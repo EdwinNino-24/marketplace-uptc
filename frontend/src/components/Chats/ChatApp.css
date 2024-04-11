@@ -1,0 +1,108 @@
+.big-box{
+    padding-top: 13rem;
+    display: flex;
+    width: 99.8%;
+    font-family: sans-serif;
+    height: 46rem;
+}
+
+.big-box .chats-module{
+    float: left;
+    width: 30%;
+    border: 3px solid black;
+    background: rgb(30,27,23);
+    color: #b49c0c;
+    overflow-y: auto;
+    scrollbar-width: 'none', '-ms-overflow-style';
+}
+
+.chats{
+    margin-top: 10rem;
+    float: left;
+    width: 100%;
+    background: rgb(30,27,23);
+    color: #b49c0c;
+}
+.chats-module::-webkit-scrollbar {
+    display: none; 
+}
+
+.header-chats{
+    position: fixed;
+    background: rgb(30,27,23);
+    width: 27.5rem;
+}
+.header-chats input{
+    width: 90%;
+    margin-left: 5%;
+    font-size: 2rem;
+    background: rgb(30,27,23);
+    border: 3px solid #b49c0c;
+    border-bottom: 5px solid #b49c0c;
+    color: #b49c0c;
+}
+
+.header-chats h1{
+    font-size: 5rem;
+    padding-left: 5%;
+}
+
+.big-box .chats li{
+    font-size: 3rem;
+    padding-left: 5%;
+    margin-top: 3%;
+    margin-bottom: 5%;
+    cursor: pointer;
+}
+
+.big-box .chat{
+    float: right;
+    width: 70%;
+    border: 3px solid black;
+}
+
+.ras{
+    font-size: 5rem;
+    padding-left: 5%;
+    font-family: sans-serif;
+}
+
+.oli{
+    margin-left: 5%;
+}
+
+.oli h1{
+    font-size: 5rem;
+}
+
+.messages-text{
+    height: 21rem;
+    font-size: 2rem;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    scrollbar-width: 'none', '-ms-overflow-style';
+}
+.messages-text::-webkit-scrollbar {
+    display: none; 
+}
+
+.message-chat{
+
+}
+
+.oilo{
+    display: flex;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.input-chat{
+    float: left;
+    width: 85%;
+    font-size: 2rem;
+}
+.send-chat{
+    float: left;
+    width: 10%;
+    background: black;
+    cursor: pointer;
+}

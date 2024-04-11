@@ -1,0 +1,13 @@
+.slider-main-page{
+    width: 95%;
+    margin-left: 2.3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.slider-image-main-page{
+    width: 100%;
+}
+.slider-image-main-page image{
+    width: 100%;
+}

@@ -1,0 +1,123 @@
+/*=================================My-Publications================================*/
+.title-my-publications{
+    font-size: 4rem;
+    font-weight: bold;
+    color: rgba(30,27,23,0.9);
+  }
+
+.my-box-publication{
+  display: flex;
+}
+
+.my-publication-image{
+  float: left;
+  width: 33.3%;
+}
+.image-my-publication{
+  width: 100%;
+  margin-left: 5%;
+  margin-top: 15%;
+}
+
+.info-my-publication{
+  float: left;
+  width: 33.3%;
+  margin-left: 5%;
+  margin-top: 5%;
+  font-family: sans-serif;
+}
+.info-my-publication h1{
+  font-family: sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.info-my-publication p{
+  font-family: sans-serif;
+  font-size: 2rem;
+}
+
+.properties-my-publication{
+  width: 33.3%;
+  float: left;
+}
+.properties-my-publication select{
+  cursor: pointer;
+  width: 75%;
+  margin-left: 2.5rem;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.properties-my-publication button{
+  cursor: pointer;
+  width: 75%;
+  margin-left: 2.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.edit-my-publication{
+  color: white;
+  background: #043246;
+}
+.delete-my-publication{
+  background: #540303;
+  color: white;
+
+}
+.chats-my-publication{
+  background: #004139;
+  color: white;
+}
+
+
+  .my-publications{
+    padding: 1rem 1rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    gap: 3rem 2rem;
+    box-sizing: border-box;
+  }
+  .my-publication{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 10px 10px 2px rgba(0, 0, 0, .2);
+    border: 6px solid transparent;
+    border-radius: 5px;
+    background-color: white;
+  }
+  .my-publication:hover{
+    border: 6px solid #08a05c55;
+  }
+
+  .hello{
+    padding-top: 12rem;
+    display: flex;
+    width: 100%;
+  }
+  .title-my-publications{
+    float: left;
+    width: 45%;
+  }
+  .create-new-publication{
+    background: rgb(1, 51, 1);
+    font-size: 3rem;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #b49c0c;
+    height:4rem;
+    margin-top: 0.8rem;
+    width: 5rem;
+    cursor: pointer;
+  }
+  
+  /*=================================MEDIA================================*/
+  @media only screen and (max-width: 600px){
+    header ul {
+      display: none;
+    }
+  }
