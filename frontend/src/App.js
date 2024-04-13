@@ -4,6 +4,7 @@ import 'boxicons';
 
 import Login from "./components/LoginForm/LoginForm";
 import Register from "./components/RegisterForm/RegisterForm";
+import ActivateAccount from "./components/ActivateAccount/ActivateAccount";
 import EnterEmail from "./components/RecoverPassword/EnterEmailForm/EnterEmailForm";
 import EnterCodeRecover from "./components/RecoverPassword/EnterCodeRecoverForm/EnterCodeRecoverForm";
 import NewPassword from "./components/RecoverPassword/NewPasswordForm/NewPasswordForm";
@@ -27,7 +28,6 @@ import ImageUploader from "./components/ImageUploader/ImageUploader";
 import CreatePublication from "./components/CreatePublicationForm/CreatePublicationForm";
 import EditPublication from "./components/EditPublicationForm/EditPublicationForm";
 
-import { Header } from "./components/Header";
 
 import Modal from 'react-modal';
 
@@ -49,20 +49,8 @@ import Axios from "axios";
 
 function App() {
 
-  const [data,setData]=useState("");
-
-  const getData=async()=>{
-    const response=await Axios.get("http://localhost:5000/getData");
-    setData(response.data);
-  }
-
-  useEffect(()=>{
-    getData()
-  }, []);
-
   return (
     <div className="">
-      <div>{data}</div>
       <Router>
         <Routes>
           <Route path="/main-page" element={<MainPage/>}/>
@@ -70,6 +58,7 @@ function App() {
           <Route path="/services-page" element={<ServicesPage/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
+          <Route path="/activate-account" element={<ActivateAccount/>}/>
           <Route path="/enter-email" element={<EnterEmail/>}/>
           <Route path="/enter-code-recover" element={<EnterCodeRecover/>}/>
           <Route path="/user-profile" element={<UserProfile/>}/>

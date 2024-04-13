@@ -2,13 +2,75 @@ import express from 'express';
 import cors from 'cors';
 
 const app = express();
+
+// Middleware para permitir solicitudes desde cualquier origen
+app.use(cors());
+
+// Middleware para analizar el cuerpo de las solicitudes como JSON
+app.use(express.json());
+
+// Ruta para manejar la solicitud POST del formulario
+app.post('/crear-cuenta', (req, res) => {
+  // Aquí puedes manejar la lógica para procesar los datos del formulario
+  const formData = req.body;
+  console.log(formData); // Puedes imprimir los datos del formulario en la consola
+  // Luego, puedes enviar una respuesta al cliente, por ejemplo:
+});
+
+// Iniciar el servidor en el puerto 5000
+app.listen(5000, () => {
+  console.log('Servidor Express corriendo en el puerto 5000');
+});
+
+
+
+/*import express from 'express';
+import cors from 'cors';
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+app.listen(5000, () => console.log('Servidor corriendo en el puerto 5000'));
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  // Aquí puedes realizar la lógica de autenticación
+  // Verificar si el nombre de usuario y la contraseña son válidos
+  // Si son válidos, puedes devolver una respuesta con un token de autenticación
+  // Si no son válidos, puedes devolver un error
+  res.send('Solicitud de inicio de sesión recibida');
+});*/
+
+
+/*import express from 'express';
+import cors from 'cors';
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+app.listen(5000, () => console.log("Servidor corriendo en el puerto 5000"));
+
+app.post("/submitForm", (req, res) => {
+  const { name, email } = req.body;
+  // Aquí puedes procesar los datos recibidos del formulario como desees
+  // Por ejemplo, podrías guardarlos en una base de datos
+  res.send(`Hola ${name}, tu email ${email} ha sido recibido correctamente.`);
+});
+*/
+
+/*import express from 'express';
+import cors from 'cors';
+
+const app = express();
 app.use(cors());
 
 app.listen(5000, ()=>console.log("app is running"));
 
 app.get("/getdata", (req,res)=>{
   res.send("hello world")
-})
+})*/
 
 /*const db = require('./user_crud'); 
 

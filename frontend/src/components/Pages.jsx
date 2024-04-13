@@ -11,6 +11,10 @@ const links = [
         href: "/register",
     },
     {
+        name: "ActivateAccount",
+        href: "/activate-account",
+    },
+    {
         name: "EnterEmail",
         href: "/enter-email",
     },
