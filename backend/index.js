@@ -1,23 +1,150 @@
 import express from 'express';
 import cors from 'cors';
+import nodemailer from 'nodemailer';
+import mysql from 'mysql';
 
 const app = express();
 
-// Middleware para permitir solicitudes desde cualquier origen
 app.use(cors());
-
-// Middleware para analizar el cuerpo de las solicitudes como JSON
 app.use(express.json());
 
-// Ruta para manejar la solicitud POST del formulario
 app.post('/crear-cuenta', (req, res) => {
-  // Aquí puedes manejar la lógica para procesar los datos del formulario
   const formData = req.body;
-  console.log(formData); // Puedes imprimir los datos del formulario en la consola
-  // Luego, puedes enviar una respuesta al cliente, por ejemplo:
+
+  const names = formData.names;
+  const lastnames = formData.lastnames;
+  const email = formData.email;
+  const password = formData.password;
+  const code = Math.floor(100000 + Math.random() * 900000);
+
+  console.log('Nombres:', names);
+  console.log('Apellidos:', lastnames);
+  console.log('Correo electrónico:', email);
+  console.log('Contraseña:', password);
+
+
+  res.send('Datos recibidos correctamente');
+
+  const newUser = {
+    ID_NEW_USER: email,
+    NAMES_NEW_USER: names,
+    LASTNAMES_NEW_USER: lastnames,
+    PASSWORD_NEW_USER: password,
+    CODE_ACTIVATION_NEW_USER: code
+  };
+  insertNewUser(newUser, (err) => {
+    if (err) {
+      console.error('Error al insertar usuario:', err);
+      return;
+    }
+    console.log('Usuario insertado correctamente');
+  });
+
+  send_mail(email,code);
 });
 
-// Iniciar el servidor en el puerto 5000
+async function send_mail(to,code) {
+  const config = {
+      host: 'smtp.gmail.com',
+      port: 587,
+      auth: {
+          user: 'servicemarketplaceu@gmail.com',
+          pass: 'pmna eyho ijzy gmil'
+      }
+  }
+
+  const codigoAutenticacion = code;
+
+  const mensaje = {
+      from: 'servicemarketplaceu@gmail.com',
+      to: to + '@uptc.edu.co',
+      subject: 'Confirma tu Cuenta de MARKETPLACE - UPTC',
+      text: `Tu código de autenticación que debes ingresar es: ${codigoAutenticacion}`
+  }
+
+  const transport = nodemailer.createTransport(config);
+
+  try {
+      const info = await transport.sendMail(mensaje);
+      console.log('Correo enviado:', info);
+  } catch (error) {
+      console.error('Error al enviar el correo:', error);
+  }
+}
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'marketplace_uptc'
+});
+
+function openConnection(callback) {
+  connection.connect(err => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+}
+
+function closeConnection(callback) {
+  connection.end(err => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    callback(null);
+  });
+}
+
+function insertNewUser(user, callback) {
+  openConnection(err => {
+    if (err) {
+      callback(err, null);
+      return;
+    }
+    
+    connection.query('SELECT * FROM NEW_USERS WHERE ID_NEW_USER = ?', user.ID_NEW_USER, (err, results) => {
+      if (err) {
+        callback(err, null);
+        closeConnection(() => {}); 
+        return;
+      }
+      
+      if (results.length === 0) {
+        connection.query('INSERT INTO NEW_USERS SET ?', user, (err, results) => {
+          if (err) {
+            callback(err, null);
+            closeConnection(() => {}); 
+            return;
+          }
+          
+          closeConnection(err => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            callback(null, results);
+          });
+        });
+      } else {
+        // Si el usuario ya existe, retornar un mensaje indicando que no se agregó
+        closeConnection(err => {
+          if (err) {
+            callback(err, null);
+            return;
+          }
+          callback(null, "El usuario ya existe en la base de datos.");
+        });
+      }
+    });
+  });
+}
+
+
+
 app.listen(5000, () => {
   console.log('Servidor Express corriendo en el puerto 5000');
 });

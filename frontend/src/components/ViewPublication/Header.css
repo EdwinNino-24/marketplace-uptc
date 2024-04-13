@@ -12,9 +12,7 @@
 }
 /*=================================HEADER================================*/
 header{
-    width: 97%;
     min-height: 100px;
-    max-width: 1530px;
     overflow: hidden;
     display: flex;
     justify-content: space-around;

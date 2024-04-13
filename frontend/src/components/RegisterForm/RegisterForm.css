@@ -22,11 +22,12 @@
     background: var(--my-color3-register);
 }
 
-.bg_register .header-login{
-    width: 100%;
+.bg_register .header_register{
     background: var(--my-color1-register);
     justify-content: left;
-    flex: 1;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 .bg_register .title_login{
     background: var(--my-color2-register);
@@ -145,6 +146,7 @@
     font-size: 24px;
     color: var(--my-color2-register);
     margin-left: 0.5rem;
+    user-select: none;
 }
 
 .wrapperRegisterUserForm .input_password_register{
@@ -186,6 +188,7 @@
     font-weight: 800;
     margin-left: 25%;
     margin-top: 5%;
+    user-select: none;
 }
 
 .button_register:hover{
