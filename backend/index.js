@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import mysql from 'mysql';
@@ -7,6 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
 app.post('/crear-cuenta', (req, res) => {
   const formData = req.body;
@@ -22,9 +24,6 @@ app.post('/crear-cuenta', (req, res) => {
   console.log('Correo electrónico:', email);
   console.log('Contraseña:', password);
 
-
-  res.send('Datos recibidos correctamente');
-
   const newUser = {
     ID_NEW_USER: email,
     NAMES_NEW_USER: names,
@@ -32,15 +31,9 @@ app.post('/crear-cuenta', (req, res) => {
     PASSWORD_NEW_USER: password,
     CODE_ACTIVATION_NEW_USER: code
   };
-  insertNewUser(newUser, (err) => {
-    if (err) {
-      console.error('Error al insertar usuario:', err);
-      return;
-    }
-    console.log('Usuario insertado correctamente');
+  insertNewUser(newUser, email, code, res, (err) => {
+    
   });
-
-  send_mail(email,code);
 });
 
 async function send_mail(to,code) {
@@ -72,6 +65,23 @@ async function send_mail(to,code) {
   }
 }
 
+app.post('/code_activation', (req, res) => {
+  const code = req.body;
+
+  console.log('Código:', code.numericValue);
+
+  getUserAuth(code.numericValue, res);
+
+});
+
+const newUserAuth = {
+  ID_NEW_USER: "",
+  NAMES_NEW_USER: "",
+  LASTNAMES_NEW_USER: "",
+  PASSWORD_NEW_USER: "",
+  CODE_ACTIVATION_NEW_USER: null
+};
+
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -99,51 +109,93 @@ function closeConnection(callback) {
   });
 }
 
-function insertNewUser(user, callback) {
-  openConnection(err => {
-    if (err) {
-      callback(err, null);
+
+function insertNewUser(newUser, email, code, res) {
+  connection.query('SELECT ID_USER FROM USERS WHERE ID_USER = ?', newUser.ID_NEW_USER, (error, results, fields) => {
+    if (error) {
+      console.error('Error al verificar el ID_NEW_USER en la tabla USERS:', error);
       return;
     }
-    
-    connection.query('SELECT * FROM NEW_USERS WHERE ID_NEW_USER = ?', user.ID_NEW_USER, (err, results) => {
-      if (err) {
-        callback(err, null);
-        closeConnection(() => {}); 
+    if (results.length > 0) {
+      const message = '¡Ya hay una cuenta registrada con el usuario institucional ingresado!';
+      console.log(message);
+      res.send(message);
+      return;
+    }
+    connection.query('SELECT * FROM NEW_USERS WHERE ID_NEW_USER = ?', newUser.ID_NEW_USER, (error, results, fields) => {
+      if (error) {
+        console.error('Error al verificar el ID_NEW_USER en la tabla NEW_USERS:', error);
         return;
       }
-      
-      if (results.length === 0) {
-        connection.query('INSERT INTO NEW_USERS SET ?', user, (err, results) => {
-          if (err) {
-            callback(err, null);
-            closeConnection(() => {}); 
+      if (results.length > 0) {
+        connection.query('UPDATE NEW_USERS SET NAMES_NEW_USER = ?, LASTNAMES_NEW_USER = ?, PASSWORD_NEW_USER = ?, CODE_ACTIVATION_NEW_USER = ? WHERE ID_NEW_USER = ?', [newUser.NAMES_NEW_USER, newUser.LASTNAMES_NEW_USER, newUser.PASSWORD_NEW_USER, newUser.CODE_ACTIVATION_NEW_USER, newUser.ID_NEW_USER], (error, results, fields) => {
+          if (error) {
+            console.error('Error al actualizar el CODE_ACTIVATION_NEW_USER en la tabla NEW_USERS:', error);
             return;
           }
-          
-          closeConnection(err => {
-            if (err) {
-              callback(err, null);
-              return;
-            }
-            callback(null, results);
-          });
+          send_mail(email,code);
+          console.log('El ID_NEW_USER ya existe en la tabla NEW_USERS, se ha actualizado el campo CODE_ACTIVATION_NEW_USER');
+          res.send("pa dentro");
         });
       } else {
-        // Si el usuario ya existe, retornar un mensaje indicando que no se agregó
-        closeConnection(err => {
-          if (err) {
-            callback(err, null);
+        connection.query('INSERT INTO NEW_USERS SET ?', newUser, (error, results, fields) => {
+          if (error) {
+            console.error('Error al insertar un nuevo usuario en la tabla NEW_USERS:', error);
             return;
           }
-          callback(null, "El usuario ya existe en la base de datos.");
+          send_mail(email,code);
+          console.log('Nuevo usuario insertado en la tabla NEW_USERS');
+          res.send("pa dentro");
         });
       }
     });
   });
 }
 
+function getUserAuth(code, res){
+  connection.query('SELECT * FROM NEW_USERS WHERE CODE_ACTIVATION_NEW_USER = ?', code, (err, results) => {
+    if (results.length === 0) {
+      console.log('Usuario no encontrado');
+      res.send("¡El código que ingresaste no fue el que te enviamos!");
+    }
+    else{
+      const usuarioEncontrado = results[0];
+      console.log('Usuario encontrado:', usuarioEncontrado);
+      
+      newUserAuth.ID_NEW_USER = usuarioEncontrado.ID_NEW_USER;
+      newUserAuth.NAMES_NEW_USER = usuarioEncontrado.NAMES_NEW_USER;
+      newUserAuth.LASTNAMES_NEW_USER = usuarioEncontrado.LASTNAMES_NEW_USER;
+      newUserAuth.PASSWORD_NEW_USER = usuarioEncontrado.PASSWORD_NEW_USER;
+      newUserAuth.CODE_ACTIVATION_NEW_USER = usuarioEncontrado.CODE_ACTIVATION_NEW_USER;
 
+      insertUser();
+      deleteNewUser(newUserAuth.ID_NEW_USER);
+      res.send("¡Tu cuenta se ha creado exitosamente!");
+    }
+  });
+}
+
+function insertUser() {
+  const newRegisterUser = {
+    ID_USER: newUserAuth.ID_NEW_USER,
+    CREATION_DATE_USER: new Date(),
+    CODE_CONFIRMATION_USER: newUserAuth.CODE_ACTIVATION_NEW_USER,
+    NAMES_USER: newUserAuth.NAMES_NEW_USER,
+    LAST_NAMES_USER: newUserAuth.LASTNAMES_NEW_USER,
+    EMAIL_USER: newUserAuth.ID_NEW_USER + "@uptc.edu.co",
+    PASSWORD_USER: newUserAuth.PASSWORD_NEW_USER,
+    CODE_SECURITY_USER: Math.floor(100000 + Math.random() * 900000)
+  };
+  connection.query('INSERT INTO USERS SET ?', newRegisterUser, (err, results) => {
+    
+  });
+}
+
+function deleteNewUser(userId) {
+  connection.query('DELETE FROM NEW_USERS WHERE ID_NEW_USER = ?', userId, (err, results) => {
+    
+  });
+}
 
 app.listen(5000, () => {
   console.log('Servidor Express corriendo en el puerto 5000');

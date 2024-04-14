@@ -3,10 +3,21 @@
   import { useNavigate } from 'react-router-dom';
   import { FaArrowAltCircleLeft} from "react-icons/fa";
   import { FaEye, FaEyeSlash } from 'react-icons/fa';
+  import Modal from 'react-modal';
+
+  Modal.setAppElement('#root');
 
   const RegisterForm = () => {
 
     const navigate = useNavigate();
+    const handleBack = () => {
+      navigate(-1); 
+    };
+
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
 
     const [formData, setFormData] = useState({
       "names": '',
@@ -14,16 +25,8 @@
       "email": '',
       "password": ''
       });
-
-    const handleBack = () => {
-      navigate(-1); // Esto te lleva a la página anterior
-    };
-
-    const [passwordVisible, setPasswordVisible] = useState(false);
-
-    const togglePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-    };
+    
+    const [mensaje, setMensaje] = useState('');
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -35,11 +38,18 @@
           },
           body: JSON.stringify(formData)
         });
-        const data = await response.json();
-        console.log(data);
+        const data = await response.text(); // Recibimos el string de la respuesta
+        setMensaje(data); // Establecemos el string en el estado 'mensaje'
+        console.log(data); // Mostramos el string en la consola
+
+        if(data === '¡Ya hay una cuenta registrada con el usuario institucional ingresado!'){
+          setModalIsOpen(true);
+        }
+        else{
+          window.location.href = '/activate-account';
+        }
       } catch (error) {
       }
-      window.location.href = '/activate-account';
     };
 
     const handleChange1 = (e) => {
@@ -56,6 +66,22 @@
         [name]: processedValue
       });
     };
+
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
+    const handleOK = () => {
+        setModalIsOpen(false);
+    };
+
+    const customStyles = {
+        content: {
+          width: '45%', // Cambia el porcentaje según tu preferencia
+          height: '30%', // Cambia el porcentaje según tu preferencia
+          margin: 'auto', // Para centrar el modal horizontalmente
+          backgroundColor: 'white', // Color de fondo del modal
+        },
+      };
 
 
     return (
@@ -112,6 +138,20 @@
               <button type="submit" className="button_register">
                 CREAR CUENTA
               </button>
+              <Modal
+                            isOpen={modalIsOpen}
+                            onRequestClose={() => setModalIsOpen(false)}
+                            contentLabel="Notificación"
+                            style={customStyles}
+                        >
+                            <div className='notification_register'>
+                                <h1 className='title_notification_register'>Notificación</h1>
+                                <h2 className='subtitle_notification_register'>{mensaje}</h2>
+                                <div className='button_notification_register'>
+                                    <button className="ok_notification_register" onClick={handleOK}>Continuar</button>
+                                </div>
+                            </div>
+                        </Modal>
             </form>
           </div>
         </div>

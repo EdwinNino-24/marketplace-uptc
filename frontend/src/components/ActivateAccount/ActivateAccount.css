@@ -1,5 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
+.notification_account_created{
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter';
+}
+.title_notification_account_created{
+    margin: 0.5rem 1rem 0.5rem 1rem;
+    font-weight: 800;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 2.5rem;
+}
+.subtitle_notification_account_created{
+    margin: 0rem 1rem 1rem 1rem;
+    font-weight: 500;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 1.5rem;
+}
+.button_notification_account_created{
+    margin-top: 1rem;
+}
+.ok_notification_account_created{
+    background: green;
+    font-size: 2rem;
+    width: 25%;
+    color: var(--my-color3-register);
+    cursor: pointer;
+}
+.ok_notification_account_created:hover{
+    background: darkgreen;
+}
+
+
 :root {
     --my-color1-register: #F7C600; 
     --my-color2-register: #1E1A16; 
