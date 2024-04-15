@@ -1,5 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
+.notification_account_created{
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter';
+}
+.title_notification_account_created{
+    margin: 0.5rem 1rem 0.5rem 1rem;
+    font-weight: 800;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 2.5rem;
+}
+.subtitle_notification_account_created{
+    margin: 0rem 1rem 1rem 1rem;
+    font-weight: 500;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 1.5rem;
+}
+.button_notification_account_created{
+    margin-top: 1rem;
+}
+.ok_notification_account_created{
+    background: green;
+    font-size: 2rem;
+    width: 25%;
+    color: var(--my-color3-register);
+    cursor: pointer;
+}
+.ok_notification_account_created:hover{
+    background: darkgreen;
+}
+
 :root {
     --my-color1-login: #F7C600; 
     --my-color2-login: #1E1A16; 
@@ -29,21 +62,21 @@
     background: var(--my-color1-login);
     justify-content: left;
     flex: 1;
+    height: 5rem;
+    flex-wrap: wrap;
+    position: fixed;
+    z-index: 2;
+
 }
 .bg_login .title_login{
     background: var(--my-color2-login);
     color: var(--my-color1-login);
     font-size: 3rem;
-    margin-left: 1%;
+    margin-top: 0.5%;
+    margin-left: 1.5%;
     width: 35rem;
     text-align: center;
     user-select: none;
-}
-
-body{
-    margin: 0;
-    padding: 0;
-    width: 100%;
 }
 
 .body_login{
@@ -51,6 +84,7 @@ body{
     display: flex;
     margin-top: 6.5rem;
     height: 80%;
+    flex: 2;
 }
 
 .title_body{

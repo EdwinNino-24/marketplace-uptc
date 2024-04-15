@@ -1,19 +1,46 @@
-import React from "react";
-import Logo from "../../images/2.1.png";
+import React, { useState, useEffect } from "react";
 import './Header.css';
 import './Banner.css';
 import './ImageSlider.css';
 import IMG2 from "../../images/img01.jpg";
-import BANNER1 from "../../images/banner1.png";
-import BANNER2 from "../../images/banner2.png";
+import BANNER1 from "../../images/3.jpeg";
+import BANNER2 from "../../images/4.jpeg";
+import BANNER3 from "../../images/banner3.jpeg";
 import './Publications.css';
+import Axios from 'axios';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 
+import { FaMagnifyingGlass } from "react-icons/fa6";
+
+import axios from 'axios';
+
+
+
 export const MainPage = () => {
+
+    const [user, setUser] = useState(null);
+
+    const send_token_user = () => {
+        Axios.post('http://localhost:5000/user_profile', {
+          token: localStorage.getItem('token'),
+        })
+        .then(response => {
+          const data = response.data;
+          console.log(data.user);
+          setUser(data.user);
+        })
+        .catch(error => {
+          console.error('Error al iniciar sesión:', error);
+        });
+      };
+    
+      useEffect(() => {
+        send_token_user();
+      }, []);
 
     const settings = {
         dots: true,
@@ -33,291 +60,238 @@ export const MainPage = () => {
         }
     };
 
+    const getTokenFromLocalStorage = () => {
+        console.log(localStorage.getItem('token'));
+        return localStorage.getItem('token');
+      };
+
+    const [showSubMenu, setShowSubMenu] = useState(false);
+    const [isOverSubList, setIsOverSubList] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSubMenuToggleEnter = () => {
+        setShowSubMenu(true);
+        console.log(user);
+        getTokenFromLocalStorage();
+        send_token_user();
+    };
+    const handleIsOverSubList = () => {
+        setIsOverSubList(true);
+    };
+    const handleSubMenuToggleLeave = () => {
+        setShowSubMenu(false);
+    };
+
+    const handleSearch = (event) => {
+        if (event.key === 'Enter') {
+        // Redirigir a la página de búsqueda con el término de búsqueda
+        console.log("Search term:", searchTerm);
+        // Reemplaza el console.log con la redirección real
+        }
+    };
+
     return (
-        <div className="ramirez">
-            <header className="sis">
-                <a href="/main-page">
-                    <div className="logo">
-                        <img src={Logo} alt="logo" width="150"/>
-                    </div>
-                </a>
-                <ul>
-                    <li>
-                        <a href="/main-page">INICIO</a>
-                    </li>
-                    <li>
-                        <a href="/products-page">PRODUCTOS</a>
-                    </li>
-                    <li>
-                        <a href="/services-page">SERVICIOS</a>
-                    </li>
-                    <li>
-                        <a href="/create-publication">VENDER</a>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <a href="/user-profile">
-                            <div className="login">
-                                <box-icon name='user-pin' size="5rem" type='solid' color='#f6c700' ></box-icon>
-                                <p className="rrr">Juan José</p>
-                            </div>
+        <div className="bg_main_page">
+            <header className="header_main_page">
+                <div className="box_header_top">
+                    <div className="isotype_header">
+                        <a href="/main-page" className="href_isotype">
+                            <h1 className="isotype">MARKETPLACE - UPTC</h1>
                         </a>
-                    </li>
-                </ul>
-                <nav className="mainnav">
-                    <ul>
-                        <li>
-                            <a className="categories">CATEGORÍAS</a>
-                        </li>
-                        <li>
-                            <a href="/publications-page">Ropa</a>
-                        </li>
-                        <li>
-                            <a href="/publications-page">Tecnología</a>
-                        </li>
-                        <li>
-                            <a href="/publications-page">Accesorios</a>
-                        </li>
-                        <li>
-                            <a href="/publications-page">Tutorías</a>
-                        </li>
-                        <li>
-                            <a href="/publications-page">Comida</a>
-                        </li>
-                        <li>
-                            <a className='melo' href="/publications-page">Otros</a>
-                        </li>
-                        <li>
-                            <input className="ram" placeholder=" Haz una Búsqueda..." onKeyPress={handleKeyPress}></input>
-                        </li>
-                    </ul>
-                </nav>
+                    </div>
+                    <div className="list_user_options">
+                        <ul className="user_options">
+                            <li>
+                                <a className="user_option" href="/main-page">Inicio</a>
+                            </li>
+                            <li>
+                                <a className="user_option" href="/products-page">Publicar</a>
+                            </li>
+                            <li>
+                                <a className="user_option" href="/services-page">Mis Ofertas</a>
+                            </li>
+                            <li>
+                                <a className="user_option" href="/create-publication">Mis Chats</a>
+                            </li>
+                            <li>
+                                <a className="user_option" href="/user-profile">{user}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </header>
-            <div className="banner">
-                <Slider className='slider-main-page' {...settings}>
-                    <div>
-                        <img className='slider-image-main-page' src={BANNER1} alt=""/>
+            <nav className="mainnav">
+                    <div className="left_header_bottom">
+                        <ul className="plataform_options">
+                            <li onMouseEnter={handleSubMenuToggleEnter} 
+                            onMouseLeave={handleSubMenuToggleLeave}>
+                            <p className="plataform_option">Categorías ></p>
+                            {showSubMenu && (
+                                <ul className="submenu">
+                                    <a href="categoria1.html">
+                                        <li>Accesorios</li>
+                                    </a>
+                                    <a href="categoria1.html">
+                                        <li>Tecnología</li>
+                                    </a>
+                                    <a href="categoria1.html">
+                                        <li>Tutorías</li>
+                                    </a>
+                                    <a href="categoria1.html">
+                                        <li>Ropa</li>
+                                    </a>
+                                </ul>
+                            )}
+                            </li>
+                            <a href="/products" className="plataform_option">
+                                <li>Productos</li>
+                            </a>
+                            <a href="/services" className="plataform_option">
+                                <li>Servicios</li>
+                            </a>
+                        </ul>
                     </div>
-                    <div>
-                        <img className='slider-image-main-page' src={BANNER2} alt=""/>
+                    <div className="right_header_bottom">
+                        <ul className="module_search">
+                            <li>
+                                <input className="input_search" placeholder="Haz una Búsqueda..." onKeyPress={handleKeyPress}></input>
+                                <label className="icon_glass"><FaMagnifyingGlass color="#F7C600" size="20px"/></label>
+                            </li>
+                        </ul>
                     </div>
-                </Slider>
-            </div>
-            <div className="separator"></div>
-            
-            <h1 className="title">PRODUCTOS</h1>
-            <div className="products">
-                <a href="/view-publication">
-                    <div className="product">
-                        <div className="product_img">
-                            <img src={IMG2} alt=""/>
+                </nav>
+                <div className="banner">
+                    <Slider className='slider-main-page' {...settings}>
+                        <div className="slide">
+                            <h1 className="left_title_slide">COMPRA Y VENDE ARTÍCULOS DE SEGUNDA MANO</h1>
+                            <img className='right_image_slide' src={BANNER1} alt=""/>
                         </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
+                        <div className="slide">
+                            <h1 className="right_title_slide">CONTACTA CON TUTORES PARA AGENDA UNA CITA</h1>
+                            <img className='left_image_slide' src={BANNER2} alt=""/>
                         </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
+                        <div className="slide">
+                            <h1 className="left_title_slide_1">APOYA LA ECONOMÍA UPETECISTA</h1>
+                            <img className='right_image_slide' src={BANNER3} alt=""/>
                         </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="product">
-                        <div className="product_img">
-                            <img src={IMG2} alt=""/>
+                    </Slider>
+                </div>
+            <div className="publications_products">
+                <div className="section_products">
+                    <h1 className="title_section_products">PRODUCTOS</h1>
+                </div>
+                <div className="products">
+                    <a className="product_link" href="/view-publication">
+                        <div className="product">
+                            <div className="product_img">
+                                <img src={IMG2} alt=""/>
+                            </div>
+                            <div className="footer_product">
+                                <h1 className="title_product"> Zapatilla </h1>
+                                <p> Ropa </p>
+                                <p className="price">$3,99</p>
+                            </div>
+                            <div className="button_more_information">
+                                <button>
+                                    Más Información
+                                </button>
+                            </div>
                         </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
+                    </a>
+                    <a className="product_link" href="/view-publication">
+                        <div className="product">
+                            <div className="product_img">
+                                <img src={IMG2} alt=""/>
+                            </div>
+                            <div className="footer_product">
+                                <h1 className="title_product"> Zapatilla </h1>
+                                <p> Ropa </p>
+                                <p className="price">$3,99</p>
+                            </div>
+                            <div className="button_more_information">
+                                <button>
+                                    Más Información
+                                </button>
+                            </div>
                         </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
+                    </a>
+                    <a className="product_link" href="/view-publication">
+                        <div className="product">
+                            <div className="product_img">
+                                <img src={IMG2} alt=""/>
+                            </div>
+                            <div className="footer_product">
+                                <h1 className="title_product"> Zapatilla </h1>
+                                <p> Ropa </p>
+                                <p className="price">$3,99</p>
+                            </div>
+                            <div className="button_more_information">
+                                <button>
+                                    Más Información
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="product">
-                        <div className="product_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="product">
-                        <div className="product_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="product">
-                        <div className="product_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="product">
-                        <div className="product_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
 
-            <div className="separator"></div>
-            
-            <h1 className="title">SERVICIOS</h1>
-            <div className="services">
-                <a href="/view-publication">
-                    <div className="service">
-                        <div className="service_img">
-                            <img src={IMG2} alt=""/>
+            <div className="publications_services">
+                <div className="section_services">
+                    <h1 className="title_section_services">SERVICIOS</h1>
+                </div>
+                <div className="services">
+                    <a className="service_link" href="/view-publication">
+                        <div className="service">
+                            <div className="service_img">
+                                <img src={IMG2} alt=""/>
+                            </div>
+                            <div className="footer_service">
+                                <h1 className="title_service"> Zapatilla </h1>
+                                <p> Ropa </p>
+                                <p className="price">$3,99</p>
+                            </div>
+                            <div className="button_more_information">
+                                <button>
+                                    Más Información
+                                </button>
+                            </div>
                         </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
+                    </a>
+                    <a className="service_link" href="/view-publication">
+                        <div className="service">
+                            <div className="service_img">
+                                <img src={IMG2} alt=""/>
+                            </div>
+                            <div className="footer_service">
+                                <h1 className="title_service"> Zapatilla </h1>
+                                <p> Ropa </p>
+                                <p className="price">$3,99</p>
+                            </div>
+                            <div className="button_more_information">
+                                <button>
+                                    Más Información
+                                </button>
+                            </div>
                         </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
+                    </a>
+                    <a className="service_link" href="/view-publication">
+                        <div className="service">
+                            <div className="service_img">
+                                <img src={IMG2} alt=""/>
+                            </div>
+                            <div className="footer_service">
+                                <h1 className="title_service"> Zapatilla </h1>
+                                <p> Ropa </p>
+                                <p className="price">$3,99</p>
+                            </div>
+                            <div className="button_more_information">
+                                <button>
+                                    Más Información
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="service">
-                        <div className="service_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="service">
-                        <div className="service_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="service">
-                        <div className="service_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="service">
-                        <div className="service_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
-                <a href="/view-publication">
-                    <div className="service">
-                        <div className="service_img">
-                            <img src={IMG2} alt=""/>
-                        </div>
-                        <div className="general-footer">
-                            <h1> Zapatilla </h1>
-                            <p> Ropa </p>
-                            <p className="price">$3,99</p>
-                        </div>
-                        <div className="button-more-information">
-                            <button>
-                                Más Información
-                            </button>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
     )

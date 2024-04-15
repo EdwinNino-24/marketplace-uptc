@@ -23,6 +23,10 @@ const links = [
         href: "/enter-coder-recover",
     },
     {
+        name: "NewPassword",
+        href: "/new_password_from_recover",
+    },
+    {
         name: "Main",
         href: "/main",
     },

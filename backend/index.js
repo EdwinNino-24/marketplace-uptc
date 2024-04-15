@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import mysql from 'mysql';
@@ -9,6 +10,47 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const query = 'SELECT * FROM USERS WHERE ID_USER = ?';
+  connection.query(query, [username], (error, results, fields) => {
+    if (error) {
+      console.error('Error al buscar usuario en la base de datos:', error);
+      return;
+    }
+
+    if (results.length > 0) {
+      const user = results[0];
+      if (user.PASSWORD_USER === password) {
+        const token = jwt.sign({ username: user.ID_USER }, '2404');
+        res.json({ user: user.ID_USER, token: token, code: '0' });
+        console.log('si es');
+      } else {
+        res.json({ user: user.ID_USER, token: null, code: '1' });
+        console.log('no es la contra');
+      }
+    } else {
+      res.json({ user: null, token: null, code: '2' });
+      console.log('no es el usuario');
+    }
+  });
+});
+
+app.post('/user_profile', (req, res) => {
+  const token = req.body.token;
+  let token_decoded = "";
+  jwt.verify(token, '2404', (err, decoded) => {
+    if (err) {
+      console.error('Error al decodificar el token:', err);
+    } else {
+      console.log('Token decodificado:', decoded);
+      token_decoded = decoded;
+      console.log(token_decoded);
+      res.json({ user: token_decoded.username});
+    }
+  });
+});
 
 app.post('/crear-cuenta', (req, res) => {
   const formData = req.body;
@@ -41,15 +83,15 @@ async function send_mail(to,code) {
       host: 'smtp.gmail.com',
       port: 587,
       auth: {
-          user: 'servicemarketplaceu@gmail.com',
-          pass: 'pmna eyho ijzy gmil'
+          user: 'sac.marketplace.uptc@gmail.com',
+          pass: 'elmo pzdu iahw yhad'
       }
   }
 
   const codigoAutenticacion = code;
 
   const mensaje = {
-      from: 'servicemarketplaceu@gmail.com',
+      from: 'sac.marketplace.uptc@gmail.com',
       to: to + '@uptc.edu.co',
       subject: 'Confirma tu Cuenta de MARKETPLACE - UPTC',
       text: `Tu código de autenticación que debes ingresar es: ${codigoAutenticacion}`
@@ -81,6 +123,68 @@ const newUserAuth = {
   PASSWORD_NEW_USER: "",
   CODE_ACTIVATION_NEW_USER: null
 };
+
+
+app.post('/search_account_recover', (req, res) => {
+  const id_user = req.body;
+  console.log(id_user.inputValue);
+  getUserRecover(id_user.inputValue, res);
+});
+
+app.post('/recover_account', (req, res) => {
+  const { numericValue } = req.body; // Debes desestructurar el cuerpo de la solicitud para obtener numericValue
+  console.log(numericValue);
+
+  const query = 'SELECT * FROM USERS WHERE CODE_SECURITY_USER = ?';
+  connection.query(query, [numericValue], (error, results, fields) => {
+    if (error) {
+      console.error('Error al buscar usuario en la base de datos:', error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+    if (results.length > 0) {
+      const user = results[0];
+      const token = jwt.sign({ username: user.ID_USER }, '2404');
+      console.log('código de seguridad correcto');
+
+      const new_code = Math.floor(100000 + Math.random() * 900000);
+      console.log(new_code);
+
+      connection.query('UPDATE USERS SET CODE_SECURITY_USER = ? WHERE ID_USER = ?', [new_code, user.ID_USER], (error, results, fields) => {
+        if (error) {
+          console.error('Error al actualizar código de seguridad:', error);
+        }
+      });
+
+      return res.json({ user: user.ID_USER, token: token, code: '0' });
+    } else {
+      console.log('código de seguridad incorrecto');
+      return res.status(400).json({ error: 'Código de seguridad incorrecto' });
+    }
+  });
+});
+
+app.post('/enter_password_recover', (req, res) => {
+  const { password, token } = req.body;
+
+  let token_decoded = "";
+  jwt.verify(token.token, '2404', (err, decoded) => {
+    if (err) {
+      console.error('Error al decodificar el token:', err);
+    } else {
+      console.log('Token decodificado:', decoded);
+      token_decoded = decoded;
+      console.log(token_decoded);
+      const query = 'UPDATE USERS SET PASSWORD_USER = ? WHERE ID_USER = ?';
+      connection.query(query, [password.newPassword, token_decoded.username], (error, results, fields) => {
+        if (error) {
+
+        }
+      });
+    }
+  });
+});
+
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -196,6 +300,51 @@ function deleteNewUser(userId) {
     
   });
 }
+
+function getUserRecover(code, res){
+  connection.query('SELECT * FROM USERS WHERE ID_USER = ?', code, (err, results) => {
+    if (results.length === 0) {
+      console.log('Usuario no encontrado');
+      res.send("0");
+    }
+    else{
+      const usuarioEncontrado = results[0];
+      console.log('Usuario encontrado:', usuarioEncontrado);
+      res.send("1");
+      send_recover_mail(usuarioEncontrado.ID_USER, usuarioEncontrado.CODE_SECURITY_USER);
+    }
+  });
+}
+
+async function send_recover_mail(to,code) {
+  const config = {
+    host: 'smtp.gmail.com',
+    port: 587,
+    auth: {
+        user: 'sac.marketplace.uptc@gmail.com',
+        pass: 'elmo pzdu iahw yhad'
+    }
+}
+
+  const codigoAutenticacion = code;
+
+  const mensaje = {
+      from: 'sac.marketplace.uptc@gmail.com',
+      to: to + '@uptc.edu.co',
+      subject: 'Recupera tu Cuenta de MARKETPLACE - UPTC',
+      text: `Tu código de recuperación que debes ingresar es: ${codigoAutenticacion}`
+  }
+
+  const transport = nodemailer.createTransport(config);
+
+  try {
+      const info = await transport.sendMail(mensaje);
+      console.log('Correo enviado:', info);
+  } catch (error) {
+      console.error('Error al enviar el correo:', error);
+  }
+}
+
 
 app.listen(5000, () => {
   console.log('Servidor Express corriendo en el puerto 5000');

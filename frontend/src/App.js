@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import 'boxicons';
 
 import Login from "./components/LoginForm/LoginForm";
+
 import Register from "./components/RegisterForm/RegisterForm";
 import ActivateAccount from "./components/ActivateAccount/ActivateAccount";
+
 import EnterEmail from "./components/RecoverPassword/EnterEmailForm/EnterEmailForm";
 import EnterCodeRecover from "./components/RecoverPassword/EnterCodeRecoverForm/EnterCodeRecoverForm";
 import NewPassword from "./components/RecoverPassword/NewPasswordForm/NewPasswordForm";
@@ -23,7 +24,6 @@ import { ViewPublication } from "./components/ViewPublication/ViewPublication";
 import { PublicationsPage } from "./components/PublicationsPage/PublicationsPage";
 
 
-import ImageSlider from './components/ImageSlider/ImageSlider';
 import ImageUploader from "./components/ImageUploader/ImageUploader";
 import CreatePublication from "./components/CreatePublicationForm/CreatePublicationForm";
 import EditPublication from "./components/EditPublicationForm/EditPublicationForm";
@@ -53,14 +53,20 @@ function App() {
     <div className="">
       <Router>
         <Routes>
+
+          <Route path="/login" element={<Login/>}/>
+
+          <Route path="/register" element={<Register/>}/>
+          <Route path="/activate-account" element={<ActivateAccount/>}/>
+          
+          <Route path="/enter-email" element={<EnterEmail/>}/>
+          <Route path="/enter-code-recover" element={<EnterCodeRecover/>}/>
+          <Route path="/new_password_from_recover" element={<NewPassword/>}/>
+
           <Route path="/main-page" element={<MainPage/>}/>
           <Route path="/products-page" element={<ProductsPage/>}/>
           <Route path="/services-page" element={<ServicesPage/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/register" element={<Register/>}/>
-          <Route path="/activate-account" element={<ActivateAccount/>}/>
-          <Route path="/enter-email" element={<EnterEmail/>}/>
-          <Route path="/enter-code-recover" element={<EnterCodeRecover/>}/>
+
           <Route path="/user-profile" element={<UserProfile/>}/>
           <Route path="/edit-user-profile" element={<EditUserProfile/>}/>
           <Route path="/my-publications-page" element={<MyPublications/>}/>

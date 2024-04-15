@@ -63,19 +63,24 @@
     margin: 0;
     padding: 0;
     width: 100%;
+    flex-wrap: wrap;
+    position: fixed;
+    z-index: 2;
+    height: 5rem;
 }
 .bg_register .title_login{
     background: var(--my-color2-register);
     color: var(--my-color1-register);
     font-size: 3rem;
-    margin-left: 1%;
+    margin-top: 0.5%;
+    margin-left: 1.5%;
     width: 35rem;
     text-align: center;
     user-select: none;
 }
 
 .body_register{
-    margin-top: 6.3rem;
+    margin-top: 5.5%;
     background: #ecedec;
     justify-content: center;
     align-items: center;
