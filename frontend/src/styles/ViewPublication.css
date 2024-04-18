@@ -1,106 +1,98 @@
-/*=================================PUBLICATIONS================================*/
-  .publications{
-    padding: 1rem 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-    gap: 3rem 2rem;
-    box-sizing: border-box;
-    padding-top: 13rem;
-    height: 45rem;
-  }
-  .publication{
-    display: flex;
-    width: 100%;
-    box-shadow: 1px 10px 10px 2px rgba(0, 0, 0, .2);
-    border: 6px solid transparent;
-    border-radius: 5px;
-    background-color: white;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
-  .gallery-publication{
-    width: 50%;
-    display:flex;
-    float: left;
-  }
-  .info-publication{
-    width: 50%;
-    display: flex;
-    float: right;
-    margin-top: 0;
-  }
+:root {
+  --my-color1-create_publication: #F7C600;
+  --my-color2-create_publication: #1E1A16;
+  --my-color3-create_publication: #FFF;
+  --my-color4-create_publication: gray;
+  --my-color5-create_publication: #ecedec;
+}
 
-  .publication:hover{
-    border: 6px solid #08a05c55;
-  }
-  .product_img img{
-    width: 310px;
-  }
-  .publication-footer{
-    padding: 1rem;
-    padding-left: 3rem;
-  }
-  .publication-footer h1{
-    font-weight: 600;
-    font-size: 3.5rem;
-    color: #1a202c;
-    font-family: Helvetica, sans-serif;
-    width: 100%;
-  }
-  .publication-footer p{
-    font-weight: 700;
-    color: rgba(0, 0, 0, .555);
-    text-transform: uppercase;
-    font-size: 2rem;
-  }
-  .publication-footer .price{
-    font-size: 2rem;
-    color: #1a202c;
-  }
-  
-  .publication .button-contact{
-    width: 45%;
-    height: 45px;
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-top: 1rem;
-  }
-  .button-contact .btn{
-    border: none;
-    outline: 0;
-    cursor: pointer;
-    border-radius: 30px;
-    font-size: 1.5rem;
-  }
-  .button-contact button{
-    max-width: 250px;
-    width: 100%;
-    font-size: 3rem;
-    color: white;
-    font-weight: 600;
-  }
-  .button-contact div{
-    background-color: rgba(30,27,23,0.9);
-    display: grid;
-    align-items: center;
-    text-align: center;
-    border-radius: 5px; 
-  }
-  .button-contact div a{
-    color: rgba(246,199,0,255);
-    font-weight: 700;
-  }
-  .button-contact div a:hover{
-    color: #b49c0c;
-  }
-  
-  
-  
-  
-  
-  
-  /*=================================MEDIA================================*/
-  @media only screen and (max-width: 600px){
-    header ul {
-      display: none;
-    }
-  }
+* {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.bg_view_publication{
+  margin: 0;
+  padding: 0;
+}
+
+.section_post{
+  padding-top: 11%;
+}
+.publication {
+  display: flex;
+  width: 90%;
+  background-color: var(--my-color5-create_publication);
+  margin-left: 5%;
+}
+
+.images_post{
+  width: 50%;
+  float: left;
+  height: 100%;
+}
+.slider_post{
+  width: 90%;
+  height: 100%;
+  height: 5rem;
+  margin: 10% 5% 0% 5%;
+}
+.image_slider{
+  width: 100%;
+}
+
+
+
+.info_post{
+  width: 50%;
+  float: right;
+}
+
+.data_post{
+
+}
+.data_post h1{
+  font-size: 4rem;
+  font-weight: 800;
+  margin-top: 1.5rem;
+  margin-left: 3%;
+}
+.data_post h2{
+  font-size: 3rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-left: 3%;
+}
+.data_post p{
+  font-size: 1.5rem;
+  margin-top: 0.3rem;
+  margin-left: 3%;
+}
+.description{
+  font-size: 1.5rem;
+  margin-left: 3%;
+  margin-top: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.button_contact{
+  width: 100%;
+  margin: 3% auto 5% 3%;
+}
+.button_contact button{
+  background: var(--my-color2-create_publication);
+  width: 30%;
+  font-size: 2rem;
+  color: var(--my-color3-create_publication);
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  height: 3rem;
+}
+
+.button_contact button:hover{
+  color: var(--my-color1-create_publication);
+}
