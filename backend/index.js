@@ -132,15 +132,11 @@ app.post('/search_account_recover', (req, res) => {
 });
 
 app.post('/recover_account', (req, res) => {
-  const { numericValue } = req.body; // Debes desestructurar el cuerpo de la solicitud para obtener numericValue
+  const { numericValue } = req.body; 
   console.log(numericValue);
 
   const query = 'SELECT * FROM USERS WHERE CODE_SECURITY_USER = ?';
   connection.query(query, [numericValue], (error, results, fields) => {
-    if (error) {
-      console.error('Error al buscar usuario en la base de datos:', error);
-      return res.status(500).json({ error: 'Error interno del servidor' });
-    }
 
     if (results.length > 0) {
       const user = results[0];
@@ -159,26 +155,29 @@ app.post('/recover_account', (req, res) => {
       return res.json({ user: user.ID_USER, token: token, code: '0' });
     } else {
       console.log('código de seguridad incorrecto');
-      return res.status(400).json({ error: 'Código de seguridad incorrecto' });
+      return res.json({ user: null, token: null, code: '1' });
     }
   });
 });
 
 app.post('/enter_password_recover', (req, res) => {
-  const { password, token } = req.body;
+  const { newPassword, token } = req.body;
 
-  let token_decoded = "";
-  jwt.verify(token.token, '2404', (err, decoded) => {
+  jwt.verify(token, '2404', (err, decoded) => {
     if (err) {
       console.error('Error al decodificar el token:', err);
+      return res.status(400).send('Token inválido');
     } else {
       console.log('Token decodificado:', decoded);
-      token_decoded = decoded;
-      console.log(token_decoded);
+      const username = decoded.username;
       const query = 'UPDATE USERS SET PASSWORD_USER = ? WHERE ID_USER = ?';
-      connection.query(query, [password.newPassword, token_decoded.username], (error, results, fields) => {
+      connection.query(query, [newPassword, username], (error, results, fields) => {
         if (error) {
-
+          console.error('Error al actualizar la contraseña:', error);
+          return res.status(500).send('Error al actualizar la contraseña');
+        } else {
+          console.log('Contraseña actualizada correctamente');
+          return res.status(200).send('Contraseña actualizada correctamente');
         }
       });
     }
