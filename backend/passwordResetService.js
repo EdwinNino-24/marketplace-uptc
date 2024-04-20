@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import { queryDatabase } from './databaseService.js'; 
+const jwt = require('jsonwebtoken');
+const { queryDatabase } = require('./databaseService.js');
 
-export function enterPasswordRecover(newPassword, token, res) {
+function enterPasswordRecover(newPassword, token, res) {
   jwt.verify(token, '2404', (err, decoded) => {
     if (err) {
       console.error('Error al decodificar el token:', err);
@@ -22,3 +22,5 @@ export function enterPasswordRecover(newPassword, token, res) {
     }
   });
 }
+
+module.exports = { enterPasswordRecover };

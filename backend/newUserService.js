@@ -1,7 +1,7 @@
-import { sendMail } from './emailService.js'; 
-import { queryDatabase } from './databaseService.js'; 
+const { sendMail } = require('./emailService.js');
+const { queryDatabase } = require('./databaseService.js');
 
-export function createAccount(formData, callback) {
+function createAccount(formData, callback) {
   const { names, lastnames, email, password } = formData;
   const code = Math.floor(100000 + Math.random() * 900000);
 
@@ -38,7 +38,7 @@ export function createAccount(formData, callback) {
             callback('Error al actualizar el CODE_ACTIVATION_NEW_USER en la tabla NEW_USERS', null);
             return;
           }
-          sendMail("ACTIVA TU CUENTA DE MARKETPLACE - UPTC", "activación", email, code); 
+          sendMail("ACTIVA TU CUENTA DE MARKETPLACE - UPTC", "activación", email, code);
           console.log('El ID_NEW_USER ya existe en la tabla NEW_USERS, se ha actualizado el campo CODE_ACTIVATION_NEW_USER');
           callback(null, 'Cuenta creada exitosamente');
         });
@@ -56,3 +56,5 @@ export function createAccount(formData, callback) {
     });
   });
 }
+
+module.exports = { createAccount };

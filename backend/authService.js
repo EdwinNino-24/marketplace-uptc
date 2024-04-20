@@ -1,9 +1,8 @@
-import jwt from 'jsonwebtoken';
-import { queryDatabase } from './databaseService.js';
-
+const jwt = require('jsonwebtoken');
+const { queryDatabase } = require('./databaseService.js');
 const secretKey = '2404';
 
-export function login(username, password, callback) {
+function login(username, password, callback) {
   const query = 'SELECT * FROM USERS WHERE ID_USER = ?';
   queryDatabase(query, [username], (error, results, fields) => {
     if (error) {
@@ -24,3 +23,5 @@ export function login(username, password, callback) {
     }
   });
 }
+
+module.exports = { login }; 

@@ -21,12 +21,15 @@ import IMG2 from "../images/img01.jpg";
 import BANNER3 from "../images/banner3.jpeg";
 import '../styles/Publications.css';
 import Axios from 'axios';
+import { useParams } from "react-router-dom";
 
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
 
+
 export const ViewPublication = () => {
 
+    const { id } = useParams();
     const [user, setUser] = useState(null);
 
     const send_token_user = () => {
@@ -50,6 +53,7 @@ export const ViewPublication = () => {
 
     useEffect(() => {
         send_token_user();
+        console.log(id);
     }, []);
 
     const settings = {
@@ -98,6 +102,65 @@ export const ViewPublication = () => {
             // Reemplaza el console.log con la redirección real
         }
     };
+
+    const [publication, setPublication] = useState(""); // Estado para almacenar los detalles de la publicación
+
+    useEffect(() => {
+        // Función para obtener los detalles de la publicación del backend
+        const fetchPublication = async () => {
+            try {
+                const response = await Axios.get(`http://localhost:5000/publications/${id}`);
+                setPublication(response.data); // Actualizar el estado con los datos de la publicación
+            } catch (error) {
+                console.error('Error al obtener la publicación:', error);
+            }
+        };
+
+        fetchPublication(); // Llamar a la función para obtener los detalles de la publicación
+    }, [id]);
+
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            try {
+                const response = await Axios.post('http://localhost:5000/get_post_images', {
+                    folderPath: id, 
+                });
+    
+                setImages(response.data.image); // Almacena las URLs de las imágenes
+                console.log(response.data.image);
+                console.log(images);
+            } catch (error) {
+                console.error('Error fetching images:', error);
+            }
+        };
+    
+        fetchImages(); // Llama a la función para obtener las URLs al montar el componente
+    }, []);
+
+    useEffect(() => {
+        console.log('Updated images:', images);
+    }, [images]);
+
+    function formatToColombianPesos(price) {
+        const numericPrice = parseFloat(price);
+        if (!isNaN(numericPrice)) {
+            const formattedPrice = numericPrice.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            });
+            return formattedPrice;
+        } else {
+            return 'Precio no válido';
+        }
+    }
+
+    function ColombianPrice({ price }) {
+        const formattedPrice = formatToColombianPesos(price);
+
+        return <span>{formattedPrice}</span>;
+    }
 
     return (
         <div className="bg_view_publication">
@@ -175,24 +238,23 @@ export const ViewPublication = () => {
                 <div className="publication">
                     <div className="images_post">
                         <Slider className='slider_post' {...settings}>
-                            <div>
-                                <img className='image_slider' src={IMG1} alt="" />
-                            </div>
-                            <div>
-                                <img className='image_slider' src={BANNER2} alt="" />
-                            </div>
+                            {images.map((imageUrl, index) => (
+                                <div key={index} className="image_container">
+                                    <img src={imageUrl} alt={`Slide ${index}`} className="image_slider" />
+                                </div>
+                            ))}
                         </Slider>
                     </div>
                     <div className="info_post">
                         <div className="data_post">
-                            <h1> PLAY 2 CHIPEADA </h1>
-                            <p> Producto - Disponible </p>
-                            <p> Categoría - Tecnología </p>
+                            <h1>{publication.TITLE_PUBLICATION}</h1>
+                            <p> {publication.TYPE_PUBLICATION} - {publication.STATE_PUBLICATION} </p>
+                            <p> Categoría -  {publication.CATEGORY_PUBLICATION} </p>
                             <h2> Descripción </h2>
-                            <p className="description"> Una play 2 chipeada barata </p>
-                            <p> Precio -> $10.000 </p>
-                            <p> Ofertada en -> Sede Central </p>
-                            <p> Por Ramírez </p>
+                            <p className="description"> {publication.DESCRIPTION_PUBLICATION} </p>
+                            <p> Precio: <ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
+                            <p> Ofertada en Sede / Seccional: {publication.SELLER_LOCATION} </p>
+                            <p> Por  {publication.ID_USER_SELLER} </p>
                             <div className="button_contact">
                                 <button>
                                     Contactar

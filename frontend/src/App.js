@@ -47,7 +47,7 @@ function App() {
           <Route path="/user-profile" element={<UserProfile/>}/>
           <Route path="/edit-user-profile" element={<EditUserProfile/>}/>
           <Route path="/my-publications-page" element={<MyPublications/>}/>
-          <Route path="/view-publication" element={<ViewPublication/>}/>
+          <Route path="/view-publication/:id" element={<ViewPublication/>}/>
           <Route path="/publications-page" element={<PublicationsPage/>}/>
           <Route path="/create-publication" element={<CreatePublication/>}/>
           <Route path="/edit-publication" element={<EditPublication/>}/>

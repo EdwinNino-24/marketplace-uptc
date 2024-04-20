@@ -1,7 +1,7 @@
-import { insertUser, deleteNewUser } from './userService.js';
-import { queryDatabase } from './databaseService.js';
+const { insertUser, deleteNewUser } = require('./userService.js');
+const { queryDatabase } = require('./databaseService.js');
 
-export function activateAccount(code, res) {
+function activateAccount(code, res) {
   queryDatabase('SELECT * FROM NEW_USERS WHERE CODE_ACTIVATION_NEW_USER = ?', code, (err, results) => {
     if (err) {
       console.error('Error al buscar usuario con el código de activación:', err);
@@ -30,3 +30,5 @@ export function activateAccount(code, res) {
     }
   });
 }
+
+module.exports = { activateAccount };

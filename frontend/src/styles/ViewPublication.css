@@ -20,7 +20,7 @@
 }
 
 .section_post{
-  padding-top: 11%;
+  padding-top: 10%;
 }
 .publication {
   display: flex;
@@ -30,24 +30,34 @@
 }
 
 .images_post{
-  width: 50%;
+  width: 55%;
   float: left;
-  height: 100%;
 }
 .slider_post{
-  width: 90%;
-  height: 100%;
-  height: 5rem;
-  margin: 10% 5% 0% 5%;
+  width: 80%;
+  height: 80%;
+  margin: 5% 0% 5% 12%;
 }
 .image_slider{
   width: 100%;
+  height: 100%;
 }
+.image_container {
+  display: flex;
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+}
+
+.slider_post .slick-prev:before,
+.slider_post .slick-next:before {
+  color: var(--my-color2-create_publication);
+}
+
 
 
 
 .info_post{
-  width: 50%;
+  width: 45%;
   float: right;
 }
 

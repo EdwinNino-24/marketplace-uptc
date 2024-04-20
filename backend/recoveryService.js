@@ -1,8 +1,8 @@
-import { queryDatabase } from './databaseService.js'; 
-import { sendMail } from './emailService.js';
-import jwt from 'jsonwebtoken';
+const { queryDatabase } = require('./databaseService.js');
+const { sendMail } = require('./emailService.js');
+const jwt = require('jsonwebtoken');
 
-export function searchAccountRecover(idUser, res) {
+function searchAccountRecover(idUser, res) {
   queryDatabase('SELECT * FROM USERS WHERE ID_USER = ?', idUser, (err, results) => {
     if (err) {
       console.error('Error al buscar usuario en la base de datos:', err);
@@ -22,7 +22,7 @@ export function searchAccountRecover(idUser, res) {
   });
 }
 
-export function recoverAccount(numericValue, res) {
+function recoverAccount(numericValue, res) {
     queryDatabase('SELECT * FROM USERS WHERE CODE_SECURITY_USER = ?', [numericValue], (error, results) => {
       if (error) {
         console.error('Error al buscar usuario en la base de datos:', error);
@@ -51,3 +51,5 @@ export function recoverAccount(numericValue, res) {
       }
     });
   }
+
+module.exports = { searchAccountRecover, recoverAccount };

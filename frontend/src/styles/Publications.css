@@ -49,12 +49,16 @@
     border: 6px solid transparent;
     border-radius: 5px;
     background:var(--my-color3-main_page);
+    height: 100%;
+    justify-content: center;
   }
   .product:hover{
     border: 6px solid #08a05c55;
   }
   .product_img img{
-    width: 310px;
+    margin-top: 1rem;
+    width: 80%;
+    margin-left: 10%;
   }
   .footer_product{
     font-family: 'Inter';

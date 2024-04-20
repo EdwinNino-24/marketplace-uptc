@@ -27,10 +27,10 @@ export const MainPage = () => {
             .then(response => {
                 const data = response.data;
                 console.log(data.user);
-                if(data.user != null){
+                if (data.user != null) {
                     setUser(data.user);
                 }
-                else{
+                else {
                     setUser("Iniciar Sesión")
                 }
             })
@@ -74,6 +74,7 @@ export const MainPage = () => {
         console.log(user);
         getTokenFromLocalStorage();
         send_token_user();
+        console.log(randomImages);
     };
     const handleIsOverSubList = () => {
         setIsOverSubList(true);
@@ -89,6 +90,39 @@ export const MainPage = () => {
             // Reemplaza el console.log con la redirección real
         }
     };
+
+    const [publications, setPublications] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/publications')
+            .then(response => response.json())
+            .then(data => setPublications(data))
+            .catch(error => console.error('Error al obtener las publicaciones:', error));
+    }, []);
+
+    const formatToColombianPesos = (value) => {
+        const formattedValue = Number(value).toLocaleString('es-CO', {
+            style: 'currency',
+            currency: 'COP'
+        });
+
+        return formattedValue;
+    }
+
+    function ColombianPrice({ price }) {
+        const formattedPrice = formatToColombianPesos(price);
+
+        return <span>{formattedPrice}</span>;
+    }
+
+    const [randomImages, setRandomImages] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_random_images')
+            .then(response => response.json())
+            .then(data => setRandomImages(data))
+            .catch(error => console.error('Error al obtener las imágenes aleatorias:', error));
+    }, []);
 
     return (
         <div className="bg_main_page">
@@ -181,57 +215,24 @@ export const MainPage = () => {
                     <h1 className="title_section_products">PRODUCTOS</h1>
                 </div>
                 <div className="products">
-                    <a className="product_link" href="/view-publication">
-                        <div className="product">
-                            <div className="product_img">
-                                <img src={IMG2} alt="" />
+                    {publications.map(publication => (
+                        <a key={publication.ID_PUBLICATION} className="product_link"
+                            href={`/view-publication/${publication.ID_PUBLICATION}`}>
+                            <div className="product">
+                                <div className="product_img">
+                                    <img src={publication.URL_IMAGE_PUBLICATION} alt="" />
+                                </div>
+                                <div className="footer_product">
+                                    <h1 className="title_product">{publication.TITLE_PUBLICATION}</h1>
+                                    <p>{publication.CATEGORY_PUBLICATION}</p>
+                                    <p className="price"><ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
+                                </div>
+                                <div className="button_more_information">
+                                    <button>Más Información</button>
+                                </div>
                             </div>
-                            <div className="footer_product">
-                                <h1 className="title_product"> Zapatilla </h1>
-                                <p> Ropa </p>
-                                <p className="price">$3,99</p>
-                            </div>
-                            <div className="button_more_information">
-                                <button>
-                                    Más Información
-                                </button>
-                            </div>
-                        </div>
-                    </a>
-                    <a className="product_link" href="/view-publication">
-                        <div className="product">
-                            <div className="product_img">
-                                <img src={IMG2} alt="" />
-                            </div>
-                            <div className="footer_product">
-                                <h1 className="title_product"> Zapatilla </h1>
-                                <p> Ropa </p>
-                                <p className="price">$3,99</p>
-                            </div>
-                            <div className="button_more_information">
-                                <button>
-                                    Más Información
-                                </button>
-                            </div>
-                        </div>
-                    </a>
-                    <a className="product_link" href="/view-publication">
-                        <div className="product">
-                            <div className="product_img">
-                                <img src={IMG2} alt="" />
-                            </div>
-                            <div className="footer_product">
-                                <h1 className="title_product"> Zapatilla </h1>
-                                <p> Ropa </p>
-                                <p className="price">$3,99</p>
-                            </div>
-                            <div className="button_more_information">
-                                <button>
-                                    Más Información
-                                </button>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    ))}
                 </div>
             </div>
 

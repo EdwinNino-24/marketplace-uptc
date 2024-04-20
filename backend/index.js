@@ -1,18 +1,30 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import { login } from './authService.js';
-import { verifyToken } from './jwtService.js';
-import { createAccount } from './newUserService.js';
-import { activateAccount } from './activationService.js'; 
-import { searchAccountRecover, recoverAccount } from './recoveryService.js';
-import { enterPasswordRecover } from './passwordResetService.js';
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const admin = require('firebase-admin');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+const { login } = require('./authService.js');
+const { verifyToken } = require('./jwtService.js');
+const { createAccount } = require('./newUserService.js');
+const { activateAccount } = require('./activationService.js');
+const { searchAccountRecover, recoverAccount } = require('./recoveryService.js');
+const { enterPasswordRecover } = require('./passwordResetService.js');
+
+const { getPublication, getPublications } = require('./postsService.js');
+const { insertPost } = require('./postService.js');
+
+const { bucket } = require('./firebaseConfig.js');
+
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -72,57 +84,173 @@ app.post('/enter_password_recover', (req, res) => {
   enterPasswordRecover(newPassword, token, res); 
 });
 
+
+app.get('/publications', getPublications);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); 
+  }
+});
+
+app.get('/publications/:id', getPublication);
+
+const upload = multer({ storage });
+
+app.post('/get_post_images', async (req, res) => {
+  try {
+      const folderPath = req.body.folderPath; 
+
+      const [files] = await bucket.getFiles({ prefix: folderPath });
+      const urls = await Promise.all(
+          files.map(async (file) => {
+              const [url] = await file.getSignedUrl({
+                  action: 'read',
+                  expires: '03-01-2500', 
+              });
+              return url;
+          })
+      );
+      res.json({ image: urls });
+
+  } catch (error) {
+      console.error('Error fetching images:', error);
+      res.status(500).json({ message: 'Error fetching images' });
+  }
+});
+
+const { queryDatabase } = require('./databaseService.js');
+
+const fetchPublications = () => {
+  return new Promise((resolve, reject) => {
+    queryDatabase('SELECT * FROM PUBLICATIONS', (error, results, fields) => {
+      if (error) {
+        console.error('Error al obtener las publicaciones desde la base de datos:', error);
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+app.get('/get_random_images', async (req, res) => {
+  try {
+    const publications = await fetchPublications();
+    const randomImages = await Promise.all(
+      publications.map(async (publication) => {
+        const folderPath = publication.ID_PUBLICATION;
+
+        const [files] = await bucket.getFiles({ prefix: folderPath });
+
+        if (files.length > 0) {
+          // Obtener un índice aleatorio dentro del rango de archivos
+          const randomIndex = Math.floor(Math.random() * files.length);
+          // Obtener el archivo aleatorio
+          const randomFile = files[randomIndex];
+          // Obtener la URL firmada del archivo aleatorio
+          const [url] = await randomFile.getSignedUrl({
+            action: 'read',
+            expires: '03-01-2500',
+          });
+          
+          return { folderName: folderPath, imageUrl: url };
+        } else {
+          // Si no hay imágenes en la carpeta, manejar el caso según tus necesidades
+          return { folderName: folderPath, imageUrl: 'URL_POR_DEFECTO' };
+        }
+      })
+    );
+
+    // Una vez que se hayan obtenido todas las imágenes aleatorias, actualizar la base de datos
+    randomImages.forEach(({ folderName, imageUrl }) => {
+      const query = 'UPDATE PUBLICATIONS SET URL_IMAGE_PUBLICATION = ? WHERE ID_PUBLICATION = ?';
+      queryDatabase(query, [imageUrl, folderName], (error) => {
+        if (error) {
+          console.error('Error al actualizar la URL de imagen:', error);
+        } else {
+          console.log('URL de imagen actualizada correctamente');
+        }
+      });
+    });
+
+    console.log(randomImages);
+    res.json(randomImages);
+  } catch (error) {
+    console.error('Error al obtener las imágenes aleatorias de las publicaciones:', error);
+    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
+  }
+});
+
+
+
+
+
+app.post('/create_post', (req, res) => {
+  
+  const post = {
+    "title": req.body.title,
+    "type": req.body.type,
+    "category": req.body.category,
+    "description": req.body.description,
+    "price": req.body.price,  
+    "location": req.body.location,
+    "token": req.body.token
+  }
+
+  insertPost(post, res);
+});
+
+app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
+  try {
+
+    const id = req.body.id;
+    const folderPath = path.join(__dirname, 'uploads', id);
+
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath);
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: 'No se han recibido imágenes' });
+    }
+
+    const uploadedFiles = [];
+
+    for (const file of req.files) {
+      const newName = `${Date.now()}-${file.originalname}`;
+
+      const fileSnapshot = await bucket.upload(file.path, {
+        destination: `${id}/${newName}`,
+      });
+
+      const downloadURL = await fileSnapshot[0].getSignedUrl({
+        action: 'read',
+        expires: '01-01-3000', 
+      });
+
+      uploadedFiles.push(downloadURL[0]);
+    }
+
+    for (const file of req.files) {
+      fs.unlinkSync(file.path);
+    }
+
+    res.json({ message: 'Imágenes subidas exitosamente', uploadedFiles });
+  } catch (error) {
+    console.error('Error al subir las imágenes:', error);
+    res.status(500).json({ message: 'Error al subir las imágenes' });
+  }
+});
+
 app.listen(5000, () => {
   console.log('Servidor Express corriendo en el puerto 5000');
 });
 
-/*import express from 'express';
-import cors from 'cors';
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-
-app.listen(5000, () => console.log('Servidor corriendo en el puerto 5000'));
-
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  // Aquí puedes realizar la lógica de autenticación
-  // Verificar si el nombre de usuario y la contraseña son válidos
-  // Si son válidos, puedes devolver una respuesta con un token de autenticación
-  // Si no son válidos, puedes devolver un error
-  res.send('Solicitud de inicio de sesión recibida');
-});*/
-
-
-/*import express from 'express';
-import cors from 'cors';
-
-const app = express();
-app.use(express.json());
-app.use(cors());
-
-app.listen(5000, () => console.log("Servidor corriendo en el puerto 5000"));
-
-app.post("/submitForm", (req, res) => {
-  const { name, email } = req.body;
-  // Aquí puedes procesar los datos recibidos del formulario como desees
-  // Por ejemplo, podrías guardarlos en una base de datos
-  res.send(`Hola ${name}, tu email ${email} ha sido recibido correctamente.`);
-});
-*/
-
-/*import express from 'express';
-import cors from 'cors';
-
-const app = express();
-app.use(cors());
-
-app.listen(5000, ()=>console.log("app is running"));
-
-app.get("/getdata", (req,res)=>{
-  res.send("hello world")
-})*/
 
 /*const db = require('./user_crud'); 
 

@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export function sendMail(title, body, email, code) {
+function sendMail(title, body, email, code) {
   const mailOptions = {
     from: 'sac.marketplace.uptc@gmail.com',
     to: email + '@uptc.edu.co',
@@ -26,3 +26,5 @@ export function sendMail(title, body, email, code) {
     }
   });
 }
+
+module.exports = { sendMail };

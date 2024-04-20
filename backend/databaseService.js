@@ -1,4 +1,4 @@
-import mysql from 'mysql';
+const mysql = require('mysql');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -7,6 +7,8 @@ const connection = mysql.createConnection({
   database: 'marketplace_uptc'
 });
 
-export function queryDatabase(query, params, callback) {
+function queryDatabase(query, params, callback) {
   connection.query(query, params, callback);
 }
+
+module.exports = { queryDatabase };

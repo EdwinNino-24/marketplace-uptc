@@ -1,6 +1,6 @@
-import { queryDatabase } from './databaseService.js'; 
+const { queryDatabase } = require('./databaseService.js');
 
-export function insertUser(newUserAuth) {
+function insertUser(newUserAuth) {
   const newRegisterUser = {
     ID_USER: newUserAuth.ID_NEW_USER,
     CREATION_DATE_USER: new Date(),
@@ -21,7 +21,7 @@ export function insertUser(newUserAuth) {
   });
 }
 
-export function deleteNewUser(userId) {
+function deleteNewUser(userId) {
   queryDatabase('DELETE FROM NEW_USERS WHERE ID_NEW_USER = ?', userId, (err, results) => {
     if (err) {
       console.error('Error al eliminar usuario de la tabla NEW_USERS:', err);
@@ -30,3 +30,5 @@ export function deleteNewUser(userId) {
     console.log('Usuario eliminado de la tabla NEW_USERS');
   });
 }
+
+module.exports = { insertUser, deleteNewUser };
