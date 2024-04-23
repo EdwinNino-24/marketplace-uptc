@@ -12,6 +12,12 @@ function verifyToken(token, callback) {
   });
 }
 
+function generateToken(email, session, activate) {
+  const secretKey = '2404'; // Considera mover la clave secreta a una variable de entorno
+  const token = jwt.sign({ username: email, session: session, activate: activate }, secretKey);
+  return token;
+}
+
 function decodedToken(token) {
   let user;
   jwt.verify(token, secretKey, (err, decoded) => {
@@ -25,4 +31,4 @@ function decodedToken(token) {
 }
 
 
-module.exports = { verifyToken, decodedToken };
+module.exports = { verifyToken, generateToken, decodedToken };
