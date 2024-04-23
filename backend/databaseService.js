@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const util = require('util');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -7,8 +8,11 @@ const connection = mysql.createConnection({
   database: 'marketplace_uptc'
 });
 
-function queryDatabase(query, params, callback) {
-  connection.query(query, params, callback);
+// Promisify the query function
+const query = util.promisify(connection.query).bind(connection);
+
+function queryDatabase(sql, params) {
+  return query(sql, params);
 }
 
 module.exports = { queryDatabase };

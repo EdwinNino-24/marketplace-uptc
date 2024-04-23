@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../styles/Header.css';
 import '../styles/Banner.css';
 import '../styles/ImageSlider.css';
-import IMG2 from "../images/img01.jpg";
+
 import BANNER1 from "../images/3.jpeg";
 import BANNER2 from "../images/4.jpeg";
 import BANNER3 from "../images/banner3.jpeg";
@@ -18,24 +18,24 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export const MainPage = () => {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState("Iniciar Sesión");
 
     const send_token_user = () => {
-        Axios.post('http://localhost:5000/user_profile', {
-            token: localStorage.getItem('token'),
-        })
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log('No hay token disponible.');
+            setUser("Iniciar Sesión");
+            return;
+        }
+
+        Axios.post('http://localhost:5000/user_profile', { token })
             .then(response => {
-                const data = response.data;
-                console.log(data.user);
-                if (data.user != null) {
-                    setUser(data.user);
-                }
-                else {
-                    setUser("Iniciar Sesión")
-                }
+                const { user } = response.data;
+                setUser(user ? user : "Iniciar Sesión");
             })
             .catch(error => {
                 console.error('Error al iniciar sesión:', error);
+                setUser("Iniciar Sesión");
             });
     };
 
@@ -100,6 +100,24 @@ export const MainPage = () => {
             .catch(error => console.error('Error al obtener las publicaciones:', error));
     }, []);
 
+    const [productsPosts, setProductsPosts] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/products_posts')
+            .then(response => response.json())
+            .then(data => setProductsPosts(data))
+            .catch(error => console.error('Error al obtener las publicaciones:', error));
+    }, []);
+
+    const [servicesPosts, setServicesPosts] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/services_posts')
+            .then(response => response.json())
+            .then(data => setServicesPosts(data))
+            .catch(error => console.error('Error al obtener las publicaciones:', error));
+    }, []);
+
     const formatToColombianPesos = (value) => {
         const formattedValue = Number(value).toLocaleString('es-CO', {
             style: 'currency',
@@ -124,6 +142,8 @@ export const MainPage = () => {
             .catch(error => console.error('Error al obtener las imágenes aleatorias:', error));
     }, []);
 
+    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
+
     return (
         <div className="bg_main_page">
             <header className="header">
@@ -142,13 +162,13 @@ export const MainPage = () => {
                                 <a className="user_option" href="/create-publication">Publicar</a>
                             </li>
                             <li>
-                                <a className="user_option" href="/services-page">Mis Ofertas</a>
+                                <a className="user_option" href="/my-publications-page">Mis Ofertas</a>
                             </li>
                             <li>
-                                <a className="user_option" href="/create-publication">Mis Chats</a>
+                                <a className="user_option" href="/my-publications-page">Mis Chats</a>
                             </li>
                             <li>
-                                <a className="user_option" href="/user-profile">{user}</a>
+                                <a className="user_option" href={href_user_profile}>{user}</a>
                             </li>
                         </ul>
                     </div>
@@ -210,25 +230,22 @@ export const MainPage = () => {
                     </div>
                 </Slider>
             </div>
-            <div className="publications_products">
-                <div className="section_products">
-                    <h1 className="title_section_products">PRODUCTOS</h1>
+            <div className="general_posts">
+                <div className="section_title">
+                    <h1 className="section_title_posts">PRODUCTOS</h1>
                 </div>
-                <div className="products">
-                    {publications.map(publication => (
-                        <a key={publication.ID_PUBLICATION} className="product_link"
+                <div className="posts">
+                    {productsPosts.map(publication => (
+                        <a key={publication.ID_PUBLICATION} className="post_link"
                             href={`/view-publication/${publication.ID_PUBLICATION}`}>
-                            <div className="product">
-                                <div className="product_img">
+                            <div className="post">
+                                <div className="post_img">
                                     <img src={publication.URL_IMAGE_PUBLICATION} alt="" />
                                 </div>
-                                <div className="footer_product">
-                                    <h1 className="title_product">{publication.TITLE_PUBLICATION}</h1>
-                                    <p>{publication.CATEGORY_PUBLICATION}</p>
+                                <div className="footer_post">
                                     <p className="price"><ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
-                                </div>
-                                <div className="button_more_information">
-                                    <button>Más Información</button>
+                                    <h1 className="title_post">{publication.TITLE_PUBLICATION}</h1>
+                                    <p>SEDE / SECCIONAL {publication.SELLER_LOCATION}</p>
                                 </div>
                             </div>
                         </a>
@@ -236,62 +253,26 @@ export const MainPage = () => {
                 </div>
             </div>
 
-            <div className="publications_services">
-                <div className="section_services">
-                    <h1 className="title_section_services">SERVICIOS</h1>
+            <div className="general_posts">
+                <div className="section_title">
+                    <h1 className="section_title_posts">SERVICIOS</h1>
                 </div>
-                <div className="services">
-                    <a className="service_link" href="/view-publication">
-                        <div className="service">
-                            <div className="service_img">
-                                <img src={IMG2} alt="" />
+                <div className="posts">
+                    {servicesPosts.map(publication => (
+                        <a key={publication.ID_PUBLICATION} className="post_link"
+                            href={`/view-publication/${publication.ID_PUBLICATION}`}>
+                            <div className="post">
+                                <div className="post_img">
+                                    <img src={publication.URL_IMAGE_PUBLICATION} alt="" />
+                                </div>
+                                <div className="footer_post">
+                                    <p className="price"><ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
+                                    <h1 className="title_post">{publication.TITLE_PUBLICATION}</h1>
+                                    <p>SEDE / SECCIONAL {publication.SELLER_LOCATION}</p>
+                                </div>
                             </div>
-                            <div className="footer_service">
-                                <h1 className="title_service"> Zapatilla </h1>
-                                <p> Ropa </p>
-                                <p className="price">$3,99</p>
-                            </div>
-                            <div className="button_more_information">
-                                <button>
-                                    Más Información
-                                </button>
-                            </div>
-                        </div>
-                    </a>
-                    <a className="service_link" href="/view-publication">
-                        <div className="service">
-                            <div className="service_img">
-                                <img src={IMG2} alt="" />
-                            </div>
-                            <div className="footer_service">
-                                <h1 className="title_service"> Zapatilla </h1>
-                                <p> Ropa </p>
-                                <p className="price">$3,99</p>
-                            </div>
-                            <div className="button_more_information">
-                                <button>
-                                    Más Información
-                                </button>
-                            </div>
-                        </div>
-                    </a>
-                    <a className="service_link" href="/view-publication">
-                        <div className="service">
-                            <div className="service_img">
-                                <img src={IMG2} alt="" />
-                            </div>
-                            <div className="footer_service">
-                                <h1 className="title_service"> Zapatilla </h1>
-                                <p> Ropa </p>
-                                <p className="price">$3,99</p>
-                            </div>
-                            <div className="button_more_information">
-                                <button>
-                                    Más Información
-                                </button>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    ))}
                 </div>
             </div>
         </div>

@@ -5,7 +5,6 @@ import { FaArrowAltCircleLeft} from "react-icons/fa";
 import { useState } from 'react';
 import Modal from 'react-modal';
 
-
 Modal.setAppElement('#root');
 
 const ActivateAccount = () => {
@@ -20,10 +19,9 @@ const ActivateAccount = () => {
 
     const handleNumericChange = (event) => {
         const value = event.target.value;
-        const regex = /^[0-9\b]+$/; 
-        if (value === '' || regex.test(value)) {
+        
         setNumericValue(value);
-        }
+        
     };
 
     const [mensaje, setMensaje] = useState('');
@@ -37,15 +35,16 @@ const ActivateAccount = () => {
                 headers: {
                 'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ numericValue }) // Envías solo el código en el cuerpo de la solicitud
+                body: JSON.stringify({ code: numericValue, token: (localStorage.getItem('token')) }) // Envías solo el código en el cuerpo de la solicitud
             });
-            const data = await response.text();
-            setMensaje(data);
-            console.log(data);
+            const data = await response.json();
         
-            if (data === '¡El código que ingresaste no fue el que te enviamos!') {
+            if (data.code === '0') {
+                setMensaje("¡El código que ingresaste, no fue el que te enviamos!");
                 setModalIsOpen(true);
             } else {
+                localStorage.setItem('token', data.token);
+                setMensaje("Tu cuenta ha sido activada exitosamente!");
                 setModal2IsOpen(true);
             }
             } catch (error) {
@@ -62,7 +61,7 @@ const ActivateAccount = () => {
     };
     const handleOK2 = () => {
         setModal2IsOpen(false);
-        window.location.href = '/login';
+        window.location.href = '/main-page';
     };
 
     const customStyles = {

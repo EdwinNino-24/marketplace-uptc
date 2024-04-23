@@ -13,7 +13,7 @@ function login(username, password, callback) {
     if (results.length > 0) {
       const user = results[0];
       if (user.PASSWORD_USER === password) {
-        const token = jwt.sign({ username: user.ID_USER }, secretKey);
+        const token = jwt.sign({ username: user.ID_USER, activate: user }, secretKey);
         callback(null, { user: user.ID_USER, token: token, code: '0' });
       } else {
         callback(null, { user: user.ID_USER, token: null, code: '1' });

@@ -38,14 +38,14 @@ const RegisterForm = () => {
         },
         body: JSON.stringify(formData)
       });
-      const data = await response.text(); // Recibimos el string de la respuesta
-      setMensaje(data); // Establecemos el string en el estado 'mensaje'
-      console.log(data); // Mostramos el string en la consola
+      const data = await response.json();
 
-      if (data === '¡Ya hay una cuenta registrada con el usuario institucional ingresado!') {
+      if (data.code === '0') {
+        setMensaje("¡Ya tenemos una cuenta registrada con este usuario!");
         setModalIsOpen(true);
       }
       else {
+        localStorage.setItem('token', data.token);
         window.location.href = '/activate-account';
       }
     } catch (error) {

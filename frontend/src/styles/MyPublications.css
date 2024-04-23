@@ -1,38 +1,91 @@
-/*=================================My-Publications================================*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root {
+  --my-color1-my_publications: #F7C600;
+  --my-color2-my_publications: #1E1A16;
+  --my-color3-my_publications: #FFF;
+  --my-color4-my_publications: gray;
+  --my-color5-my_publications: #ecedec;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.section_top{
+  padding-top: 10%;
+  display: flex;
+  background: var(--my-color5-my_publications);
+  padding-bottom: 1%;
+}
+.section_title_my_posts{
+  width: 48%;
+  font-size: 4rem;
+  height: auto;
+  padding-left: 2.5%;
+}
+.shortcut_create_new_publication{
+  background: darkgreen;
+  font-size: 3rem;
+  font-family: sans-serif;
+  font-weight: bold;
+  height: 100%;
+  width: 5rem;
+  cursor: pointer;
+  color: var(--my-color3-my_publications);
+}
+.shortcut_create_new_publication:hover{
+  color: var(--my-color1-my_publications);
+}
+
+.my-publications{
+  padding: 1rem 1rem;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(35rem, 1fr));
+  gap: 3rem 2rem;
+  box-sizing: border-box;
+  background: var(--my-color5-my_publications);
+}
+
 .title-my-publications{
     font-size: 4rem;
     font-weight: bold;
     color: rgba(30,27,23,0.9);
   }
 
-.my-box-publication{
+.my_publication{
   display: flex;
+  width: 100%;
+  height: autos;
 }
 
-.my-publication-image{
+.div_image_post{
   float: left;
   width: 33.3%;
 }
-.image-my-publication{
+.image_my_post{
   width: 100%;
   margin-left: 5%;
   margin-top: 15%;
 }
 
-.info-my-publication{
+.info_my_post{
   float: left;
   width: 33.3%;
   margin-left: 5%;
   margin-top: 5%;
-  font-family: sans-serif;
+  align-items: center;
+  align-content: center;
 }
-.info-my-publication h1{
+.info_my_post h1{
   font-family: sans-serif;
   font-size: 2.5rem;
-  font-weight: bold;
+  font-weight: 600;
 }
-.info-my-publication p{
-  font-family: sans-serif;
+.info_my_post p{
   font-size: 2rem;
 }
 
@@ -72,14 +125,7 @@
 }
 
 
-  .my-publications{
-    padding: 1rem 1rem;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-    gap: 3rem 2rem;
-    box-sizing: border-box;
-  }
+  
   .my-publication{
     display: flex;
     width: 100%;
@@ -94,30 +140,5 @@
     border: 6px solid #08a05c55;
   }
 
-  .hello{
-    padding-top: 12rem;
-    display: flex;
-    width: 100%;
-  }
-  .title-my-publications{
-    float: left;
-    width: 45%;
-  }
-  .create-new-publication{
-    background: rgb(1, 51, 1);
-    font-size: 3rem;
-    font-family: sans-serif;
-    font-weight: bold;
-    color: #b49c0c;
-    height:4rem;
-    margin-top: 0.8rem;
-    width: 5rem;
-    cursor: pointer;
-  }
+ 
   
-  /*=================================MEDIA================================*/
-  @media only screen and (max-width: 600px){
-    header ul {
-      display: none;
-    }
-  }

@@ -16,7 +16,7 @@ function decodedToken(token) {
   let user;
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      callback(err, null);
+
     } else {
       user = decoded.username;
     }

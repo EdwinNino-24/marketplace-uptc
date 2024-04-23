@@ -1,34 +1,46 @@
-const { insertUser, deleteNewUser } = require('./userService.js');
 const { queryDatabase } = require('./databaseService.js');
+const { decodedToken } = require('./jwtService.js');
+const { checkCode } = require('./hashService.js');
 
-function activateAccount(code, res) {
-  queryDatabase('SELECT * FROM NEW_USERS WHERE CODE_ACTIVATION_NEW_USER = ?', code, (err, results) => {
-    if (err) {
-      console.error('Error al buscar usuario con el código de activación:', err);
-      res.status(500).json({ message: 'Error interno del servidor' });
-      return;
+async function activateAccount(req, res) {
+    const user = decodedToken(req.body.token);
+    console.log(user);
+    console.log(req.numericValue);
+    try {
+        // Primero, recuperamos la entrada de la base de datos basada en el ID del usuario o algún otro identificador si es necesario
+        const results = await queryDatabase('SELECT * FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [user]); // Asumimos que puedes identificar al usuario de alguna manera
+        if (results.length === 0) {
+            console.log('Usuario no encontrado');
+            //res.send("0");
+            return;
+        }
+
+        const usuarioEncontrado = results[0];
+
+        // Aquí se verifica el código utilizando verifyCode
+        const isValidCode = await checkCode(req.body.code, usuarioEncontrado.CODE_CONFIRMATION_HASHED);
+        if (!isValidCode) {
+            console.log('Código de activación inválido');
+            const token = jwt.sign({ username: email, sesion: false, activate: false }, '2404');
+            res.json({ user: email, code: "0", token: token});
+            return;
+        }
+
+        // Si el código es correcto, actualizamos el estado de la cuenta
+        const updateResults = await queryDatabase('UPDATE ACCOUNTS SET STATE_ACCOUNT = TRUE WHERE ID_ACCOUNT = ?', [usuarioEncontrado.ID_ACCOUNT]);
+        if (updateResults.affectedRows === 0) {
+            console.error('No se actualizó ningún registro, posible error en los datos.');
+            res.status(500).json({ message: 'Error al activar la cuenta, no se encontró el registro correspondiente.' });
+        } else {
+            console.log('Cuenta activada exitosamente');
+            const token = jwt.sign({ username: email, sesion: true, activate: true }, '2404');
+            res.json({ user: email, code: "1", token: token});
+        }
+    } catch (err) {
+        console.error('Error durante la activación de la cuenta:', err);
+        res.status(500).json({ message: 'Error interno del servidor' });
     }
-
-    if (results.length === 0) {
-      console.log('Usuario no encontrado');
-      res.send("¡El código que ingresaste no fue el que te enviamos!");
-    } else {
-      const usuarioEncontrado = results[0];
-      console.log('Usuario encontrado:', usuarioEncontrado);
-      
-      const newUserAuth = {
-        ID_NEW_USER: usuarioEncontrado.ID_NEW_USER,
-        NAMES_NEW_USER: usuarioEncontrado.NAMES_NEW_USER,
-        LASTNAMES_NEW_USER: usuarioEncontrado.LASTNAMES_NEW_USER,
-        PASSWORD_NEW_USER: usuarioEncontrado.PASSWORD_NEW_USER,
-        CODE_ACTIVATION_NEW_USER: usuarioEncontrado.CODE_ACTIVATION_NEW_USER
-      };
-
-      insertUser(newUserAuth);
-      deleteNewUser(newUserAuth.ID_NEW_USER);
-      res.send("¡Tu cuenta se ha creado exitosamente!");
-    }
-  });
 }
+
 
 module.exports = { activateAccount };

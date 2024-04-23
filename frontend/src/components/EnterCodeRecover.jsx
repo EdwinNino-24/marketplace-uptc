@@ -20,10 +20,9 @@ const EnterCodeRecover = () => {
 
   const handleNumericChange = (event) => {
     const value = event.target.value;
-    const regex = /^[0-9\b]+$/;
-    if (value === '' || regex.test(value)) {
-      setNumericValue(value);
-    }
+
+    setNumericValue(value);
+
   };
 
   const [mensaje, setMensaje] = useState('');
@@ -39,18 +38,19 @@ const EnterCodeRecover = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ numericValue })
+          body: JSON.stringify({ code: numericValue, token: localStorage.getItem('token') })
         });
 
         const data = await response.json();
 
-        if (data.code === '0') {
+        if (data.code === '1') {
           setMensaje("¡Recuperación de Cuenta Exitosa!")
           setModal2IsOpen(true);
           localStorage.setItem('token', data.token);
         }
-        else if (data.code === '1') {
+        else if (data.code === '0') {
           setMensaje("¡El código de seguridad que ingresaste no fue el que te enviamos!")
+          localStorage.setItem('token', data.token);
           setModalIsOpen(true);
         }
 

@@ -12,6 +12,30 @@ function getPublications(req, res) {
     });
 }
 
+function getProductsPosts(req, res) {
+    const query = 'SELECT * FROM publications WHERE TYPE_PUBLICATION = "PRODUCTO"';
+    queryDatabase(query, (error, results) => {
+        if (error) {
+            console.error('Error al obtener las publicaciones:', error);
+            res.status(500).json({ error: 'Error interno del servidor' });
+            return;
+        }
+        res.json(results); // Envía las publicaciones como respuesta
+    });
+}
+
+function getServicesPosts(req, res) {
+    const query = 'SELECT * FROM publications WHERE TYPE_PUBLICATION = "SERVICIO"';
+    queryDatabase(query, (error, results) => {
+        if (error) {
+            console.error('Error al obtener las publicaciones:', error);
+            res.status(500).json({ error: 'Error interno del servidor' });
+            return;
+        }
+        res.json(results); // Envía las publicaciones como respuesta
+    });
+}
+
 function getPublication(req, res) {
     const id = req.params.id; // Obtener el ID de la URL
     // Consulta SQL para buscar la publicación por su ID en la tabla PUBLICATIONS
@@ -35,4 +59,4 @@ function getPublication(req, res) {
     });
 }
 
-module.exports = { getPublication, getPublications };
+module.exports = { getPublication, getPublications, getProductsPosts, getServicesPosts };

@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+.notification{
+    display: block;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter';
+    width: 100%;
+    justify-content: center;
+}
+.title_notification{
+    font-weight: 800;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 2.5rem;
+    width: 100%;
+    margin: 1rem 0rem 0.5rem 0rem;
+}
+.subtitle_notification{
+    font-weight: 500;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 1.8rem;
+    width: 100%;
+    margin: 0.5rem 0rem 0.5rem 0rem;
+}
+.button_notification{
+    width: 100%;
+    margin: 1rem 0rem 0rem 0rem;
+}
+.ok_notification{
+    background: green;
+    font-size: 2rem;
+    color: var(--my-color3-register);
+    cursor: pointer;
+    width: 30%;
+}
+.ok_notification:hover{
+    background: darkgreen;
+}
+
+
+:root {
+    --my-color1-register: #F7C600; 
+    --my-color2-register: #1E1A16; 
+    --my-color3-register: #FFF;
+    --my-color4-register: gray; 
+}
+  
+*{
+    font-family: 'Inter', sans-serif;
+}

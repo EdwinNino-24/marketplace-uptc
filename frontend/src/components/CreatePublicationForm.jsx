@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+
 import '../styles/CreatePublicationForm.css';
+import '../styles/Notification.css';
+
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
@@ -113,6 +116,8 @@ const CreatePublicationForm = () => {
                     const data = await response.json();
                     const id_post = data.id_post;
                     uploadImages(id_post);
+                    setMensaje("¡La publicación se ha creado exitosamente!");
+                    setModalCreatePostIsOpen(true);
                 } else {
                     console.error('Error al enviar el formulario:', response.statusText);
                 }
@@ -127,7 +132,7 @@ const CreatePublicationForm = () => {
     const [canPublish, setCanPublish] = useState(false);
 
     const handleImageChange = (event) => {
-        if(images.length === 0) {
+        if (images.length === 0) {
             setModalIsOpen(true);
         }
         const hasImages = images.length > 0;
@@ -142,11 +147,18 @@ const CreatePublicationForm = () => {
 
     const customStyles = {
         content: {
-            width: '45%', // Cambia el porcentaje según tu preferencia
+            width: '50%', // Cambia el porcentaje según tu preferencia
             height: '30%', // Cambia el porcentaje según tu preferencia
             margin: 'auto', // Para centrar el modal horizontalmente
             backgroundColor: 'white', // Color de fondo del modal
         },
+    };
+
+    const [mensaje, setMensaje] = useState('');
+    const [modalCreatePostIsOpen, setModalCreatePostIsOpen] = useState(false);
+    const handleConfirmationCreatePost = () => {
+        setModalCreatePostIsOpen(false);
+        window.location.href = '/my-publications-page';
     };
 
     return (
@@ -171,7 +183,7 @@ const CreatePublicationForm = () => {
                                     {images.map((image, index) => (
                                         <div key={index} className="image_container">
                                             <img src={image.preview} className='preview_image' alt={`Imagen ${index}`} />
-                                            <button className="button_publicate" onClick={() => removeImage(index)}>Eliminar</button>
+                                            <button className="button_remove" onClick={() => removeImage(index)}>Eliminar</button>
                                         </div>
                                     ))}
                                 </div>
@@ -240,11 +252,25 @@ const CreatePublicationForm = () => {
                                     contentLabel="Notificación"
                                     style={customStyles}
                                 >
-                                    <div className='notification_account_created'>
-                                        <h1 className='title_notification_account_created'>Atención</h1>
-                                        <h2 className='subtitle_notification_account_created'>Carga al menos una imagen para tu publicación</h2>
-                                        <div className='button_notification_account_created'>
-                                            <button className="ok_notification_account_created" onClick={handleOK}>Continuar</button>
+                                    <div className='notification'>
+                                        <h1 className='title_notification'>Atención</h1>
+                                        <h2 className='subtitle_notification'>¡Cargue al menos una imagen para crear tu publicación!</h2>
+                                        <div className='button_notification'>
+                                            <button className="ok_notification" onClick={handleOK}>Continuar</button>
+                                        </div>
+                                    </div>
+                                </Modal>
+                                <Modal
+                                    isOpen={modalCreatePostIsOpen}
+                                    onRequestClose={() => setModalCreatePostIsOpen(true)}
+                                    contentLabel="Notificación"
+                                    style={customStyles}
+                                >
+                                    <div className='notification'>
+                                        <h1 className='title_notification'>Atención</h1>
+                                        <h2 className='subtitle_notification'>{mensaje}</h2>
+                                        <div className='button_notification'>
+                                            <button className="ok_notification" onClick={handleConfirmationCreatePost}>Continuar</button>
                                         </div>
                                     </div>
                                 </Modal>

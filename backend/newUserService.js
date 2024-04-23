@@ -1,60 +1,76 @@
 const { sendMail } = require('./emailService.js');
 const { queryDatabase } = require('./databaseService.js');
+const { hashCode } = require('./hashService.js');
+const jwt = require('jsonwebtoken');
 
-function createAccount(formData, callback) {
+function generateRandomCode(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+async function createAccount(formData, res) {
   const { names, lastnames, email, password } = formData;
-  const code = Math.floor(100000 + Math.random() * 900000);
+  const code_activation = generateRandomCode(6);
+  const code_recover = generateRandomCode(6);
 
-  console.log('Nombres:', names);
-  console.log('Apellidos:', lastnames);
-  console.log('Correo electrónico:', email);
-  console.log('Contraseña:', password);
+  try {
+    // Await the completion of the password hashing
+    const passwordHashed = await hashCode(password);
+    const code_activation_hashed = await hashCode(code_activation);
+    console.log(code_activation);
+    const code_recover_hashed = await hashCode(code_recover);
 
-  const newUser = {
-    ID_NEW_USER: email,
-    NAMES_NEW_USER: names,
-    LASTNAMES_NEW_USER: lastnames,
-    PASSWORD_NEW_USER: password,
-    CODE_ACTIVATION_NEW_USER: code
-  };
+    // Check for existing account and retrieve the personal ID
+    const accountCheck = await queryDatabase('SELECT ID_ACCOUNT, STATE_ACCOUNT, ID_PERSONAL FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [email]);
+    if (accountCheck.length > 0) {
+      const { STATE_ACCOUNT, ID_PERSONAL } = accountCheck[0];
+      if (STATE_ACCOUNT) {
+        console.log('An account with this email already exists.', null);
+        res.json({code: "0"});
+        return;
+      } else {
+        // Update PERSONAL_INFORMATION based on the ID_PERSONAL retrieved
+        await queryDatabase('UPDATE PERSONAL_INFORMATION SET NAMES=?, LASTNAMES=? WHERE ID_PERSONAL=?', [names, lastnames, ID_PERSONAL]);
 
-  queryDatabase('SELECT ID_USER FROM USERS WHERE ID_USER = ?', newUser.ID_NEW_USER, (error, results, fields) => {
-    if (error) {
-      callback('Error al verificar el ID_NEW_USER en la tabla USERS', null);
-      return;
-    }
-    if (results.length > 0) {
-      callback('¡Ya hay una cuenta registrada con el usuario institucional ingresado!', null);
-      return;
-    }
-    queryDatabase('SELECT * FROM NEW_USERS WHERE ID_NEW_USER = ?', newUser.ID_NEW_USER, (error, results, fields) => {
-      if (error) {
-        callback('Error al verificar el ID_NEW_USER en la tabla NEW_USERS', null);
+        // Update the existing inactive account in ACCOUNTS
+        await queryDatabase(
+          'UPDATE ACCOUNTS SET PASSWORD_HASHED=?, CODE_CONFIRMATION_HASHED=?, CODE_SECURITY_HASHED=?, UPDATE_DATE=NOW(), STATE_ACCOUNT=? WHERE ID_ACCOUNT=?',
+          [passwordHashed, code_activation_hashed, code_recover_hashed, false, email]
+        );
+        sendMail("REACTIVA TU CUENTA DE MARKETPLACE - UPTC", "reactivación", email, code_activation, () => {
+          console.log('Reactivation email sent.');
+        });
+        const token = jwt.sign({ username: email, sesion: false, activate: false }, '2404');
+        res.json({ user: email, token: token});
+        console.log(null, 'Account reactivated and updated successfully.');
         return;
       }
-      if (results.length > 0) {
-        queryDatabase('UPDATE NEW_USERS SET NAMES_NEW_USER = ?, LASTNAMES_NEW_USER = ?, PASSWORD_NEW_USER = ?, CODE_ACTIVATION_NEW_USER = ? WHERE ID_NEW_USER = ?', [newUser.NAMES_NEW_USER, newUser.LASTNAMES_NEW_USER, newUser.PASSWORD_NEW_USER, newUser.CODE_ACTIVATION_NEW_USER, newUser.ID_NEW_USER], (error, results, fields) => {
-          if (error) {
-            callback('Error al actualizar el CODE_ACTIVATION_NEW_USER en la tabla NEW_USERS', null);
-            return;
-          }
-          sendMail("ACTIVA TU CUENTA DE MARKETPLACE - UPTC", "activación", email, code);
-          console.log('El ID_NEW_USER ya existe en la tabla NEW_USERS, se ha actualizado el campo CODE_ACTIVATION_NEW_USER');
-          callback(null, 'Cuenta creada exitosamente');
-        });
-      } else {
-        queryDatabase('INSERT INTO NEW_USERS SET ?', newUser, (error, results, fields) => {
-          if (error) {
-            callback('Error al insertar un nuevo usuario en la tabla NEW_USERS', null);
-            return;
-          }
-          sendMail("ACTIVA TU CUENTA DE MARKETPLACE - UPTC", "activación", email, code);
-          console.log('Nuevo usuario insertado en la tabla NEW_USERS');
-          callback(null, 'Cuenta creada exitosamente');
-        });
-      }
+    }
+
+    // Insert into PERSONAL_INFORMATION and get the insertId
+    const personalInfo = await queryDatabase('INSERT INTO PERSONAL_INFORMATION (NAMES, LASTNAMES) VALUES (?, ?)', [names, lastnames]);
+    const personalId = personalInfo.insertId;
+
+    // Insert new account into ACCOUNTS
+    await queryDatabase('INSERT INTO ACCOUNTS (ID_ACCOUNT, ID_PERSONAL, ID_TYPE, CREATION_DATE, CODE_CONFIRMATION_HASHED, PASSWORD_HASHED, CODE_SECURITY_HASHED, UPDATE_DATE, STATE_ACCOUNT) VALUES (?, ?, ?, NOW(), ?, ?, ?, NOW(), ?)',
+      [email, personalId, 2, code_activation_hashed, passwordHashed, code_recover_hashed, false]);
+
+    // Send activation email
+    sendMail("ACTIVA TU CUENTA DE MARKETPLACE UPTC", "activación", email, code_activation, () => {
+      console.log('Activation email sent.');
     });
-  });
+    const token = jwt.sign({ username: email }, '2404');
+    res.json({ user: email, token: token});
+    console.log(null, 'Account successfully created');
+  } catch (error) {
+    console.log('An error occurred: ' + error.message, null);
+  }
 }
+
 
 module.exports = { createAccount };

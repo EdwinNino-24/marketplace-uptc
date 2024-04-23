@@ -13,7 +13,7 @@ const { activateAccount } = require('./activationService.js');
 const { searchAccountRecover, recoverAccount } = require('./recoveryService.js');
 const { enterPasswordRecover } = require('./passwordResetService.js');
 
-const { getPublication, getPublications } = require('./postsService.js');
+const { getPublication, getPublications, getProductsPosts, getServicesPosts } = require('./postsService.js');
 const { insertPost } = require('./postService.js');
 
 const { bucket } = require('./firebaseConfig.js');
@@ -53,39 +53,31 @@ app.post('/user_profile', (req, res) => {
 
 app.post('/crear-cuenta', (req, res) => {
   const formData = req.body;
-  createAccount(formData, (error, message) => {
-    if (error) {
-      console.error('Error al crear la cuenta:', error);
-      res.status(500).json({ message: 'Error al crear la cuenta' });
-    } else {
-      console.log(message);
-      res.send(message);
-    }
-  });
+  createAccount(formData, res);
 });
 
 app.post('/code_activation', (req, res) => {
-  const code = req.body;
-  activateAccount(code.numericValue, res);
+  activateAccount(req, res);
 });
 
 app.post('/search_account_recover', (req, res) => {
-  const id_user = req.body;
-  searchAccountRecover(id_user.inputValue, res);
+  searchAccountRecover(req, res);
 });
 
 app.post('/recover_account', (req, res) => {
-  const { numericValue } = req.body;
-  recoverAccount(numericValue, res);
+  recoverAccount(req, res);
 });
 
 app.post('/enter_password_recover', (req, res) => {
-  const { newPassword, token } = req.body;
-  enterPasswordRecover(newPassword, token, res); 
+  enterPasswordRecover(req, res); 
 });
 
 
 app.get('/publications', getPublications);
+
+app.get('/products_posts', getProductsPosts);
+
+app.get('/services_posts', getServicesPosts);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -249,6 +241,8 @@ app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
 app.listen(5000, () => {
   console.log('Servidor Express corriendo en el puerto 5000');
 });
+
+
 
 
 
