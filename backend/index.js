@@ -7,14 +7,18 @@ const fs = require('fs');
 const path = require('path');
 
 const { login } = require('./authService.js');
-const { verifyToken } = require('./jwtService.js');
-const { createAccount } = require('./newUserService.js');
+const { decodedToken } = require('./jwtService.js');
+
+const { createAccount, resendCodeActivation } = require('./newUserService.js');
 const { activateAccount } = require('./activationService.js');
-const { searchAccountRecover, recoverAccount } = require('./recoveryService.js');
+
+const { searchAccountRecover, recoverAccount, resendCodeRecovery } = require('./recoveryService.js');
 const { enterPasswordRecover } = require('./passwordResetService.js');
 
 const { getPublication, getPublications, getProductsPosts, getServicesPosts } = require('./postsService.js');
 const { insertPost } = require('./postService.js');
+
+const { getTypePosts, getCategories, getLocations } = require('./types.js');
 
 const { bucket } = require('./firebaseConfig.js');
 
@@ -27,28 +31,11 @@ app.use(bodyParser.json());
 
 
 app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  login(username, password, (error, result) => {
-    if (error) {
-      console.error('Error al autenticar usuario:', error);
-      res.status(500).json({ message: 'Error interno del servidor' });
-      return;
-    }
-    res.json(result);
-  });
+  login(req, res);
 });
 
 app.post('/user_profile', (req, res) => {
-  const token = req.body.token;
-  verifyToken(token, (err, decoded) => {
-    if (err) {
-      console.error('Error al decodificar el token:', err);
-      res.status(401).json({ message: 'Token inválido' });
-    } else {
-      console.log('Token decodificado:', decoded);
-      res.json({ user: decoded.username });
-    }
-  });
+  res.json({user: decodedToken(req.body.token)});
 });
 
 app.post('/crear-cuenta', (req, res) => {
@@ -60,12 +47,20 @@ app.post('/code_activation', (req, res) => {
   activateAccount(req, res);
 });
 
+app.post('/resend_code_activation', (req, res) => {
+  resendCodeActivation(req, res);
+});
+
 app.post('/search_account_recover', (req, res) => {
   searchAccountRecover(req, res);
 });
 
 app.post('/recover_account', (req, res) => {
   recoverAccount(req, res);
+});
+
+app.post('/resend_code_recover', (req, res) => {
+  resendCodeRecovery(req, res);
 });
 
 app.post('/enter_password_recover', (req, res) => {
@@ -181,6 +176,18 @@ app.get('/get_random_images', async (req, res) => {
 
 
 
+app.get('/get_type_offers', (req, res) => {
+  getTypePosts(req, res);
+});
+
+app.get('/get_categories', (req, res) => {
+  getCategories(req, res);
+});
+
+app.get('/get_locations', (req, res) => {
+  getLocations(req, res);
+});
+
 app.post('/create_post', (req, res) => {
   
   const post = {
@@ -192,6 +199,8 @@ app.post('/create_post', (req, res) => {
     "location": req.body.location,
     "token": req.body.token
   }
+
+  console.log(post);
 
   insertPost(post, res);
 });

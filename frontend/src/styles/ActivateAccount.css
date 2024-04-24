@@ -85,12 +85,12 @@
     width: 100%;
 }
 
-.wrapper_activate_account{
+.wrapper_activate_account_ra{
     margin-top: 2.5%;
     width: 40%;
     margin-left: 30%;
     margin-right: 30%;
-    height: 23rem;
+    height: 28rem;
     border: 1.5px solid var(--my-color4-register);
     border-radius: 10px;
     padding: 30px, 40px;
@@ -98,13 +98,13 @@
     background: var(--my-color3-register);
 }
 
-.wrapper_activate_account .header-register .iconBackFromActivateAccount{
+.wrapper_activate_account_ra .header-register .iconBackFromActivateAccount{
     margin-left: 1rem;
     margin-top: 1rem;
     cursor: pointer;
 }
 
-.wrapper_activate_account .header-register .header-title-register{
+.wrapper_activate_account_ra .header-register .header-title-register{
     font-size: 2rem;
     text-align: center;
     color: var(--my-color2-register);
@@ -114,7 +114,7 @@
     margin-top: 3%;
 }
 
-.wrapper_activate_account .input_code_activation{
+.wrapper_activate_account_ra .input_code_activation{
     width: 100%;
     height: 3rem;
     margin-top: 1rem;
@@ -132,7 +132,7 @@
     padding: 20px 45px 20px 20px;
 }
 
-.wrapper_activate_account .button_active_account{
+.wrapper_activate_account_ra .button_active_account{
     width: 50%;
     height: 3rem;
     background: var(--my-color2-register);
@@ -146,10 +146,32 @@
     font-weight: 800;
     margin-left: 25%;
     margin-top: 5%;
+    user-select: none;
 }
 
 .button_active_account:hover{
     color: var(--my-color1-register);
+}
+
+.wrapper_activate_account_ra .button_resend{
+    width: 50%;
+    height: 3rem;
+    background: green;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px var(--my-color2-register);
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--my-color3-register);
+    font-weight: 800;
+    margin-left: 25%;
+    margin-top: 3%;
+    user-select: none;
+}
+
+.button_resend:hover{
+    background: darkgreen;
 }
 
 

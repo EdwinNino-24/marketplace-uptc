@@ -1,33 +1,48 @@
 const { queryDatabase } = require('./databaseService.js');
 const { decodedToken } = require('./jwtService.js');
 
-function insertPost(post, res) {
-    console.log(post.token);
-    const decoded = decodedToken(post.token);
+async function insertOffer(offer, post, decoded, res) {
+    const query = `INSERT INTO OFFERS (ID_TYPE, NAME_OFFER, DESCRIPTION_OFFER, URL_IMAGE_OFFER, PRICE_OFFER) VALUES (?, ?, ?, ?, ?)`;
+    try {
+        const result = await queryDatabase(query, [offer.typeId, offer.name, offer.description, "", offer.price]);
+        console.log("Oferta insertada con ID:", result.insertId);
+        console.log(result.insertId);
+
+        insertPublication(post, result.insertId, decoded, res);
+    } catch (error) {
+        console.error("Error al insertar la oferta:", error);
+        throw error; // Propagar el error para manejo externo
+    }
+}
+
+async function insertPublication(post, offerId, decoded, res) {
+    console.log(offerId);
+    const query = `INSERT INTO PUBLICATIONS 
+                   (ID_OFFERER, ID_CATEGORY, ID_LOCATION, ID_OFFER, CREATION_DATE, UPDATE_DATE, STATE_PUBLICATION)
+                   VALUES (?, ?, ?, ?, NOW(), NOW(), 'Disponible')`;
+    await queryDatabase(query, [decoded, post.category, post.location, offerId]);
+}
+
+async function insertPost(post, res) {
+
+    const decoded = decodedToken(post.token); // Asumiendo que decodeToken es una función que ya tienes
 
     if (!decoded) {
-        const error = new Error('No se pudo decodificar el token');
-        console.error('Error al decodificar el token:', error);
-        callback(error, null);
+        res.status(400).json({ error: 'Token inválido' });
         return;
     }
 
-    const userId = decoded;
+    const offer = {
+        typeId: post.type,
+        name: post.title,
+        description: post.description,
+        imageUrl: "",
+        price: post.price
+    };
 
-    const query = `INSERT INTO PUBLICATIONS 
-                  (ID_USER_SELLER, CREATION_DATE_PUBLICATION, UPDATE_DATE_PUBLICATION, TITLE_PUBLICATION, URL_IMAGE_PUBLICATION, STATE_PUBLICATION, TYPE_PUBLICATION, CATEGORY_PUBLICATION, DESCRIPTION_PUBLICATION, SELLER_LOCATION, PRICE_PUBLICATION) 
-                  VALUES (?, NOW(), NOW(), ?, '', 'DISPONIBLE', ?, ?, ?, ?, ?)`;
+    // Primero insertamos la oferta y luego la publicación
+    insertOffer(offer, post, decoded, res);
+}
 
-    queryDatabase(query, [userId, post.title, post.type, post.category, post.description, post.location, post.price], (error, results, fields) => {
-        if (error) {
-            console.error('Error al insertar el registro:', error);
-            callback(error, null);
-        } else {
-            console.log('Registro insertado correctamente');
-            const lastInsertedId = results.insertId;
-            res.json({ id_post: lastInsertedId});
-        }
-    });
-};
 
 module.exports = { insertPost };

@@ -20,23 +20,26 @@ const LoginForm = () => {
         username: username,
         password: password,
       });
-      // Guardar el token en localStorage
+
       const data = response.data;
-      console.log(data.code);
       const token = data.token;
-      console.log(token);
-      console.log(data.code);
-      if (data.code === '0') {
-        setMensaje("¡Inicio de Sesión Exitosa!")
-        setModal2IsOpen(true);
+
+      if (data.code === '3') {
         localStorage.setItem('token', token);
+        window.location.href = '/main-page';
       }
-      else if (data.code === '1') {
-        setMensaje("¡La contraseña ingresada es incorrecta!")
+      else if (data.code === '0') {
+        setMensaje("¡Este usuario no esta registrado en nuestro sistema!")
         setModalIsOpen(true);
       }
+      else if (data.code === '1') {
+        localStorage.setItem('token', token);
+        setMensaje("¡Este usuario no ha activado la cuenta!")
+        setModal2IsOpen(true);
+      }
       else if (data.code === '2') {
-        setMensaje("¡El usuario ingresado no esta registrado en nuestro sistema!")
+        localStorage.setItem('token', token);
+        setMensaje("¡La contraseña ingresada es incorrecta!")
         setModalIsOpen(true);
       }
     } catch (error) {
@@ -54,13 +57,13 @@ const LoginForm = () => {
   };
   const handleOK2 = () => {
     setModal2IsOpen(false);
-    window.location.href = '/main-page';
+    window.location.href = '/activate-account';
   };
 
   const customStyles = {
     content: {
       width: '45%', // Cambia el porcentaje según tu preferencia
-      height: '30%', // Cambia el porcentaje según tu preferencia
+      height: '33%', // Cambia el porcentaje según tu preferencia
       margin: 'auto', // Para centrar el modal horizontalmente
       backgroundColor: 'white', // Color de fondo del modal
     },
@@ -123,11 +126,11 @@ const LoginForm = () => {
               contentLabel="Notificación"
               style={customStyles}
             >
-              <div className='notification_account_created'>
-                <h1 className='title_notification_account_created'>Atención</h1>
-                <h2 className='subtitle_notification_account_created'>{mensaje}</h2>
-                <div className='button_notification_account_created'>
-                  <button className="ok_notification_account_created" onClick={handleOK}>Continuar</button>
+              <div className='notification'>
+                <h1 className='title_notification'>Atención</h1>
+                <h2 className='subtitle_notification'>{mensaje}</h2>
+                <div className='button_notification'>
+                  <button className="ok_notification" onClick={handleOK}>Continuar</button>
                 </div>
               </div>
             </Modal>

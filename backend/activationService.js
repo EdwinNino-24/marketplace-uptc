@@ -5,8 +5,7 @@ const { checkCode } = require('./hashService.js');
 
 async function activateAccount(req, res) {
     const user = decodedToken(req.body.token);
-    console.log(user);
-    console.log(req.numericValue);
+
     try {
         // Primero, recuperamos la entrada de la base de datos basada en el ID del usuario o algún otro identificador si es necesario
         const results = await queryDatabase('SELECT * FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [user]); // Asumimos que puedes identificar al usuario de alguna manera
@@ -23,7 +22,7 @@ async function activateAccount(req, res) {
         if (!isValidCode) {
             console.log('Código de activación inválido');
             const token = generateToken(user, false, false);
-            res.json({ user: user, code: "0", token: token});
+            res.json({ user: user, code: "0", token: token });
             return;
         }
 
@@ -35,7 +34,7 @@ async function activateAccount(req, res) {
         } else {
             console.log('Cuenta activada exitosamente');
             const token = generateToken(user, true, true);
-            res.json({ user: user, code: "1", token: token});
+            res.json({ user: user, code: "1", token: token });
         }
     } catch (err) {
         console.error('Error durante la activación de la cuenta:', err);

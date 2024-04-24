@@ -2,6 +2,7 @@ const { sendMail } = require('./emailService.js');
 const { queryDatabase } = require('./databaseService.js');
 const { hashCode } = require('./hashService.js');
 const jwt = require('jsonwebtoken');
+const { decodedToken } = require('./jwtService.js');
 
 function generateRandomCode(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -72,5 +73,31 @@ async function createAccount(formData, res) {
   }
 }
 
+async function resendCodeActivation(req, res) {
+  
+  const user = decodedToken(req.body.token);
+  const code_activation = generateRandomCode(6);
+  try {
+    // Await the completion of the password hashing
+    const code_activation_hashed = await hashCode(code_activation);
+    console.log(code_activation);
 
-module.exports = { createAccount };
+    // Check for existing account and retrieve the personal ID
+    const accountCheck = await queryDatabase('SELECT ID_ACCOUNT FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [user]);
+    if (accountCheck.length > 0) {
+      await queryDatabase(
+        'UPDATE ACCOUNTS SET CODE_CONFIRMATION_HASHED=? WHERE ID_ACCOUNT=?',
+        [code_activation_hashed, user]
+      );
+      sendMail("ACTIVA TU CUENTA DE MARKETPLACE - UPTC", "activación", user, code_activation, () => {
+        console.log('Activation email sent.');
+      });
+    }
+
+  } catch (error) {
+    console.log('An error occurred: ' + error.message, null);
+  }
+}
+
+
+module.exports = { createAccount, resendCodeActivation};

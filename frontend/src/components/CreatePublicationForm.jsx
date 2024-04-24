@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import '../styles/CreatePublicationForm.css';
 import '../styles/Notification.css';
@@ -45,10 +45,15 @@ const CreatePublicationForm = () => {
     };
 
     const onDrop = (acceptedFiles) => {
-        console.log(formData);
-        const newImages = acceptedFiles.map((file) => Object.assign(file, {
+        // Filtra los archivos para incluir solo imágenes
+        const imageFiles = acceptedFiles.filter(file => file.type.startsWith('image/'));
+    
+        // Mapea cada archivo de imagen a un nuevo objeto con una URL de previsualización
+        const newImages = imageFiles.map((file) => Object.assign(file, {
             preview: URL.createObjectURL(file)
         }));
+    
+        // Actualiza el estado de las imágenes añadiendo las nuevas imágenes
         setImages([...images, ...newImages]);
     };
 
@@ -115,7 +120,7 @@ const CreatePublicationForm = () => {
                 if (response.ok) {
                     const data = await response.json();
                     const id_post = data.id_post;
-                    uploadImages(id_post);
+                    //uploadImages(id_post);
                     setMensaje("¡La publicación se ha creado exitosamente!");
                     setModalCreatePostIsOpen(true);
                 } else {
@@ -161,6 +166,33 @@ const CreatePublicationForm = () => {
         window.location.href = '/my-publications-page';
     };
 
+    const [types, setTypes] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_type_offers')
+            .then(response => response.json())
+            .then(data => setTypes(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_categories')
+            .then(response => response.json())
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    const [locations, setLocations] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_locations')
+            .then(response => response.json())
+            .then(data => setLocations(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
     return (
         <div className="bg_create_publication">
             <header className="header">
@@ -199,18 +231,16 @@ const CreatePublicationForm = () => {
                                     onChange={handleChange} name='type'
                                     placeholder="Selecciona tu Tipo de Publicación" value={formData.type}>
                                     <option value="" disabled>Selecciona el Tipo</option>
-                                    <option value="Producto">Producto</option>
-                                    <option value="Servicio">Servicio</option>
+                                    {types.map(type => (
+                                        <option key={type.ID_TYPE} value={type.ID_TYPE}>{type.NAME_TYPE}</option>
+                                    ))}
                                 </select>
                                 <select required className="combo_box"
                                     value={formData.category} onChange={handleChange} name='category'>
                                     <option value="" disabled>Selecciona la Categoría</option>
-                                    <option value="Ropa">Ropa</option>
-                                    <option value="Tecnología">Tecnología</option>
-                                    <option value="Accesorios">Accesorios</option>
-                                    <option value="Tutorías">Tutorías</option>
-                                    <option value="Comida">Comida</option>
-                                    <option value="Otros">Otros</option>
+                                    {categories.map(category => (
+                                        <option key={category.ID_CATEGORY} value={category.ID_CATEGORY}>{category.NAME_CATEGORY}</option>
+                                    ))}
                                 </select>
                                 <textarea
                                     required
@@ -240,11 +270,9 @@ const CreatePublicationForm = () => {
                                 <select required className="combo_box"
                                     value={formData.location} onChange={handleChange} name='location'>
                                     <option value="" disabled>Selecciona la Sede o Seccional</option>
-                                    <option value="Central">Sede Central</option>
-                                    <option value="Duitama">Seccional Duitama</option>
-                                    <option value="Sogamoso">Seccional Sogamoso</option>
-                                    <option value="Aguazul">Seccional Aguazul</option>
-                                    <option value="Chiquinquirá">Seccional Chiquinquirá</option>
+                                    {locations.map(location => (
+                                        <option key={location.ID_LOCATION} value={location.ID_LOCATION}>{location.NAME_LOCATION}</option>
+                                    ))}
                                 </select>
                                 <Modal
                                     isOpen={modalIsOpen}

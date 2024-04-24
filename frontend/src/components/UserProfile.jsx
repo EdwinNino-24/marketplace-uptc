@@ -61,6 +61,15 @@ export const UserProfile = () => {
          send_token_user();
     };
 
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_categories')
+            .then(response => response.json())
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+    
     return (
         <div className="bg_my_account">
 
@@ -100,18 +109,11 @@ export const UserProfile = () => {
                             <p className="plataform_option">{"Categorías >"}</p>
                             {showSubMenu && (
                                 <ul className="submenu">
-                                    <a href="categoria1.html">
-                                        <li>Accesorios</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Tecnología</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Tutorías</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Ropa</li>
-                                    </a>
+                                    {categories.map((category) => (
+                                        <a key={category.ID_CATEGORY} href={""}>
+                                            <li>{category.NAME_CATEGORY}</li>
+                                        </a>
+                                    ))}
                                 </ul>
                             )}
                         </li>

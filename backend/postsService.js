@@ -1,6 +1,6 @@
 const { queryDatabase } = require('./databaseService.js');
 
-function getPublications(req, res) {
+function getPublications(res) {
     const query = 'SELECT * FROM publications';
     queryDatabase(query, (error, results) => {
         if (error) {
@@ -12,7 +12,7 @@ function getPublications(req, res) {
     });
 }
 
-function getProductsPosts(req, res) {
+function getProductsPosts(res) {
     const query = 'SELECT * FROM publications WHERE TYPE_PUBLICATION = "PRODUCTO"';
     queryDatabase(query, (error, results) => {
         if (error) {
@@ -24,7 +24,7 @@ function getProductsPosts(req, res) {
     });
 }
 
-function getServicesPosts(req, res) {
+function getServicesPosts(res) {
     const query = 'SELECT * FROM publications WHERE TYPE_PUBLICATION = "SERVICIO"';
     queryDatabase(query, (error, results) => {
         if (error) {

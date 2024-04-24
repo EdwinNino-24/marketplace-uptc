@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/EnterEmail.css';
+import '../styles/Notification.css';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { useState } from 'react';
@@ -18,6 +19,8 @@ const EnterEmailForm = () => {
 
     const [inputValue, setInputValue] = useState('');
 
+    const [message, setMessage] = useState('');
+
     const handleSubmit = async (e) => {
         if (inputValue.length !== 0) {
             e.preventDefault();
@@ -32,7 +35,13 @@ const EnterEmailForm = () => {
                 const data = await response.json();
 
                 if (data.code === "0") {
+                    setMessage('¡Este usuario no esta registrado en nuestro sistema!');
                     setModalIsOpen(true);
+                }
+                else if (data.code === "1") {
+                    localStorage.setItem('token', data.token);
+                    setMessage('¡Este usuario no ha activado la cuenta!');
+                    setModal3IsOpen(true);
                 } else {
                     localStorage.setItem('token', data.token);
                     setModal2IsOpen(true);
@@ -46,6 +55,7 @@ const EnterEmailForm = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modal2IsOpen, setModal2IsOpen] = useState(false);
+    const [modal3IsOpen, setModal3IsOpen] = useState(false);
 
     const handleOK = () => {
         setModalIsOpen(false);
@@ -54,11 +64,15 @@ const EnterEmailForm = () => {
         setModal2IsOpen(false);
         window.location.href = '/enter-code-recover';
     };
+    const handleOK3 = () => {
+        setModal3IsOpen(false);
+        window.location.href = '/activate-account';
+    };
 
     const customStyles = {
         content: {
             width: '45%', // Cambia el porcentaje según tu preferencia
-            height: '30%', // Cambia el porcentaje según tu preferencia
+            height: '33%', // Cambia el porcentaje según tu preferencia
             margin: 'auto', // Para centrar el modal horizontalmente
             backgroundColor: 'white', // Color de fondo del modal
         },
@@ -100,11 +114,24 @@ const EnterEmailForm = () => {
                             contentLabel="Notificación"
                             style={customStyles}
                         >
-                            <div className='notification_account_created'>
-                                <h1 className='title_notification_account_created'>Notificación</h1>
-                                <h2 className='subtitle_notification_account_created'>¡Este usuario no esta registrado en nuestro sistema!</h2>
-                                <div className='button_notification_account_created'>
-                                    <button className="ok_notification_account_created" onClick={handleOK}>Continuar</button>
+                            <div className='notification'>
+                                <h1 className='title_notification'>Atención</h1>
+                                <h2 className='subtitle_notification'>{message}</h2>
+                                <div className='button_notification'>
+                                    <button className="ok_notification" onClick={handleOK}>Continuar</button>
+                                </div>
+                            </div>
+                        </Modal>
+                        <Modal
+                            isOpen={modal3IsOpen}
+                            contentLabel="Notificación"
+                            style={customStyles}
+                        >
+                            <div className='notification'>
+                                <h1 className='title_notification'>Atención</h1>
+                                <h2 className='subtitle_notification'>{message}</h2>
+                                <div className='button_notification'>
+                                    <button className="ok_notification" onClick={handleOK3}>Continuar</button>
                                 </div>
                             </div>
                         </Modal>
@@ -113,11 +140,11 @@ const EnterEmailForm = () => {
                             contentLabel="Notificación"
                             style={customStyles}
                         >
-                            <div className='notification_account_created'>
-                                <h1 className='title_notification_account_created'>Notificación</h1>
-                                <h2 className='subtitle_notification_account_created'>¡Cuenta Encontrada!</h2>
-                                <div className='button_notification_account_created'>
-                                    <button className="ok_notification_account_created" onClick={handleOK2}>Continuar</button>
+                            <div className='notification'>
+                                <h1 className='title_notification'>Notificación</h1>
+                                <h2 className='subtitle_notification'>¡Hemos identificado tu cuenta!</h2>
+                                <div className='button_notification'>
+                                    <button className="ok_notification" onClick={handleOK2}>Continuar</button>
                                 </div>
                             </div>
                         </Modal>

@@ -134,6 +134,7 @@
 .label_enter_email{
     font-size: 1.8rem;
     margin-left: 0.5rem;
+    user-select: none;
 }
 
 .wrapper_enter_email .button_get_code{
@@ -150,6 +151,7 @@
     font-weight: 800;
     margin-left: 25%;
     margin-top: 5%;
+    user-select: none;
 }
 
 .button_get_code:hover{

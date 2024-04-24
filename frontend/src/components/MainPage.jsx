@@ -22,13 +22,14 @@ export const MainPage = () => {
 
     const send_token_user = () => {
         const token = localStorage.getItem('token');
+
         if (!token) {
             console.log('No hay token disponible.');
             setUser("Iniciar Sesión");
             return;
         }
 
-        Axios.post('http://localhost:5000/user_profile', { token })
+        Axios.post('http://localhost:5000/user_profile', { token: token })
             .then(response => {
                 const { user } = response.data;
                 setUser(user ? user : "Iniciar Sesión");
@@ -60,21 +61,12 @@ export const MainPage = () => {
         }
     };
 
-    const getTokenFromLocalStorage = () => {
-        console.log(localStorage.getItem('token'));
-        return localStorage.getItem('token');
-    };
-
     const [showSubMenu, setShowSubMenu] = useState(false);
     const [isOverSubList, setIsOverSubList] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSubMenuToggleEnter = () => {
         setShowSubMenu(true);
-        console.log(user);
-        getTokenFromLocalStorage();
-        send_token_user();
-        console.log(randomImages);
     };
     const handleIsOverSubList = () => {
         setIsOverSubList(true);
@@ -93,7 +85,7 @@ export const MainPage = () => {
 
     const [publications, setPublications] = useState([]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         fetch('http://localhost:5000/publications')
             .then(response => response.json())
             .then(data => setPublications(data))
@@ -116,7 +108,10 @@ export const MainPage = () => {
             .then(response => response.json())
             .then(data => setServicesPosts(data))
             .catch(error => console.error('Error al obtener las publicaciones:', error));
-    }, []);
+    }, []);*/
+
+    const [productsPosts, setProductsPosts] = useState([]);
+    const [servicesPosts, setServicesPosts] = useState([]);
 
     const formatToColombianPesos = (value) => {
         const formattedValue = Number(value).toLocaleString('es-CO', {
@@ -135,14 +130,23 @@ export const MainPage = () => {
 
     const [randomImages, setRandomImages] = useState([]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         fetch('http://localhost:5000/get_random_images')
             .then(response => response.json())
             .then(data => setRandomImages(data))
             .catch(error => console.error('Error al obtener las imágenes aleatorias:', error));
-    }, []);
+    }, []);*/
 
     const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_categories')
+            .then(response => response.json())
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
 
     return (
         <div className="bg_main_page">
@@ -182,18 +186,11 @@ export const MainPage = () => {
                             <p className="plataform_option">{"Categorías >"}</p>
                             {showSubMenu && (
                                 <ul className="submenu">
-                                    <a href="categoria1.html">
-                                        <li>Accesorios</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Tecnología</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Tutorías</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Ropa</li>
-                                    </a>
+                                    {categories.map((category) => (
+                                        <a key={category.ID_CATEGORY} href={""}>
+                                            <li>{category.NAME_CATEGORY}</li>
+                                        </a>
+                                    ))}
                                 </ul>
                             )}
                         </li>

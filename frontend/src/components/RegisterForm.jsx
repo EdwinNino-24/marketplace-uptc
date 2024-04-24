@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/Register.css';
+import '../styles/Notification.css';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -77,7 +78,7 @@ const RegisterForm = () => {
   const customStyles = {
     content: {
       width: '45%', // Cambia el porcentaje según tu preferencia
-      height: '30%', // Cambia el porcentaje según tu preferencia
+      height: '33%', // Cambia el porcentaje según tu preferencia
       margin: 'auto', // Para centrar el modal horizontalmente
       backgroundColor: 'white', // Color de fondo del modal
     },
@@ -144,11 +145,11 @@ const RegisterForm = () => {
               contentLabel="Notificación"
               style={customStyles}
             >
-              <div className='notification_register'>
-                <h1 className='title_notification_register'>Notificación</h1>
-                <h2 className='subtitle_notification_register'>{mensaje}</h2>
-                <div className='button_notification_register'>
-                  <button className="ok_notification_register" onClick={handleOK}>Continuar</button>
+              <div className='notification'>
+                <h1 className='title_notification'>Atención</h1>
+                <h2 className='subtitle_notification'>{mensaje}</h2>
+                <div className='button_notification'>
+                  <button className="ok_notification" onClick={handleOK}>Continuar</button>
                 </div>
               </div>
             </Modal>

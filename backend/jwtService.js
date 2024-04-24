@@ -30,5 +30,10 @@ function decodedToken(token) {
   return user;
 }
 
+function getTokenFromLocalStorage() {
+  console.log(localStorage.getItem('token'));
+  return localStorage.getItem('token');
+};
 
-module.exports = { verifyToken, generateToken, decodedToken };
+
+module.exports = { verifyToken, generateToken, decodedToken, getTokenFromLocalStorage };
