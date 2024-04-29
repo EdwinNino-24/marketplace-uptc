@@ -1,0 +1,58 @@
+const { queryDatabase } = require('./databaseService.js');
+const { bucket } = require('./firebaseConfig.js');
+
+async function fetchRandomImages() {
+    try {
+        const publications = await fetchPublications();
+        const randomImages = await Promise.all(
+            publications.map(async (publication) => {
+                const folderPath = publication.ID_OFFER;
+                const [files] = await bucket.getFiles({ prefix: folderPath });
+
+                if (files.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * files.length);
+                    const randomFile = files[randomIndex];
+                    const [url] = await randomFile.getSignedUrl({
+                        action: 'read',
+                        expires: '03-01-2500',
+                    });
+
+                    return { folderName: folderPath, imageUrl: url };
+                } else {
+                    return { folderName: folderPath, imageUrl: '' };
+                }
+            })
+        );
+
+        randomImages.forEach(({ folderName, imageUrl }) => {
+            const query = 'UPDATE OFFERS SET URL_IMAGE_OFFER = ? WHERE ID_OFFER = ?';
+            queryDatabase(query, [imageUrl, folderName], (error) => {
+                if (error) {
+                    console.error('Error al actualizar la URL de imagen:', error);
+                } else {
+                    console.log('URL de imagen actualizada correctamente');
+                }
+            });
+        });
+
+        return randomImages;
+    } catch (error) {
+        console.error('Error al obtener las imágenes aleatorias de las publicaciones:', error);
+        throw error; // Re-throw para manejar el error más arriba
+    }
+}
+
+const fetchPublications = () => {
+    return new Promise((resolve, reject) => {
+        queryDatabase('SELECT * FROM OFFERS', (error, results, fields) => {
+            if (error) {
+                console.error('Error al obtener las publicaciones desde la base de datos:', error);
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+module.exports = { fetchRandomImages };

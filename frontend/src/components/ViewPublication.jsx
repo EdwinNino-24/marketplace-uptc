@@ -1,5 +1,4 @@
 import React from "react";
-import Logo from "../images/2.1.png";
 import '../styles/Header.css';
 import '../styles/ViewPublication.css';
 import '../styles/ImageSlider.css';
@@ -8,17 +7,11 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-import BANNER1 from "../images/banner1.png";
-import BANNER2 from "../images/banner2.png";
-
-import IMG1 from "../images/1.png";
 
 import { useState, useEffect } from "react";
 import '../styles/Header.css';
 import '../styles/Banner.css';
 import '../styles/ImageSlider.css';
-import IMG2 from "../images/img01.jpg";
-import BANNER3 from "../images/banner3.jpeg";
 import '../styles/Publications.css';
 import Axios from 'axios';
 import { useParams } from "react-router-dom";
@@ -248,14 +241,14 @@ export const ViewPublication = () => {
                     </div>
                     <div className="info_post">
                         <div className="data_post">
-                            <h1>{publication.TITLE_PUBLICATION}</h1>
-                            <p> {publication.TYPE_PUBLICATION} - {publication.STATE_PUBLICATION} </p>
-                            <p> Categoría -  {publication.CATEGORY_PUBLICATION} </p>
+                            <h1>{publication.NAME_OFFER}</h1>
+                            <p> {publication.OFFER_TYPE}: {publication.STATE_PUBLICATION} </p>
+                            <p> Categoría: {publication.NAME_CATEGORY} </p>
                             <h2> Descripción </h2>
-                            <p className="description"> {publication.DESCRIPTION_PUBLICATION} </p>
-                            <p> Precio: <ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
-                            <p> Ofertada en Sede / Seccional: {publication.SELLER_LOCATION} </p>
-                            <p> Por  {publication.ID_USER_SELLER} </p>
+                            <p className="description"> {publication.DESCRIPTION_OFFER} </p>
+                            <p> Precio: <ColombianPrice price={publication.PRICE_OFFER} /></p>
+                            <p> Ofertada en {publication.NAME_LOCATION} </p>
+                            <p> Por {publication.ID_OFFERER} </p>
                             <div className="button_contact">
                                 <button>
                                     Contactar

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
-import '../styles/Header.css';
-import '../styles/Banner.css';
-import '../styles/ImageSlider.css';
-
-import BANNER1 from "../images/3.jpeg";
-import BANNER2 from "../images/4.jpeg";
-import BANNER3 from "../images/banner3.jpeg";
-import '../styles/Publications.css';
 import Axios from 'axios';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+
+import '../styles/Header.css';
+import '../styles/Banner.css';
+import '../styles/ImageSlider.css';
+import '../styles/Publications.css';
+
+import BANNER1 from "../images/3.jpeg";
+import BANNER2 from "../images/4.jpeg";
+import BANNER3 from "../images/banner3.jpeg";
 
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
@@ -83,19 +84,10 @@ export const MainPage = () => {
         }
     };
 
-    const [publications, setPublications] = useState([]);
-
-    /*useEffect(() => {
-        fetch('http://localhost:5000/publications')
-            .then(response => response.json())
-            .then(data => setPublications(data))
-            .catch(error => console.error('Error al obtener las publicaciones:', error));
-    }, []);
-
     const [productsPosts, setProductsPosts] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/products_posts')
+        fetch('http://localhost:5000/get_products_posts')
             .then(response => response.json())
             .then(data => setProductsPosts(data))
             .catch(error => console.error('Error al obtener las publicaciones:', error));
@@ -104,14 +96,12 @@ export const MainPage = () => {
     const [servicesPosts, setServicesPosts] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/services_posts')
+        fetch('http://localhost:5000/get_services_posts')
             .then(response => response.json())
             .then(data => setServicesPosts(data))
             .catch(error => console.error('Error al obtener las publicaciones:', error));
-    }, []);*/
+    }, []);
 
-    const [productsPosts, setProductsPosts] = useState([]);
-    const [servicesPosts, setServicesPosts] = useState([]);
 
     const formatToColombianPesos = (value) => {
         const formattedValue = Number(value).toLocaleString('es-CO', {
@@ -130,12 +120,12 @@ export const MainPage = () => {
 
     const [randomImages, setRandomImages] = useState([]);
 
-    /*useEffect(() => {
+    useEffect(() => {
         fetch('http://localhost:5000/get_random_images')
             .then(response => response.json())
             .then(data => setRandomImages(data))
             .catch(error => console.error('Error al obtener las imágenes aleatorias:', error));
-    }, []);*/
+    }, []);
 
     const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
 
@@ -237,12 +227,12 @@ export const MainPage = () => {
                             href={`/view-publication/${publication.ID_PUBLICATION}`}>
                             <div className="post">
                                 <div className="post_img">
-                                    <img src={publication.URL_IMAGE_PUBLICATION} alt="" />
+                                    <img src={publication.URL_IMAGE_OFFER} alt="" />
                                 </div>
                                 <div className="footer_post">
-                                    <p className="price"><ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
-                                    <h1 className="title_post">{publication.TITLE_PUBLICATION}</h1>
-                                    <p>SEDE / SECCIONAL {publication.SELLER_LOCATION}</p>
+                                    <p className="price"><ColombianPrice price={publication.PRICE_OFFER} /></p>
+                                    <h1 className="title_post">{publication.NAME_OFFER}</h1>
+                                    <p>{publication.NAME_LOCATION}</p>
                                 </div>
                             </div>
                         </a>
@@ -260,12 +250,12 @@ export const MainPage = () => {
                             href={`/view-publication/${publication.ID_PUBLICATION}`}>
                             <div className="post">
                                 <div className="post_img">
-                                    <img src={publication.URL_IMAGE_PUBLICATION} alt="" />
+                                    <img src={publication.URL_IMAGE_OFFER} alt="" />
                                 </div>
                                 <div className="footer_post">
-                                    <p className="price"><ColombianPrice price={publication.PRICE_PUBLICATION} /></p>
-                                    <h1 className="title_post">{publication.TITLE_PUBLICATION}</h1>
-                                    <p>SEDE / SECCIONAL {publication.SELLER_LOCATION}</p>
+                                    <p className="price"><ColombianPrice price={publication.PRICE_OFFER} /></p>
+                                    <h1 className="title_post">{publication.NAME_OFFER}</h1>
+                                    <p>{publication.NAME_LOCATION}</p>
                                 </div>
                             </div>
                         </a>

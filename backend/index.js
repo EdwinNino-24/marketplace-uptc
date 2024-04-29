@@ -15,10 +15,14 @@ const { activateAccount } = require('./activationService.js');
 const { searchAccountRecover, recoverAccount, resendCodeRecovery } = require('./recoveryService.js');
 const { enterPasswordRecover } = require('./passwordResetService.js');
 
-const { getPublication, getPublications, getProductsPosts, getServicesPosts } = require('./postsService.js');
+const { getUser, validateUser, updatePersonalInformation, updatePassword } = require('./userService.js');
+
+const { getPublication, getPublications, getProductsPosts, getServicesPosts, getMyPosts } = require('./postsService.js');
 const { insertPost } = require('./postService.js');
 
 const { getTypePosts, getCategories, getLocations } = require('./types.js');
+
+const { fetchRandomImages } = require('./imageHandler.js');
 
 const { bucket } = require('./firebaseConfig.js');
 
@@ -68,11 +72,28 @@ app.post('/enter_password_recover', (req, res) => {
 });
 
 
+app.post('/personal_information', (req, res) => {
+  getUser(req, res);
+});
+
+app.post('/change_personal_information', (req, res) => {
+  updatePersonalInformation(req, res);
+});
+
+app.post('/change_password', (req, res) => {
+  updatePassword(req, res);
+});
+
+
 app.get('/publications', getPublications);
 
-app.get('/products_posts', getProductsPosts);
+app.get('/get_products_posts', (req, res) => {
+  getProductsPosts(req, res);
+});
 
-app.get('/services_posts', getServicesPosts);
+app.get('/get_services_posts', (req, res) => {
+  getServicesPosts(req, res);
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -83,7 +104,9 @@ const storage = multer.diskStorage({
   }
 });
 
-app.get('/publications/:id', getPublication);
+app.get('/publications/:id', (req, res) => {
+  getPublication(req, res);
+});
 
 const upload = multer({ storage });
 
@@ -109,65 +132,11 @@ app.post('/get_post_images', async (req, res) => {
   }
 });
 
-const { queryDatabase } = require('./databaseService.js');
-
-const fetchPublications = () => {
-  return new Promise((resolve, reject) => {
-    queryDatabase('SELECT * FROM PUBLICATIONS', (error, results, fields) => {
-      if (error) {
-        console.error('Error al obtener las publicaciones desde la base de datos:', error);
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-};
 
 app.get('/get_random_images', async (req, res) => {
   try {
-    const publications = await fetchPublications();
-    const randomImages = await Promise.all(
-      publications.map(async (publication) => {
-        const folderPath = publication.ID_PUBLICATION;
-
-        const [files] = await bucket.getFiles({ prefix: folderPath });
-
-        if (files.length > 0) {
-          // Obtener un índice aleatorio dentro del rango de archivos
-          const randomIndex = Math.floor(Math.random() * files.length);
-          // Obtener el archivo aleatorio
-          const randomFile = files[randomIndex];
-          // Obtener la URL firmada del archivo aleatorio
-          const [url] = await randomFile.getSignedUrl({
-            action: 'read',
-            expires: '03-01-2500',
-          });
-          
-          return { folderName: folderPath, imageUrl: url };
-        } else {
-          // Si no hay imágenes en la carpeta, manejar el caso según tus necesidades
-          return { folderName: folderPath, imageUrl: 'URL_POR_DEFECTO' };
-        }
-      })
-    );
-
-    // Una vez que se hayan obtenido todas las imágenes aleatorias, actualizar la base de datos
-    randomImages.forEach(({ folderName, imageUrl }) => {
-      const query = 'UPDATE PUBLICATIONS SET URL_IMAGE_PUBLICATION = ? WHERE ID_PUBLICATION = ?';
-      queryDatabase(query, [imageUrl, folderName], (error) => {
-        if (error) {
-          console.error('Error al actualizar la URL de imagen:', error);
-        } else {
-          console.log('URL de imagen actualizada correctamente');
-        }
-      });
-    });
-
-    console.log(randomImages);
-    res.json(randomImages);
+    await fetchRandomImages();
   } catch (error) {
-    console.error('Error al obtener las imágenes aleatorias de las publicaciones:', error);
     res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
   }
 });
@@ -186,6 +155,12 @@ app.get('/get_categories', (req, res) => {
 
 app.get('/get_locations', (req, res) => {
   getLocations(req, res);
+});
+
+
+
+app.post('/verify_current_user', (req, res) => {
+  validateUser(req, res);
 });
 
 app.post('/create_post', (req, res) => {
@@ -245,6 +220,10 @@ app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
     console.error('Error al subir las imágenes:', error);
     res.status(500).json({ message: 'Error al subir las imágenes' });
   }
+});
+
+app.post('/get_my_posts', (req, res) => {
+  getMyPosts(req, res);
 });
 
 app.listen(5000, () => {

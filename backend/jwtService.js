@@ -30,10 +30,32 @@ function decodedToken(token) {
   return user;
 }
 
+function verifyToken(token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(decoded);
+      }
+    });
+  });
+}
+
+async function decodedTokenComplete(token) {
+  try {
+    const decoded = await verifyToken(token);
+    return decoded.session && decoded.activate;
+  } catch (err) {
+    console.error("Error verifying token:", err);
+    return false;
+  }
+}
+
 function getTokenFromLocalStorage() {
   console.log(localStorage.getItem('token'));
   return localStorage.getItem('token');
 };
 
 
-module.exports = { verifyToken, generateToken, decodedToken, getTokenFromLocalStorage };
+module.exports = { verifyToken, generateToken, decodedToken, decodedTokenComplete, getTokenFromLocalStorage };

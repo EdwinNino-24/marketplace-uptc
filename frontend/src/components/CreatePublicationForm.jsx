@@ -120,7 +120,7 @@ const CreatePublicationForm = () => {
                 if (response.ok) {
                     const data = await response.json();
                     const id_post = data.id_post;
-                    //uploadImages(id_post);
+                    uploadImages(id_post);
                     setMensaje("¡La publicación se ha creado exitosamente!");
                     setModalCreatePostIsOpen(true);
                 } else {
@@ -153,7 +153,7 @@ const CreatePublicationForm = () => {
     const customStyles = {
         content: {
             width: '50%', // Cambia el porcentaje según tu preferencia
-            height: '30%', // Cambia el porcentaje según tu preferencia
+            height: '33%', // Cambia el porcentaje según tu preferencia
             margin: 'auto', // Para centrar el modal horizontalmente
             backgroundColor: 'white', // Color de fondo del modal
         },

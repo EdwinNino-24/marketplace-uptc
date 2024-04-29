@@ -1,5 +1,6 @@
 const { queryDatabase } = require('./databaseService.js');
 const { decodedToken } = require('./jwtService.js');
+const { fetchRandomImages } = require('./imageHandler.js');
 
 async function insertOffer(offer, post, decoded, res) {
     const query = `INSERT INTO OFFERS (ID_TYPE, NAME_OFFER, DESCRIPTION_OFFER, URL_IMAGE_OFFER, PRICE_OFFER) VALUES (?, ?, ?, ?, ?)`;
@@ -16,11 +17,17 @@ async function insertOffer(offer, post, decoded, res) {
 }
 
 async function insertPublication(post, offerId, decoded, res) {
+    try {
+        await fetchRandomImages();
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
+    }
     console.log(offerId);
     const query = `INSERT INTO PUBLICATIONS 
                    (ID_OFFERER, ID_CATEGORY, ID_LOCATION, ID_OFFER, CREATION_DATE, UPDATE_DATE, STATE_PUBLICATION)
                    VALUES (?, ?, ?, ?, NOW(), NOW(), 'Disponible')`;
     await queryDatabase(query, [decoded, post.category, post.location, offerId]);
+    res.json({ id_post: offerId });
 }
 
 async function insertPost(post, res) {

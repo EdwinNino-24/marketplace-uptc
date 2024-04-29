@@ -14,19 +14,21 @@
   padding: 0;
 }
 
-.section_top{
+.section_top {
   padding-top: 10%;
   display: flex;
   background: var(--my-color5-my_publications);
   padding-bottom: 1%;
 }
-.section_title_my_posts{
+
+.section_title_my_posts {
   width: 48%;
   font-size: 4rem;
   height: auto;
   padding-left: 2.5%;
 }
-.shortcut_create_new_publication{
+
+.shortcut_create_new_publication {
   background: darkgreen;
   font-size: 3rem;
   font-family: sans-serif;
@@ -36,11 +38,12 @@
   cursor: pointer;
   color: var(--my-color3-my_publications);
 }
-.shortcut_create_new_publication:hover{
+
+.shortcut_create_new_publication:hover {
   color: var(--my-color1-my_publications);
 }
 
-.my-publications{
+.my-publications {
   padding: 1rem 1rem;
   margin: auto;
   display: grid;
@@ -50,95 +53,109 @@
   background: var(--my-color5-my_publications);
 }
 
-.title-my-publications{
-    font-size: 4rem;
-    font-weight: bold;
-    color: rgba(30,27,23,0.9);
-  }
+.title-my-publications {
+  font-size: 4rem;
+  font-weight: bold;
+  color: rgba(30, 27, 23, 0.9);
+}
 
-.my_publication{
+.my_publication {
   display: flex;
   width: 100%;
-  height: autos;
+  height: auto;
 }
 
-.div_image_post{
+.div_image_post {
   float: left;
   width: 33.3%;
-}
-.image_my_post{
-  width: 100%;
-  margin-left: 5%;
-  margin-top: 15%;
+  display: flex;
+  align-items: center;
+
 }
 
-.info_my_post{
-  float: left;
-  width: 33.3%;
+.image_my_post {
+  width: 90%;
   margin-left: 5%;
-  margin-top: 5%;
+}
+
+.info_my_post {
+  float: left;
+  display: block;
+  width: 33.3%;
   align-items: center;
   align-content: center;
-}
-.info_my_post h1{
-  font-family: sans-serif;
-  font-size: 2.5rem;
-  font-weight: 600;
-}
-.info_my_post p{
-  font-size: 2rem;
+  margin-left: 3%;
 }
 
-.properties-my-publication{
+.info_my_post h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  width: 100%;
+}
+
+.info_my_post p {
+  font-size: 2rem;
+  width: 100%;
+}
+
+.properties-my-publication {
   width: 33.3%;
   float: left;
+  padding-bottom: 2%;
 }
-.properties-my-publication select{
+
+.properties-my-publication select {
   cursor: pointer;
-  width: 75%;
-  margin-left: 2.5rem;
-  margin-top: 1rem;
+  width: 80%;
   font-size: 1.5rem;
   font-weight: bold;
+  margin-left: 5%;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
-.properties-my-publication button{
+
+.properties-my-publication button {
   cursor: pointer;
-  width: 75%;
-  margin-left: 2.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  width: 80%;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 800;
+  margin-left: 5%;
+  margin-top: 1.5%;
+  margin-bottom: 1.5%;
 }
-.edit-my-publication{
+
+.edit-my-publication {
   color: white;
   background: #043246;
 }
-.delete-my-publication{
+
+.delete-my-publication {
   background: #540303;
   color: white;
 
 }
-.chats-my-publication{
+
+.chats-my-publication {
   background: #004139;
   color: white;
 }
 
+.my-publication {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 1px 10px 10px 2px rgba(0, 0, 0, .2);
+  border: 6px solid transparent;
+  border-radius: 5px;
+  background-color: white;
+}
 
-  
-  .my-publication{
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 1px 10px 10px 2px rgba(0, 0, 0, .2);
-    border: 6px solid transparent;
-    border-radius: 5px;
-    background-color: white;
-  }
-  .my-publication:hover{
-    border: 6px solid #08a05c55;
-  }
+.my-publication:hover {
+  border: 6px solid #08a05c55;
+}
 
- 
-  
+.post_link{
+  text-decoration: none;
+  color: var(--my-color2-my_publications);
+}

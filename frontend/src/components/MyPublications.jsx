@@ -65,6 +65,44 @@ export const MyPublications = () => {
 
     const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
 
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_categories')
+            .then(response => response.json())
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    const [myPosts, setMyPosts] = useState([]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        Axios.post('http://localhost:5000/get_my_posts', { token })
+            .then(response => {
+                const data = response.data;
+                setMyPosts(data);
+            })
+            .catch(error => {
+
+            });
+    }, []);
+
+    const formatToColombianPesos = (value) => {
+        const formattedValue = Number(value).toLocaleString('es-CO', {
+            style: 'currency',
+            currency: 'COP'
+        });
+
+        return formattedValue;
+    }
+
+    function ColombianPrice({ price }) {
+        const formattedPrice = formatToColombianPesos(price);
+
+        return <span>{formattedPrice}</span>;
+    }
+    
     return (
         <div className="bg_my_posts">
 
@@ -104,18 +142,11 @@ export const MyPublications = () => {
                             <p className="plataform_option">{"Categorías >"}</p>
                             {showSubMenu && (
                                 <ul className="submenu">
-                                    <a href="categoria1.html">
-                                        <li>Accesorios</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Tecnología</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Tutorías</li>
-                                    </a>
-                                    <a href="categoria1.html">
-                                        <li>Ropa</li>
-                                    </a>
+                                    {categories.map((category) => (
+                                        <a key={category.ID_CATEGORY} href={""}>
+                                            <li>{category.NAME_CATEGORY}</li>
+                                        </a>
+                                    ))}
                                 </ul>
                             )}
                         </li>
@@ -145,67 +176,44 @@ export const MyPublications = () => {
             </div>
 
             <div className="my-publications">
-                <div className="my-publication">
-                    <div className="my-box-publication">
-                        <div className="my-publication-image">
-                            <img className='image-my-publication' src={IMG1} alt="" />
+
+
+
+                {myPosts.map(publication => (
+                    <a key={publication.ID_PUBLICATION} className="post_link"
+                        href={`/view-publication/${publication.ID_PUBLICATION}`}>
+                        <div className="my-publication">
+                            <div className="my_publication">
+                                <div className="div_image_post">
+                                    <img className='image_my_post' src={publication.URL_IMAGE_OFFER} alt="" />
+                                </div>
+                                <div className="info_my_post">
+                                    <h1> {publication.NAME_OFFER} </h1>
+                                    <p className="price"><ColombianPrice price={publication.PRICE_OFFER} /></p>
+                                </div>
+                                <div className="properties-my-publication">
+                                    <select id="comboBox" value={selectedOption} onChange={handleOptionChange}>
+                                        <option value="DISPONIBLE">DISPONIBLE</option>
+                                        <option value="PAUSADA">PAUSADA</option>
+                                        <option value="FINALIZADA">FINALIZADA</option>
+                                    </select>
+                                    <button className="chats-my-publication">
+                                        Chats
+                                    </button>
+                                    <a href="/edit-publication">
+                                        <button className="edit-my-publication">
+                                            Editar
+                                        </button>
+                                    </a>
+                                    <button className="delete-my-publication">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="info-my-publication">
-                            <h1> PLAY2 CHIPEADA </h1>
-                            <p> $50.000 </p>
-                        </div>
-                        <div className="properties-my-publication">
-                            <button className="chats-my-publication">
-                                Chats
-                            </button>
-                            <select id="comboBox" value={selectedOption} onChange={handleOptionChange}>
-                                <option value="DISPONIBLE">DISPONIBLE</option>
-                                <option value="PAUSADA">PAUSADA</option>
-                                <option value="FINALIZADA">FINALIZADA</option>
-                            </select>
-                            <a href="/edit-publication">
-                                <button className="edit-my-publication">
-                                    Editar
-                                </button>
-                            </a>
-                            <button className="delete-my-publication">
-                                Eliminar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="my-publication">
-                    <div className="my_publication">
-                        <div className="div_image_post">
-                            <img className='image_my_post' src={IMG1} alt="" />
-                        </div>
-                        <div className="info_my_post">
-                            <h1> PLAY2 CHIPEADA </h1>
-                            <p> $50.000 </p>
-                        </div>
-                        <div className="properties-my-publication">
-                            <button className="chats-my-publication">
-                                Chats
-                            </button>
-                            <select id="comboBox" value={selectedOption} onChange={handleOptionChange}>
-                                <option value="DISPONIBLE">DISPONIBLE</option>
-                                <option value="PAUSADA">PAUSADA</option>
-                                <option value="FINALIZADA">FINALIZADA</option>
-                            </select>
-                            <a href="/edit-publication">
-                                <button className="edit-my-publication">
-                                    Editar
-                                </button>
-                            </a>
-                            <button className="delete-my-publication">
-                                Eliminar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                
+                    </a>
+                ))}
+
             </div>
         </div>
     )
