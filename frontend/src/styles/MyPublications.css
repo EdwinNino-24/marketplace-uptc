@@ -15,32 +15,51 @@
 }
 
 .section_top {
-  padding-top: 10%;
+  width: 100%;
+  padding-top: 9%;
   display: flex;
   background: var(--my-color5-my_publications);
   padding-bottom: 1%;
 }
 
+.section_title_my_posts_page {
+  padding-top: 1rem;
+  width: 50%;
+}
+
 .section_title_my_posts {
-  width: 48%;
+  font-family: 'Inter';
+  background: var(--my-color2-main_page);
+  width: max-content;
   font-size: 4rem;
-  height: auto;
-  padding-left: 2.5%;
+  color: var(--my-color3-main_page);
+  text-align: left;
+  padding-left: 5%;
+  padding-right: 5%;
+  font-weight: 800;
+  user-select: none;
+  margin-left: 2%;
+  text-transform: uppercase;
+}
+
+.short_cut_create_post{
+  padding-top: 1rem;
+  width: 50%;
 }
 
 .shortcut_create_new_publication {
-  background: darkgreen;
+  background: green;
   font-size: 3rem;
   font-family: sans-serif;
   font-weight: bold;
   height: 100%;
-  width: 5rem;
   cursor: pointer;
   color: var(--my-color3-my_publications);
+  width: 10%;
 }
 
 .shortcut_create_new_publication:hover {
-  color: var(--my-color1-my_publications);
+  background: darkgreen;
 }
 
 .my-publications {
@@ -63,6 +82,7 @@
   display: flex;
   width: 100%;
   height: auto;
+  margin: 1rem;
 }
 
 .div_image_post {
@@ -70,7 +90,8 @@
   width: 33.3%;
   display: flex;
   align-items: center;
-
+  justify-content: center;
+  cursor: pointer;
 }
 
 .image_my_post {
@@ -82,9 +103,11 @@
   float: left;
   display: block;
   width: 33.3%;
-  align-items: center;
   align-content: center;
+  justify-content: left;
   margin-left: 3%;
+  margin-right: 3%;
+  cursor: pointer;
 }
 
 .info_my_post h1 {
@@ -98,27 +121,27 @@
   width: 100%;
 }
 
-.properties-my-publication {
+.properties_my_publication {
   width: 33.3%;
   float: left;
-  padding-bottom: 2%;
+  align-content: center;
+  justify-content: center;
 }
 
-.properties-my-publication select {
+.properties_my_publication select {
   cursor: pointer;
   width: 80%;
   font-size: 1.5rem;
-  font-weight: bold;
   margin-left: 5%;
   margin-top: 5%;
   margin-bottom: 5%;
 }
 
-.properties-my-publication button {
+.properties_my_publication button {
   cursor: pointer;
   width: 80%;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 400;
   margin-left: 5%;
   margin-top: 1.5%;
   margin-bottom: 1.5%;

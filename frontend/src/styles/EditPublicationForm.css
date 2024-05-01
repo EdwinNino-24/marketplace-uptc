@@ -96,10 +96,12 @@
 .panel-left {
     float: left;
     width: 30%;
+    padding-left: 7%;
 }
 
 .image_container {
     width: 100%;
+    display: block;
 }
 
 .preview_image {
@@ -117,9 +119,21 @@
     user-select: none;
 }
 
+.box_images2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1.5px solid var(--my-color4-create_publication);
+    text-align: center;
+    height: 4rem;
+    cursor: pointer;
+    user-select: none;
+    align-items: center;
+}
+
 .panel-right {
     float: right;
     width: 70%;
+    align-items: center;
 }
 
 .panel-right .title_publication {
@@ -188,6 +202,10 @@
     color: var(--my-color1-create_publication);
 }
 
+.button_remove:hover {
+    color: var(--my-color1-create_publication);
+}
+
 .button_publicate {
     width: 50%;
     height: 3rem;
@@ -204,4 +222,22 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
     user-select: none;
+}
+
+.button_remove {
+    width: 50%;
+    height: 3rem;
+    background: var(--my-color2-create_publication);
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px var(--my-color2-create_publication);
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--my-color3-create_publication);
+    font-weight: 800;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    user-select: none;
+    margin-left: 25%;
 }

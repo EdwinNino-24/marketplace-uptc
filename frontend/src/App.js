@@ -12,6 +12,7 @@ import NewPassword from "./components/NewPasswordForm";
 
 import { MainPage } from "./components/MainPage";
 import { ViewPublication } from "./components/ViewPublication";
+import { SearchPage } from "./components/SearchPage";
 
 import { UserProfile } from "./components/UserProfile";
 import EditUserProfile from "./components/EditUserProfile";
@@ -43,18 +44,20 @@ function App() {
 
           <Route path="/main-page" element={<MainPage />} />
           <Route path="/view-publication/:id" element={<ViewPublication />} />
+          <Route path='/search_page/:searchTermId' element={<SearchPage />} />
 
           <Route path="/" element={<ProtectedRoute />}>
 
             <Route path="/create-publication" element={<CreatePublication />} />
             <Route path="/my-publications-page" element={<MyPublications />} />
-            <Route path="/edit-publication" element={<EditPublication />} />
+            <Route path="/edit-publication/:id" element={<EditPublication />} />
 
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/edit-user-profile" element={<EditUserProfile />} />
 
-            
+
           </Route>
+
         </Routes>
       </Router>
     </div>

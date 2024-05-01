@@ -47,11 +47,11 @@ const EnterCodeRecover = () => {
         if (data.code === '1') {
           setMensaje("¡Recuperación de Cuenta Exitosa!")
           setModal2IsOpen(true);
-          localStorage.setItem('token', data.token);
+          await localStorage.setItem('token', data.token);
         }
         else if (data.code === '0') {
           setMensaje("¡El código de seguridad que ingresaste no fue el que te enviamos!")
-          localStorage.setItem('token', data.token);
+          await localStorage.setItem('token', data.token);
           setModalIsOpen(true);
         }
 

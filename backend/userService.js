@@ -128,10 +128,9 @@ async function validateUser(req, res) {
   }
 
   try {
-    // Asegúrate de usar `await` aquí para esperar el resultado de la promesa
     const isValid = await decodedTokenComplete(token);
 
-    res.json({ isValid: isValid });  // Enviar respuesta como objeto
+    res.json({ isValid: isValid });  
 
   } catch (error) {
     console.error(error);

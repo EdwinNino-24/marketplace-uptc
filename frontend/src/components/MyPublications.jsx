@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from "react";
 import '../styles/Header.css';
 import '../styles/MyPublications.css';
+
+import Spinner from './Spinner.jsx';
 import Axios from 'axios';
 
-
-import IMG1 from "../images/1.png";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import Header from './Header';
+import Navigation from './Navigation.jsx';
+import { ColombianPrice } from './ColombianPrice.jsx';
 
 
 export const MyPublications = () => {
 
+    const [loading, setLoading] = useState(false);
+
     const [user, setUser] = useState("Iniciar Sesión");
+
+    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
 
     const send_token_user = () => {
         const token = localStorage.getItem('token');
+
         if (!token) {
             console.log('No hay token disponible.');
             setUser("Iniciar Sesión");
             return;
         }
 
-        Axios.post('http://localhost:5000/user_profile', { token })
+        Axios.post('http://localhost:5000/user_profile', { token: token })
             .then(response => {
-                const { user } = response.data;
+                const user = response.data.ID_ACCOUNT;
                 setUser(user ? user : "Iniciar Sesión");
             })
             .catch(error => {
@@ -35,36 +42,6 @@ export const MyPublications = () => {
         send_token_user();
     }, []);
 
-    const [showSubMenu, setShowSubMenu] = useState(false);
-    const [isOverSubList, setIsOverSubList] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleSubMenuToggleEnter = () => {
-        setShowSubMenu(true);
-    };
-    const handleIsOverSubList = () => {
-        setIsOverSubList(true);
-    };
-    const handleSubMenuToggleLeave = () => {
-        setShowSubMenu(false);
-    };
-
-    const [selectedOption, setSelectedOption] = useState('');
-
-    const handleOptionChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            // Ejecuta la acción aquí
-            window.location.href = '/publications-page';
-            console.log('Se presionó Enter');
-        }
-    };
-
-    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
-
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -74,144 +51,122 @@ export const MyPublications = () => {
             .catch(error => console.error('Error:', error));
     }, []);
 
+    const [showSubMenu, setShowSubMenu] = useState(false);
+
+    const handleSubMenuToggleEnter = () => {
+        setShowSubMenu(true);
+    };
+    const handleSubMenuToggleLeave = () => {
+        setShowSubMenu(false);
+    };
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
+
+
+    const [selectedOption, setSelectedOption] = useState('');
+
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
+
+
     const [myPosts, setMyPosts] = useState([]);
 
     useEffect(() => {
+        setLoading(true);
         const token = localStorage.getItem('token');
-        Axios.post('http://localhost:5000/get_my_posts', { token })
-            .then(response => {
-                const data = response.data;
-                setMyPosts(data);
-            })
-            .catch(error => {
-
-            });
+        if (token) {
+            Axios.post('http://localhost:5000/get_my_posts', { token })
+                .then(response => {
+                    const data = response.data;
+                    setMyPosts(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
     }, []);
 
-    const formatToColombianPesos = (value) => {
-        const formattedValue = Number(value).toLocaleString('es-CO', {
-            style: 'currency',
-            currency: 'COP'
-        });
 
-        return formattedValue;
-    }
-
-    function ColombianPrice({ price }) {
-        const formattedPrice = formatToColombianPesos(price);
-
-        return <span>{formattedPrice}</span>;
-    }
-    
     return (
         <div className="bg_my_posts">
+            <div>
+                {loading && <Spinner />}
+            </div>
 
-            <header className="header">
-                <div className="box_header_top">
-                    <div className="isotype_header">
-                        <a href="/main-page" className="href_isotype">
-                            <h1 className="isotype">MARKETPLACE - UPTC</h1>
-                        </a>
-                    </div>
-                    <div className="list_user_options">
-                        <ul className="user_options">
-                            <li>
-                                <a className="user_option" href="/main-page">Inicio</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/create-publication">Publicar</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/my-publications-page">Mis Ofertas</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/my-publications-page">Mis Chats</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href={href_user_profile}>{user}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </header>
-            <nav className="mainnav">
-                <div className="left_header_bottom">
-                    <ul className="plataform_options">
-                        <li onMouseEnter={handleSubMenuToggleEnter}
-                            onMouseLeave={handleSubMenuToggleLeave}>
-                            <p className="plataform_option">{"Categorías >"}</p>
-                            {showSubMenu && (
-                                <ul className="submenu">
-                                    {categories.map((category) => (
-                                        <a key={category.ID_CATEGORY} href={""}>
-                                            <li>{category.NAME_CATEGORY}</li>
-                                        </a>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                        <a href="/products" className="plataform_option">
-                            <li>Productos</li>
-                        </a>
-                        <a href="/services" className="plataform_option">
-                            <li>Servicios</li>
-                        </a>
-                    </ul>
-                </div>
-                <div className="right_header_bottom">
-                    <ul className="module_search">
-                        <li>
-                            <input className="input_search" placeholder="Haz una Búsqueda..." onKeyPress={handleKeyPress}></input>
-                            <label className="icon_glass"><FaMagnifyingGlass color="#F7C600" size="20px" /></label>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <Header
+                user={user}
+                href_user_profile={href_user_profile}
+            />
+            <Navigation
+                categories={categories}
+                handleSubMenuToggleEnter={handleSubMenuToggleEnter}
+                handleSubMenuToggleLeave={handleSubMenuToggleLeave}
+                showSubMenu={showSubMenu}
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                handleKeyPress={handleKeyPress}
+            />
 
             <div className="section_top">
-                <h1 className="section_title_my_posts">MIS PUBLICACIONES</h1>
-                <a href="/create-publication">
-                    <button className="shortcut_create_new_publication">+</button>
-                </a>
+                <div className="section_title_my_posts_page">
+                    <h1 className="section_title_my_posts">MIS PUBLICACIONES</h1>
+                </div>
+                <div className="short_cut_create_post">
+                    <a href="/create-publication">
+                        <button className="shortcut_create_new_publication">+</button>
+                    </a>
+                </div>
             </div>
 
             <div className="my-publications">
 
-
-
                 {myPosts.map(publication => (
-                    <a key={publication.ID_PUBLICATION} className="post_link"
-                        href={`/view-publication/${publication.ID_PUBLICATION}`}>
-                        <div className="my-publication">
-                            <div className="my_publication">
-                                <div className="div_image_post">
-                                    <img className='image_my_post' src={publication.URL_IMAGE_OFFER} alt="" />
-                                </div>
-                                <div className="info_my_post">
-                                    <h1> {publication.NAME_OFFER} </h1>
-                                    <p className="price"><ColombianPrice price={publication.PRICE_OFFER} /></p>
-                                </div>
-                                <div className="properties-my-publication">
-                                    <select id="comboBox" value={selectedOption} onChange={handleOptionChange}>
-                                        <option value="DISPONIBLE">DISPONIBLE</option>
-                                        <option value="PAUSADA">PAUSADA</option>
-                                        <option value="FINALIZADA">FINALIZADA</option>
-                                    </select>
-                                    <button className="chats-my-publication">
-                                        Chats
-                                    </button>
-                                    <a href="/edit-publication">
-                                        <button className="edit-my-publication">
-                                            Editar
-                                        </button>
-                                    </a>
-                                    <button className="delete-my-publication">
-                                        Eliminar
-                                    </button>
-                                </div>
+
+                    <div className="my-publication">
+                        <div className="my_publication">
+                            <div className="div_image_post" key={publication.ID_PUBLICATION}
+                                onClick={() => window.location.href = `/view-publication/${publication.ID_PUBLICATION}`}>
+                                <img className='image_my_post' src={publication.URL_IMAGE_OFFER} alt="" />
+                            </div>
+                            <div className="info_my_post" key={publication.ID_PUBLICATION}
+                                onClick={() => window.location.href = `/view-publication/${publication.ID_PUBLICATION}`}>
+                                <h1> {publication.NAME_OFFER} </h1>
+                                <p className="price"><ColombianPrice price={publication.PRICE_OFFER} /></p>
+                            </div>
+                            <div className="properties_my_publication">
+                                <select id="comboBox" value={selectedOption} onChange={handleOptionChange}>
+                                    <option value="DISPONIBLE">DISPONIBLE</option>
+                                    <option value="PAUSADA">PAUSADA</option>
+                                    <option value="FINALIZADA">FINALIZADA</option>
+                                </select>
+                                <button className="chats-my-publication">
+                                    Chats
+                                </button>
+                                <button className="edit-my-publication"
+                                    key={publication.ID_PUBLICATION}
+                                    onClick={() => window.location.href = `/edit-publication/${publication.ID_PUBLICATION}`}>
+                                    Editar
+                                </button>
+                                <button className="delete-my-publication">
+                                    Eliminar
+                                </button>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 ))}
 
             </div>

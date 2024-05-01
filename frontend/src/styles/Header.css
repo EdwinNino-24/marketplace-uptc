@@ -1,27 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 :root {
-  --my-color1-main_page: #F7C600; 
-  --my-color2-main_page: #1E1A16; 
+  --my-color1-main_page: #F7C600;
+  --my-color2-main_page: #1E1A16;
   --my-color3-main_page: #FFF;
-  --my-color4-main_page: gray; 
+  --my-color4-main_page: gray;
 }
 
-.bg_main_page{
+.bg_main_page {
   margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    display:block;
-    background: var(--my-color3-main_page);
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: block;
+  background: var(--my-color3-main_page);
 }
 
-*{
+* {
   font-family: 'Inter', sans-serif;
 }
 
-.header{
+.header {
   width: 100%;
   background: var(--my-color1-main_page);
   height: 5rem;
@@ -35,48 +35,57 @@
   box-sizing: border-box;
 }
 
-.box_header_top{
+.box_header_top {
   width: 100%;
   display: flex;
   flex: 1;
 }
-.isotype_header{
+
+.isotype_header {
   width: 45%;
   float: left;
   padding-left: 1.5rem;
 }
-.isotype{
+
+.isotype {
   width: 70%;
   font-size: 2rem;
   color: var(--my-color1-main_page);
   background: var(--my-color2-main_page);
   text-align: center;
   text-decoration: none;
+  user-select: none;
 }
-.href_isotype{
+
+.href_isotype {
   text-decoration: none;
 }
 
-.list_user_options{
+.list_user_options {
   width: 55%;
   float: right;
+  user-select: none;
 }
-.user_options{
+
+.user_options {
   list-style: none;
   display: flex;
-    padding: 0;
-    margin: 0;
-    margin-top: 0.5rem;
+  padding: 0;
+  margin: 0;
+  margin-top: 0.5rem;
+  user-select: none;
 }
-.user_option{
+
+.user_option {
   padding: 0 1.5rem;
   color: var(--my-color2-main_page);
   font-size: 1.5rem;
   font-weight: lighter;
   text-decoration: none;
+  user-select: none;
 }
 
-.mainnav{
+.mainnav {
   position: fixed;
   z-index: 2;
   margin-top: 5.2%;
@@ -85,16 +94,19 @@
   height: 3rem;
   display: flex;
 }
-.left_header_bottom{
+
+.left_header_bottom {
   width: 60%;
   float: left;
 }
-.right_header_bottom{
+
+.right_header_bottom {
   width: 50%;
   float: right;
   padding-left: 16%;
 }
-.plataform_options{
+
+.plataform_options {
   cursor: pointer;
   list-style: none;
   display: flex;
@@ -102,15 +114,19 @@
   margin: 0;
   margin-top: 0.5rem;
   margin-left: 5%;
+  user-select: none;
 }
-.plataform_option{
+
+.plataform_option {
   padding: 0 1rem;
   color: var(--my-color1-main_page);
   font-size: 1.5rem;
   font-weight: lighter;
   text-decoration: none;
+  user-select: none;
 }
-.module_search{
+
+.module_search {
   list-style: none;
   display: flex;
   padding: 0;
@@ -118,12 +134,14 @@
   margin-top: 0.5rem;
   margin-left: 1.5%;
 }
-.submenu{
+
+.submenu {
   background: var(--my-color2-main_page);
   margin-top: 1rem;
   height: auto;
 }
-.submenu li{
+
+.submenu li {
   list-style: none;
   padding-left: 10%;
   font-size: 1.5rem;
@@ -131,27 +149,32 @@
   padding-bottom: 0.5rem;
   cursor: pointer;
   height: auto;
+  user-select: none;
 }
-.submenu li:hover{
+
+.submenu li:hover {
   background: var(--my-color1-main_page);
   color: var(--my-color2-main_page);
 }
-.submenu a{
+
+.submenu a {
   text-decoration: none;
   color: var(--my-color1-main_page);
   width: 100%;
 }
-.submenu a:hover{
+
+.submenu a:hover {
   text-decoration: none;
   background: var(--my-color1-main_page);
   color: var(--my-color2-main_page);
 }
-.icon_glass{
+
+.icon_glass {
   background: var(--my-color2-main_page);
   margin-left: 0.5rem;
 }
 
-.input_search{
+.input_search {
   padding: 0 1rem;
   color: var(--my-color2-main_page);
   font-size: 1.5rem;

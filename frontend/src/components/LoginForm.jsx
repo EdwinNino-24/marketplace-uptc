@@ -5,9 +5,15 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Modal from 'react-modal';
 
 const LoginForm = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [mensaje, setMensaje] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modal2IsOpen, setModal2IsOpen] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -47,11 +53,6 @@ const LoginForm = () => {
     }
   };
 
-  const [mensaje, setMensaje] = useState('');
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modal2IsOpen, setModal2IsOpen] = useState(false);
-
   const handleOK = () => {
     setModalIsOpen(false);
   };
@@ -60,12 +61,21 @@ const LoginForm = () => {
     window.location.href = '/activate-account';
   };
 
+  const handleChange1 = (e) => {
+    const { value } = e.target;
+    let processedValue = value;
+    if (value.includes(' ')) {
+      processedValue = value.replace(/\s/g, '');
+    }
+    setUsername(processedValue.toLowerCase());
+  };
+
   const customStyles = {
     content: {
-      width: '45%', // Cambia el porcentaje según tu preferencia
-      height: '33%', // Cambia el porcentaje según tu preferencia
-      margin: 'auto', // Para centrar el modal horizontalmente
-      backgroundColor: 'white', // Color de fondo del modal
+      width: '45%',
+      height: '33%',
+      margin: 'auto',
+      backgroundColor: 'white',
     },
   };
 
@@ -85,13 +95,14 @@ const LoginForm = () => {
                 type="text"
                 placeholder="Usuario"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => handleChange1(e)}
                 required
               />
               <label className="label-uptc">@uptc.edu.co</label>
             </div>
             <div className="input-box-password-login">
               <input
+                aria-label="Usuario"
                 type={passwordVisible ? 'text' : 'password'}
                 placeholder="Contraseña"
                 value={password}
@@ -139,11 +150,11 @@ const LoginForm = () => {
               contentLabel="Notificación"
               style={customStyles}
             >
-              <div className='notification_account_created'>
-                <h1 className='title_notification_account_created'>Notificación</h1>
-                <h2 className='subtitle_notification_account_created'>{mensaje}</h2>
-                <div className='button_notification_account_created'>
-                  <button className="ok_notification_account_created" onClick={handleOK2}>Continuar</button>
+              <div className='notification'>
+                <h1 className='title_notification'>Notificación</h1>
+                <h2 className='subtitle_notification'>{mensaje}</h2>
+                <div className='button_notification'>
+                  <button className="ok_notification" onClick={handleOK2}>Continuar</button>
                 </div>
               </div>
             </Modal>

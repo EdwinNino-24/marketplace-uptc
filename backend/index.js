@@ -17,8 +17,8 @@ const { enterPasswordRecover } = require('./passwordResetService.js');
 
 const { getUser, validateUser, updatePersonalInformation, updatePassword } = require('./userService.js');
 
-const { getPublication, getPublications, getProductsPosts, getServicesPosts, getMyPosts } = require('./postsService.js');
-const { insertPost } = require('./postService.js');
+const { getPublication, getPublications, getProductsPosts, getServicesPosts, getMyPosts, getPostsBySearch } = require('./postsService.js');
+const { insertPost, editPost } = require('./postService.js');
 
 const { getTypePosts, getCategories, getLocations } = require('./types.js');
 
@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/user_profile', (req, res) => {
-  res.json({user: decodedToken(req.body.token)});
+  getUser(req, res);
 });
 
 app.post('/crear-cuenta', (req, res) => {
@@ -68,7 +68,7 @@ app.post('/resend_code_recover', (req, res) => {
 });
 
 app.post('/enter_password_recover', (req, res) => {
-  enterPasswordRecover(req, res); 
+  enterPasswordRecover(req, res);
 });
 
 
@@ -87,20 +87,36 @@ app.post('/change_password', (req, res) => {
 
 app.get('/publications', getPublications);
 
-app.get('/get_products_posts', (req, res) => {
-  getProductsPosts(req, res);
+app.get('/get_products_posts', async (req, res) => {
+  try {
+    await fetchRandomImages();
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
+  }
+
+  await getProductsPosts(req, res);
 });
 
-app.get('/get_services_posts', (req, res) => {
-  getServicesPosts(req, res);
+app.get('/get_services_posts', async (req, res) => {
+  try {
+    await fetchRandomImages();
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
+  }
+
+  await getServicesPosts(req, res);
+});
+
+app.post('/get_posts_by_search', async (req, res) => {
+  await getPostsBySearch(req, res);
 });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname); 
+    cb(null, file.originalname);
   }
 });
 
@@ -112,36 +128,25 @@ const upload = multer({ storage });
 
 app.post('/get_post_images', async (req, res) => {
   try {
-      const folderPath = req.body.folderPath; 
+    const folderPath = req.body.folderPath;
 
-      const [files] = await bucket.getFiles({ prefix: folderPath });
-      const urls = await Promise.all(
-          files.map(async (file) => {
-              const [url] = await file.getSignedUrl({
-                  action: 'read',
-                  expires: '03-01-2500', 
-              });
-              return url;
-          })
-      );
-      res.json({ image: urls });
+    const [files] = await bucket.getFiles({ prefix: folderPath });
+    const urls = await Promise.all(
+      files.map(async (file) => {
+        const [url] = await file.getSignedUrl({
+          action: 'read',
+          expires: '03-01-2500',
+        });
+        return url;
+      })
+    );
+    res.json({ image: urls });
 
   } catch (error) {
-      console.error('Error fetching images:', error);
-      res.status(500).json({ message: 'Error fetching images' });
+    console.error('Error fetching images:', error);
+    res.status(500).json({ message: 'Error fetching images' });
   }
 });
-
-
-app.get('/get_random_images', async (req, res) => {
-  try {
-    await fetchRandomImages();
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
-  }
-});
-
-
 
 
 
@@ -157,34 +162,53 @@ app.get('/get_locations', (req, res) => {
   getLocations(req, res);
 });
 
-
-
 app.post('/verify_current_user', (req, res) => {
   validateUser(req, res);
 });
 
 app.post('/create_post', (req, res) => {
-  
+
   const post = {
     "title": req.body.title,
     "type": req.body.type,
     "category": req.body.category,
     "description": req.body.description,
-    "price": req.body.price,  
+    "price": req.body.price,
     "location": req.body.location,
     "token": req.body.token
   }
 
-  console.log(post);
-
   insertPost(post, res);
+  
 });
 
-app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
+app.post('/edit_post', (req, res) => {
+
+  editPost(req, res);
+
+});
+
+app.post('/delete_folder', async (req, res) => {
+  const folderPath = req.body.folderPath;
+
+  try {
+    const [files] = await bucket.getFiles({ prefix: folderPath });
+    const deletePromises = files.map(file => file.delete());
+    await Promise.all(deletePromises);
+    res.status(200).json({ message: 'Todos los archivos han sido eliminados' });
+  } catch (error) {
+    console.error('Error al eliminar archivos:', error);
+    res.status(500).json({ message: 'Error al eliminar archivos' });
+  }
+});
+
+app.post('/uploadImages', upload.array('images', 100), async (req, res) => {
+
   try {
 
     const id = req.body.id;
     const folderPath = path.join(__dirname, 'uploads', id);
+
 
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath);
@@ -196,8 +220,9 @@ app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
 
     const uploadedFiles = [];
 
+
     for (const file of req.files) {
-      const newName = `${Date.now()}-${file.originalname}`;
+      const newName = `${file.originalname}`;
 
       const fileSnapshot = await bucket.upload(file.path, {
         destination: `${id}/${newName}`,
@@ -205,7 +230,7 @@ app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
 
       const downloadURL = await fileSnapshot[0].getSignedUrl({
         action: 'read',
-        expires: '01-01-3000', 
+        expires: '01-01-3000',
       });
 
       uploadedFiles.push(downloadURL[0]);
@@ -222,137 +247,70 @@ app.post('/uploadImages', upload.array('images', 5), async (req, res) => {
   }
 });
 
-app.post('/get_my_posts', (req, res) => {
-  getMyPosts(req, res);
+app.post('/get_my_posts', async (req, res) => {
+  try {
+    await fetchRandomImages();
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
+  }
+
+  await getMyPosts(req, res);
 });
+
+
+
+
+
+app.post('/uploadEditImages', upload.array('images', 100), async (req, res) => {
+  const { id, removedUrls } = req.body;
+
+  // Convertir removedUrls de JSON string a objeto JavaScript, si es necesario
+  const urlsToDelete = JSON.parse(removedUrls || '[]');
+
+  try {
+    // Subir nuevos archivos y obtener URLs
+    const uploadPromises = req.files.map(async file => {
+      const newName = `${file.originalname}`; // Mantener el nombre original
+      const destination = `${id}/${newName}`;
+      const fileSnapshot = await bucket.upload(file.path, { destination });
+      const [downloadURL] = await fileSnapshot[0].getSignedUrl({
+        action: 'read',
+        expires: '01-01-3000',
+      });
+      fs.unlinkSync(file.path); // Eliminar el archivo localmente después de subirlo
+      return downloadURL;
+    });
+
+    const uploadedFiles = await Promise.all(uploadPromises);
+
+    // Eliminar imágenes antiguas
+    const deletePromises = urlsToDelete.map(async (url) => {
+      const fileName = url.split('/').pop().split('?')[0]; // Asumiendo que el nombre del archivo está al final de la URL
+      await bucket.file(`${id}/${fileName}`).delete();
+    });
+
+    await Promise.all(deletePromises);
+
+    res.json({ message: 'Imágenes subidas y actualizadas exitosamente', uploadedFiles });
+  } catch (error) {
+    console.error('Error al subir o eliminar imágenes:', error);
+    res.status(500).json({ message: 'Error al subir o eliminar imágenes' });
+
+    // Asegurar que todos los archivos temporales sean eliminados si algo falla
+    req.files.forEach(file => {
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    });
+  }
+});
+
+
+
+
+
+
 
 app.listen(5000, () => {
   console.log('Servidor Express corriendo en el puerto 5000');
 });
-
-
-
-
-
-/*const db = require('./user_crud'); 
-
-const newUser = {
-    ID_USER: 'ramirez.ra06',
-    CREATION_DATE_USER: new Date(), 
-    CODE_CONFIRMATION_USER: 12345, 
-    NAMES_USER: 'RAMIREZ',
-    LAST_NAMES_USER: 'RAMIREZ',
-    EMAIL_USER: 'ramirez.ra07@uptc.edu.co',
-    PASSWORD_USER: 'ramirezcos123',
-    CODE_SECURITY_USER: 67890
-  };
-
-  /*-------------------------CRUD-USERS----------------------------------*/
-  /*
-  db.insertUser(newUser, (err, resultado) => {
-    if (err) {
-      console.error('Error al insertar usuario:', err);
-      return;
-    }
-    console.log('Usuario insertado correctamente');
-  });
-  */
-
-  /*
-  db.getUser('ramirez.ra07', (err, usuario) => {
-    if (err) {
-      console.error('Error al obtener usuario por ID:', err);
-      return;
-    }
-    console.log('Usuario encontrado:', usuario);
-  });
-  */
-
-  /*
-  db.getUsers((err, usuarios) => {
-    if (err) {
-      console.error('Error al obtener usuarios:', err);
-      return;
-    }
-    console.log('Usuarios:', usuarios);
-  });
-  */
-
-  /*
-  db.getId('ramirez.ra07', (err, usuario) => {
-    if (err) {
-      console.error('Error al obtener usuario por ID:', err);
-      return;
-    }
-    console.log('Usuario encontrado:', usuario);
-  });
-  */
-
-  /*
-  db.getEmail('ramirez.ra07', (err, usuario) => {
-    if (err) {
-      console.error('Error al obtener usuario por ID:', err);
-      return;
-    }
-    console.log('Usuario encontrado:', usuario);
-  });
-  */
-
-  /*
-  db.getPassword('ramirez.ra07', (err, usuario) => {
-    if (err) {
-      console.error('Error al obtener usuario por ID:', err);
-      return;
-    }
-    console.log('Usuario encontrado:', usuario);
-  });
-  */
-
-  /*
-  db.updatePassword('ramirez.ra07', 'raaa', (err, resultado) => {
-    if (err) {
-      console.error('Error al modificar password del usuario:', err);
-      return;
-    }
-    console.log('Password del usuario modificado correctamente');
-  });
-  */
- 
-  /*const publication = {
-    ID_USER_SELLER: 'ramirez.ra07',
-    CREATION_DATE_PUBLICATION: new Date(), 
-    UPDATE_DATE_PUBLICATION: new Date(), 
-    TITLE_PUBLICATION: 'Título de la publicación',
-    URL_IMAGE_PUBLICATION: 'URL de la imagen de la publicación',
-    STATE_PUBLICATION: 'Estado de la publicación',
-    TYPE_PUBLICATION: 'Tipo de publicación',
-    CATEGORY_PUBLICATION: 'Categoría de la publicación',
-    DESCRIPTION_PUBLICATION: 'Descripción de la publicación',
-    SELLER_LOCATION: 'Ubicación del vendedor',
-    PRICE_PUBLICATION: 100 
-  };*/
-
-//const dbp = require('./publication_crud'); 
-
-/*
-dbp.insertPublication(publication, (err, resultado) => {
-  if (err) {
-    console.error('Error al insertar la publicación:', err);
-    return;
-  }
-  console.log('Publicación insertada correctamente');
-});
-*/
-
-/*
-dbp.getPublications((err, publications) => {
-  if (err) {
-    console.error('Error al obtener publicaciones:', err);
-    return;
-  }
-  console.log('Publicaciones:', publications);
-});
-*/
-
-
-

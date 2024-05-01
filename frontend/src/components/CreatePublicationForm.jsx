@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Spinner from './Spinner.jsx'; 
 
 import '../styles/CreatePublicationForm.css';
 import '../styles/Notification.css';
@@ -14,6 +15,8 @@ const CreatePublicationForm = () => {
     const handleBack = () => {
         navigate(-1);
     };
+
+    const [loading, setLoading] = useState(false);
 
     const [numericValue, setNumericValue] = useState('');
 
@@ -47,12 +50,12 @@ const CreatePublicationForm = () => {
     const onDrop = (acceptedFiles) => {
         // Filtra los archivos para incluir solo imágenes
         const imageFiles = acceptedFiles.filter(file => file.type.startsWith('image/'));
-    
+
         // Mapea cada archivo de imagen a un nuevo objeto con una URL de previsualización
         const newImages = imageFiles.map((file) => Object.assign(file, {
             preview: URL.createObjectURL(file)
         }));
-    
+
         // Actualiza el estado de las imágenes añadiendo las nuevas imágenes
         setImages([...images, ...newImages]);
     };
@@ -107,20 +110,20 @@ const CreatePublicationForm = () => {
     const handleSubmit = async (event) => {
         if (images.length > 0) {
             event.preventDefault();
-
+            setLoading(true); 
             try {
                 const response = await fetch('http://localhost:5000/create_post', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData) // Utiliza el objeto formData
+                    body: JSON.stringify(formData) 
                 });
 
                 if (response.ok) {
                     const data = await response.json();
                     const id_post = data.id_post;
-                    uploadImages(id_post);
+                    await uploadImages(id_post);
                     setMensaje("¡La publicación se ha creado exitosamente!");
                     setModalCreatePostIsOpen(true);
                 } else {
@@ -129,6 +132,7 @@ const CreatePublicationForm = () => {
             } catch (error) {
                 console.error('Error al enviar el formulario:', error.message);
             }
+            setLoading(false); 
         } else {
             console.log('No sea nuv, cargue una imagen');
         }
@@ -139,6 +143,7 @@ const CreatePublicationForm = () => {
     const handleImageChange = (event) => {
         if (images.length === 0) {
             setModalIsOpen(true);
+            console.log(formData);
         }
         const hasImages = images.length > 0;
         setCanPublish(hasImages);
@@ -215,7 +220,7 @@ const CreatePublicationForm = () => {
                                     {images.map((image, index) => (
                                         <div key={index} className="image_container">
                                             <img src={image.preview} className='preview_image' alt={`Imagen ${index}`} />
-                                            <button className="button_remove" onClick={() => removeImage(index)}>Eliminar</button>
+                                            <button type="button" className="button_remove" onClick={() => removeImage(index)}>Eliminar</button>
                                         </div>
                                     ))}
                                 </div>
@@ -303,6 +308,9 @@ const CreatePublicationForm = () => {
                                     </div>
                                 </Modal>
                                 <button className="button_publicate" onMouseOver={handleImageChange} type='submit' disabled={!canPublish}>PUBLICAR</button>
+                            </div>
+                            <div>
+                                {loading && <Spinner />}  
                             </div>
                         </div>
                     </form>

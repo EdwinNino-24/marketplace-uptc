@@ -31,10 +31,6 @@ const links = [
         href: "/main",
     },
     {
-        name: "MainPage",
-        href: "/main-page",
-    },
-    {
         name: "ProductsPage",
         href: "/products-page",
     },

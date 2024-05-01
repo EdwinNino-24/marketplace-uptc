@@ -1,25 +1,32 @@
-import React, { useState, useEffect } from "react";
-import Axios from 'axios';
-
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-
 import '../styles/Header.css';
 import '../styles/Banner.css';
 import '../styles/ImageSlider.css';
 import '../styles/Publications.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+import Spinner from './Spinner.jsx';
+import Slider from 'react-slick';
+
+import React, { useState, useEffect } from "react";
+import Axios from 'axios';
 
 import BANNER1 from "../images/3.jpeg";
 import BANNER2 from "../images/4.jpeg";
 import BANNER3 from "../images/banner3.jpeg";
 
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import Header from './Header';
+import Navigation from './Navigation.jsx';
+import { ColombianPrice } from './ColombianPrice.jsx'; 
 
 
 export const MainPage = () => {
 
+    const [loading, setLoading] = useState(false);
+
     const [user, setUser] = useState("Iniciar Sesión");
+
+    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
 
     const send_token_user = () => {
         const token = localStorage.getItem('token');
@@ -32,7 +39,7 @@ export const MainPage = () => {
 
         Axios.post('http://localhost:5000/user_profile', { token: token })
             .then(response => {
-                const { user } = response.data;
+                const user = response.data.ID_ACCOUNT;
                 setUser(user ? user : "Iniciar Sesión");
             })
             .catch(error => {
@@ -45,6 +52,66 @@ export const MainPage = () => {
         send_token_user();
     }, []);
 
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_categories')
+            .then(response => response.json())
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+
+    const [showSubMenu, setShowSubMenu] = useState(false);
+
+    const handleSubMenuToggleEnter = () => {
+        setShowSubMenu(true);
+    };
+    const handleSubMenuToggleLeave = () => {
+        setShowSubMenu(false);
+    };
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
+
+
+    const [productsPosts, setProductsPosts] = useState([]);
+
+    useEffect(() => {
+        setLoading(true);
+        fetch('http://localhost:5000/get_products_posts')
+            .then(response => response.json())
+            .then(data => {
+                setProductsPosts(data);
+            })
+            .catch(error => console.error('Error al obtener las publicaciones:', error))
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
+    const [servicesPosts, setServicesPosts] = useState([]);
+
+    useEffect(() => {
+        setLoading(true);
+        fetch('http://localhost:5000/get_services_posts')
+            .then(response => response.json())
+            .then(data => setServicesPosts(data))
+            .catch(error => console.error('Error al obtener las publicaciones:', error))
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
+
     const settings = {
         dots: true,
         infinite: true,
@@ -55,152 +122,25 @@ export const MainPage = () => {
         autoplaySpeed: 5000
     };
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            window.location.href = '/publications-page';
-            console.log('Se presionó Enter');
-        }
-    };
-
-    const [showSubMenu, setShowSubMenu] = useState(false);
-    const [isOverSubList, setIsOverSubList] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleSubMenuToggleEnter = () => {
-        setShowSubMenu(true);
-    };
-    const handleIsOverSubList = () => {
-        setIsOverSubList(true);
-    };
-    const handleSubMenuToggleLeave = () => {
-        setShowSubMenu(false);
-    };
-
-    const handleSearch = (event) => {
-        if (event.key === 'Enter') {
-            // Redirigir a la página de búsqueda con el término de búsqueda
-            console.log("Search term:", searchTerm);
-            // Reemplaza el console.log con la redirección real
-        }
-    };
-
-    const [productsPosts, setProductsPosts] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:5000/get_products_posts')
-            .then(response => response.json())
-            .then(data => setProductsPosts(data))
-            .catch(error => console.error('Error al obtener las publicaciones:', error));
-    }, []);
-
-    const [servicesPosts, setServicesPosts] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:5000/get_services_posts')
-            .then(response => response.json())
-            .then(data => setServicesPosts(data))
-            .catch(error => console.error('Error al obtener las publicaciones:', error));
-    }, []);
-
-
-    const formatToColombianPesos = (value) => {
-        const formattedValue = Number(value).toLocaleString('es-CO', {
-            style: 'currency',
-            currency: 'COP'
-        });
-
-        return formattedValue;
-    }
-
-    function ColombianPrice({ price }) {
-        const formattedPrice = formatToColombianPesos(price);
-
-        return <span>{formattedPrice}</span>;
-    }
-
-    const [randomImages, setRandomImages] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:5000/get_random_images')
-            .then(response => response.json())
-            .then(data => setRandomImages(data))
-            .catch(error => console.error('Error al obtener las imágenes aleatorias:', error));
-    }, []);
-
-    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
-
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:5000/get_categories')
-            .then(response => response.json())
-            .then(data => setCategories(data))
-            .catch(error => console.error('Error:', error));
-    }, []);
 
     return (
         <div className="bg_main_page">
-            <header className="header">
-                <div className="box_header_top">
-                    <div className="isotype_header">
-                        <a href="/main-page" className="href_isotype">
-                            <h1 className="isotype">MARKETPLACE - UPTC</h1>
-                        </a>
-                    </div>
-                    <div className="list_user_options">
-                        <ul className="user_options">
-                            <li>
-                                <a className="user_option" href="/main-page">Inicio</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/create-publication">Publicar</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/my-publications-page">Mis Ofertas</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/my-publications-page">Mis Chats</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href={href_user_profile}>{user}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </header>
-            <nav className="mainnav">
-                <div className="left_header_bottom">
-                    <ul className="plataform_options">
-                        <li onMouseEnter={handleSubMenuToggleEnter}
-                            onMouseLeave={handleSubMenuToggleLeave}>
-                            <p className="plataform_option">{"Categorías >"}</p>
-                            {showSubMenu && (
-                                <ul className="submenu">
-                                    {categories.map((category) => (
-                                        <a key={category.ID_CATEGORY} href={""}>
-                                            <li>{category.NAME_CATEGORY}</li>
-                                        </a>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                        <a href="/products" className="plataform_option">
-                            <li>Productos</li>
-                        </a>
-                        <a href="/services" className="plataform_option">
-                            <li>Servicios</li>
-                        </a>
-                    </ul>
-                </div>
-                <div className="right_header_bottom">
-                    <ul className="module_search">
-                        <li>
-                            <input className="input_search" placeholder="Haz una Búsqueda..." onKeyPress={handleKeyPress}></input>
-                            <label className="icon_glass"><FaMagnifyingGlass color="#F7C600" size="20px" /></label>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <div>
+                {loading && <Spinner />}
+            </div>
+            <Header
+                user={user}
+                href_user_profile={href_user_profile}
+            />
+            <Navigation
+                categories={categories}
+                handleSubMenuToggleEnter={handleSubMenuToggleEnter}
+                handleSubMenuToggleLeave={handleSubMenuToggleLeave}
+                showSubMenu={showSubMenu}
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                handleKeyPress={handleKeyPress}
+            />
             <div className="banner">
                 <Slider className='slider-main-page' {...settings}>
                     <div className="slide">

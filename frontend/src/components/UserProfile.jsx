@@ -3,47 +3,53 @@ import '../styles/UserProfile.css';
 import '../styles/Header.css';
 import Axios from 'axios';
 
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { AiFillDatabase } from "react-icons/ai";
 import { PiCrosshairSimpleFill } from "react-icons/pi";
 import { PiChatsFill } from "react-icons/pi";
 import { GrLogout } from "react-icons/gr";
 
+import Header from './Header';
+import Navigation from './Navigation.jsx';
+
 
 export const UserProfile = () => {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState("Iniciar Sesión");
+
+    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
 
     const send_token_user = () => {
-        Axios.post('http://localhost:5000/user_profile', {
-            token: localStorage.getItem('token'),
-        })
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log('No hay token disponible.');
+            setUser("Iniciar Sesión");
+            return;
+        }
+
+        Axios.post('http://localhost:5000/user_profile', { token: token })
             .then(response => {
-                const data = response.data;
-                if(data.user != null){
-                    setUser(data.user);
-                }
-                else{
-                    setUser("Iniciar Sesión")
-                }
+                const user = response.data.ID_ACCOUNT;
+                setUser(user ? user : "Iniciar Sesión");
             })
             .catch(error => {
                 console.error('Error al iniciar sesión:', error);
+                setUser("Iniciar Sesión");
             });
     };
 
     useEffect(() => {
-        setUser("");
         send_token_user();
     }, []);
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            // Ejecuta la acción aquí
-            window.location.href = '/publications-page';
-            console.log('Se presionó Enter');
-        }
-    };
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:5000/get_categories')
+            .then(response => response.json())
+            .then(data => setCategories(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
 
     const [showSubMenu, setShowSubMenu] = useState(false);
 
@@ -54,86 +60,42 @@ export const UserProfile = () => {
         setShowSubMenu(false);
     };
 
-    const handleClick = () => {
-         localStorage.removeItem('token');
-         setUser("Iniciar Sesión");
-         localStorage.removeItem('token');
-         send_token_user();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
     };
 
-    const [categories, setCategories] = useState([]);
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
 
-    useEffect(() => {
-        fetch('http://localhost:5000/get_categories')
-            .then(response => response.json())
-            .then(data => setCategories(data))
-            .catch(error => console.error('Error:', error));
-    }, []);
-    
+    const handleClick = () => {
+        localStorage.removeItem('token');
+        setUser("Iniciar Sesión");
+        localStorage.removeItem('token');
+        send_token_user();
+    };
+
+
     return (
         <div className="bg_my_account">
 
-            <header className="header">
-                <div className="box_header_top">
-                    <div className="isotype_header">
-                        <a href="/main-page" className="href_isotype">
-                            <h1 className="isotype">MARKETPLACE - UPTC</h1>
-                        </a>
-                    </div>
-                    <div className="list_user_options">
-                        <ul className="user_options">
-                            <li>
-                                <a className="user_option" href="/main-page">Inicio</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/products-page">Publicar</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/services-page">Mis Ofertas</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/create-publication">Mis Chats</a>
-                            </li>
-                            <li>
-                                <a className="user_option" href="/user-profile">{user}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </header>
-            <nav className="mainnav">
-                <div className="left_header_bottom">
-                    <ul className="plataform_options">
-                        <li onMouseEnter={handleSubMenuToggleEnter}
-                            onMouseLeave={handleSubMenuToggleLeave}>
-                            <p className="plataform_option">{"Categorías >"}</p>
-                            {showSubMenu && (
-                                <ul className="submenu">
-                                    {categories.map((category) => (
-                                        <a key={category.ID_CATEGORY} href={""}>
-                                            <li>{category.NAME_CATEGORY}</li>
-                                        </a>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                        <a href="/products" className="plataform_option">
-                            <li>Productos</li>
-                        </a>
-                        <a href="/services" className="plataform_option">
-                            <li>Servicios</li>
-                        </a>
-                    </ul>
-                </div>
-                <div className="right_header_bottom">
-                    <ul className="module_search">
-                        <li>
-                            <input className="input_search" placeholder="Haz una Búsqueda..." onKeyPress={handleKeyPress}></input>
-                            <label className="icon_glass"><FaMagnifyingGlass color="#F7C600" size="20px" /></label>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <Header
+                user={user}
+                href_user_profile={href_user_profile}
+            />
+            <Navigation
+                categories={categories}
+                handleSubMenuToggleEnter={handleSubMenuToggleEnter}
+                handleSubMenuToggleLeave={handleSubMenuToggleLeave}
+                showSubMenu={showSubMenu}
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+                handleKeyPress={handleKeyPress}
+            />
 
             <div className="bg_user_profile">
                 <div className="section_settings">

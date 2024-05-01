@@ -12,8 +12,6 @@ const useAuth = () => {
         } else {
             Axios.post('http://localhost:5000/verify_current_user', { token: token })
                 .then(response => {
-                    // Asumiendo que el servidor devuelve un booleano true/false o algo similar
-                    // Si el servidor realmente devuelve 1 o 0, puedes necesitar ajustar esto:
                     setIsAuthenticated(response.data.isValid === 1);
                 })
                 .catch(error => {
@@ -21,7 +19,7 @@ const useAuth = () => {
                     setIsAuthenticated(false);
                 });
         }
-    }, []); // La dependencia [] asegura que este efecto se ejecute solo una vez al montar el componente.
+    }, []);
 
     return isAuthenticated;
 };

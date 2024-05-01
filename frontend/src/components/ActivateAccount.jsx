@@ -62,7 +62,7 @@ const ActivateAccount = () => {
     };
     const handleOK2 = () => {
         setModal2IsOpen(false);
-        window.location.href = '/main-page';
+        window.location.href = '/login';
     };
 
     const customStyles = {
@@ -106,15 +106,13 @@ const ActivateAccount = () => {
         handleClick();
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/resend_code_activation', {
+            await fetch('http://localhost:5000/resend_code_activation', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ token: (localStorage.getItem('token')) }) // Envías solo el código en el cuerpo de la solicitud
             });
-            const data = await response.json();
-
 
         } catch (error) {
             console.error('Error:', error);

@@ -38,19 +38,17 @@ const NewPasswordForm = () => {
                 });
 
                 if (response.ok) {
-                    console.log('Contraseña actualizada correctamente');
-                    // Aquí podrías redirigir al usuario a una página de inicio de sesión, por ejemplo
-                    window.location.href = '/main-page';
+                    const data = await response.json();
+                    await localStorage.setItem('token', data.token);
+                    setMensaje("¡Su contraseña se ha guardado correctamente!");
+                    setModal2IsOpen(true);
                 } else {
                     console.error('Error al actualizar la contraseña:', response.statusText);
-                    // Aquí podrías mostrar un mensaje de error al usuario
                 }
             } catch (error) {
                 console.error('Error:', error);
-                // Aquí podrías mostrar un mensaje de error al usuario
             }
         } else {
-            // Aquí podrías mostrar un mensaje indicando que el campo de la contraseña es obligatorio
         }
     };
 

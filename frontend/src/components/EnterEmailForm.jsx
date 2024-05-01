@@ -39,11 +39,11 @@ const EnterEmailForm = () => {
                     setModalIsOpen(true);
                 }
                 else if (data.code === "1") {
-                    localStorage.setItem('token', data.token);
+                    await localStorage.setItem('token', data.token);
                     setMessage('¡Este usuario no ha activado la cuenta!');
                     setModal3IsOpen(true);
-                } else {
-                    localStorage.setItem('token', data.token);
+                } else if (data.code === "2") {
+                    await localStorage.setItem('token', data.token);
                     setModal2IsOpen(true);
                 }
             } catch (error) {

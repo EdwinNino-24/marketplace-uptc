@@ -1,10 +1,9 @@
 const { queryDatabase } = require('./databaseService.js');
 const { sendMail } = require('./emailService.js');
-const jwt = require('jsonwebtoken');
 const { hashCode, checkCode } = require('./hashService.js');
-const { decodedToken } = require('./jwtService.js');
+const { generateToken, decodedToken } = require('./jwtService.js');
 
-function generateRandomCode(length) {
+async function generateRandomCode(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   const charactersLength = characters.length;
@@ -15,35 +14,28 @@ function generateRandomCode(length) {
 }
 
 async function searchAccountRecover(req, res) {
-  const code_recover = generateRandomCode(6); // Asegúrate de que esta función existe y genera un código
-  console.log(code_recover);
+  if (!req.body.email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  const code_recover = await generateRandomCode(6);
   try {
-    const code_recover_hashed = await hashCode(code_recover); // Asegúrate de que hashCode es una función async que hashea correctamente
-    const results = await queryDatabase('SELECT * FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [req.body.email]); // Uso de async/await en lugar de callbacks
+    const code_recover_hashed = await hashCode(code_recover);
+    const results = await queryDatabase('SELECT * FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [req.body.email]);
     if (results.length === 0) {
-      console.log('Usuario no encontrado');
-      res.json({ code: "0" });
-      return;
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
     const usuarioEncontrado = results[0];
-    console.log('Usuario encontrado:', usuarioEncontrado);
 
-    if (usuarioEncontrado.STATE_ACCOUNT) {
-      // Actualiza el código de seguridad hasheado en la base de datos
-      await queryDatabase('UPDATE ACCOUNTS SET CODE_SECURITY_HASHED = ? WHERE ID_ACCOUNT = ?', [code_recover_hashed, req.body.email]);
-
-      // Enviar correo con el código de recuperación (código no hasheado)
-      sendMail("RECUPERA TU CUENTA DE MARKETPLACE - UPTC", "recuperación", usuarioEncontrado.ID_ACCOUNT, code_recover);
-
-      const token = jwt.sign({ username: req.body.email, sesion: false, activate: false }, '2404');
-      res.json({ user: req.body.email, token: token, code: "2" });
-    }
-    else{
-      const token = jwt.sign({ username: req.body.email, sesion: false, activate: false }, '2404');
-      res.json({ user: req.body.email, token: token, code: "1" });
+    if (!usuarioEncontrado.STATE_ACCOUNT) {
+      return res.json({ code: "1" }); // Cuenta desactivada
     }
 
+    await queryDatabase('UPDATE ACCOUNTS SET CODE_SECURITY_HASHED = ? WHERE ID_ACCOUNT = ?', [code_recover_hashed, req.body.email]);
+    await sendMail("RECUPERA TU CUENTA DE MARKETPLACE - UPTC", "recuperación", req.body.email, code_recover);
+    const token = await generateToken(req.body.email, false, true);
+    res.json({ code: "2", token: token });
   } catch (error) {
     console.error('Error al buscar usuario en la base de datos:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
@@ -51,63 +43,52 @@ async function searchAccountRecover(req, res) {
 }
 
 async function resendCodeRecovery(req, res) {
+  const user = await decodedToken(req.body.token);
+  if (!user) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 
-  const user = decodedToken(req.body.token);
-  const code_recovery = generateRandomCode(6);
+  const code_recovery = await generateRandomCode(6);
   try {
-    // Await the completion of the password hashing
-    const code_activation_hashed = await hashCode(code_recovery);
-    console.log(code_recovery);
-
-    // Check for existing account and retrieve the personal ID
-    const accountCheck = await queryDatabase('SELECT ID_ACCOUNT FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [user]);
-    if (accountCheck.length > 0) {
-      await queryDatabase(
-        'UPDATE ACCOUNTS SET CODE_SECURITY_HASHED=? WHERE ID_ACCOUNT=?',
-        [code_activation_hashed, user]
-      );
-      sendMail("RECUPERA TU CUENTA DE MARKETPLACE - UPTC", "recuperación", user, code_recovery, () => {
-        console.log('Activation email sent.');
-      });
-    }
-
+    const code_recovery_hashed = await hashCode(code_recovery);
+    await queryDatabase('UPDATE ACCOUNTS SET CODE_SECURITY_HASHED=? WHERE ID_ACCOUNT=?', [code_recovery_hashed, user]);
+    await sendMail("RECUPERA TU CUENTA DE MARKETPLACE - UPTC", "recuperación", user, code_recovery);
+    res.json({ message: 'Activation email sent.' });
   } catch (error) {
-    console.log('An error occurred: ' + error.message, null);
+    console.error('An error occurred:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 
 async function recoverAccount(req, res) {
+  if (!req.body.token || !req.body.code) {
+    return res.status(400).json({ message: "Token and code are required" });
+  }
+
   try {
-    // Decodificar el token y obtener información del usuario
-    const currentUser = decodedToken(req.body.token); // Asegúrate de que esta función está correctamente definida y maneja errores
-    console.log(currentUser);
-    // Consultar la base de datos para obtener el hash del código de seguridad
+    const currentUser = await decodedToken(req.body.token);
+    if (!currentUser) {
+      return res.status(401).json({ message: "Invalid or expired token" });
+    }
+
     const results = await queryDatabase('SELECT CODE_SECURITY_HASHED FROM ACCOUNTS WHERE ID_ACCOUNT = ?', [currentUser]);
-    console.log(results);
-    if (results.length > 0) {
-      const { CODE_SECURITY_HASHED } = results[0];
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
 
-      // Comparar el código proporcionado con el hash almacenado utilizando bcrypt
-      const isMatch = await checkCode(req.body.code, CODE_SECURITY_HASHED);
+    const { CODE_SECURITY_HASHED } = results[0];
+    const isMatch = await checkCode(req.body.code, CODE_SECURITY_HASHED);
 
-      console.log(isMatch);
-
-      if (isMatch) {
-        // Código correcto, generar nuevo token con sesión activa
-        const token = jwt.sign({ username: currentUser, session: true, activate: true }, '2404');
-        res.json({ user: currentUser, token: token, code: "1" });
-      } else {
-        // Código incorrecto, generar token con sesión no activa
-        const token = jwt.sign({ username: currentUser, session: false, activate: true }, '2404');
-        res.json({ user: currentUser, token: token, code: "0" });
-      }
+    if (isMatch) {
+      const token = generateToken(currentUser, true, true);
+      res.json({ code: "1", token: token });
     } else {
-      console.log('Usuario no encontrado');
-      res.status(404).json({ message: 'Usuario no encontrado' });
+      const token = generateToken(currentUser, false, true);
+      res.json({ code: "0", token: token });
     }
   } catch (error) {
-    console.error('Error al buscar usuario en la base de datos:', error);
-    res.status(500).json({ message: 'Error interno del servidor' });
+    console.error('Error during account recovery:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 

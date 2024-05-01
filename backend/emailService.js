@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-function sendMail(title, body, email, code) {
+async function sendMail(title, body, email, code) {
   const mailOptions = {
     from: 'sac.marketplace.uptc@gmail.com',
     to: email + '@uptc.edu.co',
@@ -18,7 +18,7 @@ function sendMail(title, body, email, code) {
     text: `Tu código de ${body} es: ${code}`
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
+  await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error('Error al enviar correo electrónico:', error);
     } else {
