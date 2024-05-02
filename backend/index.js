@@ -18,9 +18,9 @@ const { enterPasswordRecover } = require('./passwordResetService.js');
 const { getUser, validateUser, updatePersonalInformation, updatePassword } = require('./userService.js');
 
 const { getPublication, getPublications, getProductsPosts, getServicesPosts, getMyPosts, getPostsBySearch } = require('./postsService.js');
-const { insertPost, editPost } = require('./postService.js');
+const { insertPost, editPost, updateStatePost } = require('./postService.js');
 
-const { getTypePosts, getCategories, getLocations } = require('./types.js');
+const { getTypePosts, getCategories, getLocations, getStates } = require('./types.js');
 
 const { fetchRandomImages } = require('./imageHandler.js');
 
@@ -111,20 +111,12 @@ app.post('/get_posts_by_search', async (req, res) => {
   await getPostsBySearch(req, res);
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
+
 
 app.get('/publications/:id', (req, res) => {
   getPublication(req, res);
 });
 
-const upload = multer({ storage });
 
 app.post('/get_post_images', async (req, res) => {
   try {
@@ -149,6 +141,9 @@ app.post('/get_post_images', async (req, res) => {
 });
 
 
+app.get('/get_type_offers', (req, res) => {
+  getTypePosts(req, res);
+});
 
 app.get('/get_type_offers', (req, res) => {
   getTypePosts(req, res);
@@ -160,6 +155,10 @@ app.get('/get_categories', (req, res) => {
 
 app.get('/get_locations', (req, res) => {
   getLocations(req, res);
+});
+
+app.get('/get_states', (req, res) => {
+  getStates(req, res);
 });
 
 app.post('/verify_current_user', (req, res) => {
@@ -179,14 +178,27 @@ app.post('/create_post', (req, res) => {
   }
 
   insertPost(post, res);
-  
+
 });
 
 app.post('/edit_post', (req, res) => {
-
   editPost(req, res);
-
 });
+
+app.post('/update_publication_state', (req, res) => {
+  updateStatePost(req, res);
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage });
 
 app.post('/delete_folder', async (req, res) => {
   const folderPath = req.body.folderPath;

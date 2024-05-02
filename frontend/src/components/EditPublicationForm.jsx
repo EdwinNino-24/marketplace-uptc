@@ -255,7 +255,6 @@ const EditPublication = () => {
     }, []);
 
 
-
     return (
         <div className="bg_create_publication">
             <header className="header">

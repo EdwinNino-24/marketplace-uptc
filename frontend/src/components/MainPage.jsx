@@ -148,7 +148,7 @@ export const MainPage = () => {
                         <img className='right_image_slide' src={BANNER1} alt="" />
                     </div>
                     <div className="slide">
-                        <h1 className="right_title_slide">CONTACTA CON TUTORES PARA AGENDA UNA CITA</h1>
+                        <h1 className="right_title_slide">CONTACTA CON TUTORES PARA AGENDAR UNA CITA</h1>
                         <img className='left_image_slide' src={BANNER2} alt="" />
                     </div>
                     <div className="slide">

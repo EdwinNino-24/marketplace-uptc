@@ -174,7 +174,7 @@ export const ViewPublication = () => {
                     <div className="info_post">
                         <div className="data_post">
                             <h1>{publication.NAME_OFFER}</h1>
-                            <p> {publication.OFFER_TYPE}: {publication.STATE_PUBLICATION} </p>
+                            <p> {publication.OFFER_TYPE}: {publication.NAME_STATE} </p>
                             <p> Categoría: {publication.NAME_CATEGORY} </p>
                             <h2> Descripción </h2>
                             <p className="description"> {publication.DESCRIPTION_OFFER} </p>

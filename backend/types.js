@@ -5,7 +5,6 @@ async function getTypePosts(req, res) {
         if (error) {
             return res.status(500).json({ error: "Error al consultar la base de datos" });
         }
-        console.log(results);
         res.json(results);
     });
 }
@@ -15,7 +14,6 @@ async function getLocations(req, res) {
         if (error) {
             return res.status(500).json({ error: "Error al consultar la base de datos" });
         }
-        console.log(results);
         res.json(results);
     });
 }
@@ -25,9 +23,17 @@ async function getCategories(req, res) {
         if (error) {
             return res.status(500).json({ error: "Error al consultar la base de datos" });
         }
-        console.log(results);
         res.json(results);
     });
 }
 
-module.exports = { getTypePosts, getCategories, getLocations };
+async function getStates(req, res) {
+    await queryDatabase('SELECT * FROM STATES', (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: "Error al consultar la base de datos" });
+        }
+        res.json(results);
+    });
+}
+
+module.exports = { getTypePosts, getCategories, getLocations, getStates };

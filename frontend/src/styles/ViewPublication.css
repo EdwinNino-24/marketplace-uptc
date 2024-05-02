@@ -32,7 +32,7 @@
 .images_post{
   width: 55%;
   float: left;
-  height: auto; /* Esto ajustará la altura según la relación de aspecto de la imagen */
+  height: auto; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,7 +62,7 @@
 }
 
 .data_post{
-
+  padding-right: 5%;
 }
 .data_post h1{
   font-size: 4rem;

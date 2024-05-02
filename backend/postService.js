@@ -15,8 +15,8 @@ async function insertOffer(offer, post, decoded, res) {
 
 async function insertPublication(post, offerId, decoded, res) {
     const query = `INSERT INTO PUBLICATIONS 
-                   (ID_OFFERER, ID_CATEGORY, ID_LOCATION, ID_OFFER, CREATION_DATE, UPDATE_DATE, STATE_PUBLICATION)
-                   VALUES (?, ?, ?, ?, NOW(), NOW(), 'Disponible')`;
+                   (ID_OFFERER, ID_CATEGORY, ID_LOCATION, ID_OFFER, ID_STATE, CREATION_DATE, UPDATE_DATE)
+                   VALUES (?, ?, ?, ?, 1, NOW(), NOW())`;
     await queryDatabase(query, [decoded, post.category, post.location, offerId]);
     res.json({ id_post: offerId });
 }
@@ -59,40 +59,93 @@ async function editPost(req, res) {
         location: req.body.location,
     };
 
-    const publicationQuery = `
-        SELECT P.ID_PUBLICATION, O.ID_OFFER
-        FROM PUBLICATIONS P
-        JOIN OFFERS O ON P.ID_OFFER = O.ID_OFFER
-        WHERE P.ID_PUBLICATION = ?;
-    `;
-
     try {
-        const results = await queryDatabase(publicationQuery, [post.id]);
-        if (results.length === 0) {
+        const publication = await fetchPublicationDetails(post.id);
+        if (!publication) {
             return res.status(404).json({ error: 'Publicación no encontrada' });
         }
 
-        const publication = results[0];
-        await editOffer(publication, post);
-        await editPublication(post);
-        res.json({ message: "ok" });
+        if (publication.ID_OFFERER !== decoded) {
+            return res.status(403).json({ error: 'No autorizado para actualizar esta publicación' });
+        }
+
+        await editOffer(publication.ID_OFFER, post);
+        await editPublication(publication.ID_PUBLICATION, post);
+        res.json({ message: "Publicación actualizada correctamente" });
     } catch (error) {
         console.error('Error en la edición:', error);
         res.status(500).json({ error: 'Error al actualizar la publicación y la oferta' });
     }
 }
 
-async function editOffer(publication, post) {
+async function fetchPublicationDetails(publicationId) {
+    const publicationQuery = `
+        SELECT P.ID_PUBLICATION, P.ID_OFFERER, O.ID_OFFER
+        FROM PUBLICATIONS P
+        JOIN OFFERS O ON P.ID_OFFER = O.ID_OFFER
+        WHERE P.ID_PUBLICATION = ?;
+    `;
+    const results = await queryDatabase(publicationQuery, [publicationId]);
+    return results.length > 0 ? results[0] : null;
+}
+
+async function editOffer(offerId, post) {
     const offerQuery = `UPDATE OFFERS SET ID_TYPE = ?, NAME_OFFER = ?, DESCRIPTION_OFFER = ?, PRICE_OFFER = ? WHERE ID_OFFER = ?`;
-    await queryDatabase(offerQuery, [post.type, post.title, post.description, post.price, publication.ID_OFFER]);
+    await queryDatabase(offerQuery, [post.type, post.title, post.description, post.price, offerId]);
 }
 
-async function editPublication(post) {
-    const publicationQuery = `UPDATE PUBLICATIONS SET ID_CATEGORY = ?, ID_LOCATION = ?, UPDATE_DATE = NOW(), STATE_PUBLICATION = 'Disponible' WHERE ID_PUBLICATION = ?`;
-    await queryDatabase(publicationQuery, [post.category, post.location, post.id]);
+async function editPublication(publicationId, post) {
+    const publicationQuery = `UPDATE PUBLICATIONS SET ID_CATEGORY = ?, ID_LOCATION = ?, UPDATE_DATE = NOW(), ID_STATE = 1 WHERE ID_PUBLICATION = ?`;
+    await queryDatabase(publicationQuery, [post.category, post.location, publicationId]);
 }
 
 
+async function updateStatePost(req, res) {
+    const { publicationId, newState, token } = req.body;
+
+    if (!publicationId || !newState || !token) {
+        return res.status(400).json({ error: 'Faltan datos requeridos' });
+    }
+
+    const user = decodedToken(token);
+    if (!user) {
+        return res.status(400).json({ error: 'Token inválido' });
+    }
+
+    try {
+        const isAuthorized = await checkPublicationOwnership(publicationId, user);
+        if (!isAuthorized) {
+            return res.status(403).json({ error: 'No autorizado para actualizar esta publicación' });
+        }
+
+        const success = await updatePublicationState(publicationId, newState);
+        if (!success) {
+            return res.status(404).json({ error: 'No se pudo actualizar la publicación' });
+        }
+
+        res.json({ success: 'Publicación actualizada correctamente' });
+    } catch (error) {
+        console.error('Error en la edición:', error);
+        res.status(500).json({ error: 'Error al actualizar la publicación' });
+    }
+}
+
+async function checkPublicationOwnership(publicationId, userId) {
+    const query = 'SELECT ID_OFFERER FROM PUBLICATIONS WHERE ID_PUBLICATION = ?';
+    const results = await queryDatabase(query, [publicationId]);
+
+    if (results.length === 0) {
+        return false;
+    }
+
+    return results[0].ID_OFFERER === userId;
+}
+
+async function updatePublicationState(publicationId, newState) {
+    const updateQuery = 'UPDATE PUBLICATIONS SET ID_STATE = ?, UPDATE_DATE = NOW() WHERE ID_PUBLICATION = ?';
+    const results = await queryDatabase(updateQuery, [newState, publicationId]);
+    return results.affectedRows > 0;
+}
 
 
-module.exports = { insertPost, editPost };
+module.exports = { insertPost, editPost, updateStatePost };

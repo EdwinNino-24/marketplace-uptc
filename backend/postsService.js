@@ -27,12 +27,14 @@ async function getProductsPosts(req, res) {
             P.ID_OFFERER,
             P.CREATION_DATE,
             P.UPDATE_DATE,
-            P.STATE_PUBLICATION
+            P.ID_STATE,
+            S.NAME_STATE
         FROM PUBLICATIONS P
         JOIN OFFERS O ON P.ID_OFFER = O.ID_OFFER
         JOIN TYPES_OFFERS T ON O.ID_TYPE = T.ID_TYPE
         JOIN CATEGORIES C ON P.ID_CATEGORY = C.ID_CATEGORY
         JOIN LOCATIONS L ON P.ID_LOCATION = L.ID_LOCATION
+        JOIN STATES S ON P.ID_STATE = S.ID_STATE
         WHERE T.ID_TYPE = 1
         ORDER BY P.UPDATE_DATE DESC;
     `;
@@ -60,12 +62,14 @@ async function getServicesPosts(req, res) {
             P.ID_OFFERER,
             P.CREATION_DATE,
             P.UPDATE_DATE,
-            P.STATE_PUBLICATION
+            P.ID_STATE,
+            S.NAME_STATE
         FROM PUBLICATIONS P
         JOIN OFFERS O ON P.ID_OFFER = O.ID_OFFER
         JOIN TYPES_OFFERS T ON O.ID_TYPE = T.ID_TYPE
         JOIN CATEGORIES C ON P.ID_CATEGORY = C.ID_CATEGORY
         JOIN LOCATIONS L ON P.ID_LOCATION = L.ID_LOCATION
+        JOIN STATES S ON P.ID_STATE = S.ID_STATE
         WHERE T.ID_TYPE = 2
         ORDER BY P.UPDATE_DATE DESC;
     `;
@@ -95,7 +99,8 @@ async function getPublication(req, res) {
             P.ID_OFFERER,
             P.CREATION_DATE,
             P.UPDATE_DATE,
-            P.STATE_PUBLICATION,
+            P.ID_STATE,
+            S.NAME_STATE,
             O.ID_TYPE,
             P.ID_CATEGORY,
             P.ID_LOCATION
@@ -104,6 +109,7 @@ async function getPublication(req, res) {
         JOIN TYPES_OFFERS T ON O.ID_TYPE = T.ID_TYPE
         JOIN CATEGORIES C ON P.ID_CATEGORY = C.ID_CATEGORY
         JOIN LOCATIONS L ON P.ID_LOCATION = L.ID_LOCATION
+        JOIN STATES S ON P.ID_STATE = S.ID_STATE
         WHERE ID_PUBLICATION = ${id};
     `;
     // Ejecutar la consulta
@@ -140,12 +146,14 @@ async function getMyPosts(req, res) {
             P.ID_OFFERER,
             P.CREATION_DATE,
             P.UPDATE_DATE,
-            P.STATE_PUBLICATION
+            P.ID_STATE,
+            S.NAME_STATE
         FROM PUBLICATIONS P
         JOIN OFFERS O ON P.ID_OFFER = O.ID_OFFER
         JOIN TYPES_OFFERS T ON O.ID_TYPE = T.ID_TYPE
         JOIN CATEGORIES C ON P.ID_CATEGORY = C.ID_CATEGORY
         JOIN LOCATIONS L ON P.ID_LOCATION = L.ID_LOCATION
+        JOIN STATES S ON P.ID_STATE = S.ID_STATE
         WHERE ID_OFFERER = ?
         ORDER BY P.UPDATE_DATE DESC;
     `;
@@ -170,19 +178,22 @@ async function getPostsBySearch(req, res) {
     P.ID_OFFERER,
     P.CREATION_DATE,
     P.UPDATE_DATE,
-    P.STATE_PUBLICATION
+    P.ID_STATE,
+    S.NAME_STATE
     FROM PUBLICATIONS P
     JOIN OFFERS O ON P.ID_OFFER = O.ID_OFFER
     JOIN TYPES_OFFERS T ON O.ID_TYPE = T.ID_TYPE
     JOIN CATEGORIES C ON P.ID_CATEGORY = C.ID_CATEGORY
     JOIN LOCATIONS L ON P.ID_LOCATION = L.ID_LOCATION
+    JOIN STATES S ON P.ID_STATE = S.ID_STATE
     WHERE
       O.NAME_OFFER LIKE ? OR 
       O.DESCRIPTION_OFFER LIKE ? OR 
       O.PRICE_OFFER LIKE ? OR 
       T.NAME_TYPE LIKE ? OR 
       C.NAME_CATEGORY LIKE ? OR
-      L.NAME_LOCATION LIKE ?;
+      L.NAME_LOCATION LIKE ?
+    ORDER BY P.UPDATE_DATE DESC;
   `;
 
     try {

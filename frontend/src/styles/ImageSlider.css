@@ -51,6 +51,7 @@
     float: right;
     width: 48%;
     margin: 1%;
+    border-radius: 15%;
 }
 .right_image_slide image{
     width: 50%;
@@ -73,6 +74,7 @@
     width: 48%;
     margin: 1%;
     margin-left: 5%;
+    border-radius: 15%;
 }
 .left_image_slide image{
     width: 50%;
