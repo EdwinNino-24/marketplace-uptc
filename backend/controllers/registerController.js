@@ -44,9 +44,7 @@ exports.codeActivation = async (code, token, res) => {
             const tokenActivation = await registerService.getTokenRegister(id, false, false);
             return res.json({ user: user, code: "0", token: tokenActivation });
         }
-
         const activation = await registerService.activateAccount(id);
-
         if (activation) {
             const tokenActivation = await registerService.getTokenRegister(id, true, true);
             res.json({ code: "1", token: tokenActivation });

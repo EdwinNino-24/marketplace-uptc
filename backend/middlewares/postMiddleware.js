@@ -51,10 +51,9 @@ exports.updatePost = async (req, res) => {
     description: req.body.description,
     price: req.body.price,
     location: req.body.location,
-};
+  };
   try {
     postController.updatePost(token, post, res);
   } catch (error) {
   }
 };
-

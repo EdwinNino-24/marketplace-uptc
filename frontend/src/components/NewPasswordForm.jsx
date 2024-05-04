@@ -14,19 +14,14 @@ Modal.setAppElement('#root');
 const NewPasswordForm = () => {
 
     const navigate = useNavigate();
-
     const handleBack = () => {
         navigate(-1);
     };
 
     const [newPassword, setNewPassword] = useState('');
-
     const [mensaje, setMensaje] = useState('');
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(newPassword);
-
         if (newPassword.length !== 0) {
             try {
                 const response = await fetch('http://localhost:5000/enter_password_recover', {
@@ -36,9 +31,7 @@ const NewPasswordForm = () => {
                     },
                     body: JSON.stringify({ newPassword: newPassword, token: localStorage.getItem('token') })
                 });
-
                 const data = await response.json();
-
                 if (data.code === 0) {
                     await localStorage.setItem('token', data.token);
                     setMensaje("¡Su contraseña se ha guardado correctamente!");
@@ -79,6 +72,12 @@ const NewPasswordForm = () => {
         setPasswordVisible(!passwordVisible);
     };
 
+    const handleInputChange = (event) => {
+        const inputValue = event;
+        const sanitizedValue = inputValue.replace(/\s/g, '');
+        setNewPassword(sanitizedValue);
+    };
+
     return (
         <div className="bg_activate_account">
             <header className='header-login'>
@@ -96,7 +95,7 @@ const NewPasswordForm = () => {
                                 type={passwordVisible ? 'text' : 'password'}
                                 placeholder="Nueva Contraseña"
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                onChange={(e) => handleInputChange(e.target.value)}
                                 required
                             />
                             {passwordVisible ? (

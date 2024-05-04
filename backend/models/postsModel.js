@@ -6,7 +6,6 @@ async function get(query) {
     try {
         results = await queryDatabase(query);
     } catch (error) {
-
     }
     return results;
 }

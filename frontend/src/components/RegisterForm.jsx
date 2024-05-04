@@ -59,19 +59,26 @@ const RegisterForm = () => {
 
   const handleChange1 = (e) => {
     const { name, value } = e.target;
-    let processedValue = value;
-    if (name === 'email' && value.includes(' ') || name === 'password' && value.includes(' ')) {
-      processedValue = value.replace(/\s/g, '');
+    let processedValue = value.trim();
+    switch (name) {
+      case 'email':
+        processedValue = processedValue.replace(/\s/g, '').toLowerCase();
+        break;
+      case 'password':
+        processedValue = processedValue.replace(/\s/g, '');
+        break;
+      case 'names':
+      case 'lastnames':
+        processedValue = processedValue.toLowerCase();
+        break;
+      default:
+        break;
     }
-    if (name === 'email' || name === 'names' || name === 'lastnames') {
-      processedValue = processedValue.toLowerCase();
-    }
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: processedValue
-    });
+    }));
   };
-
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -81,10 +88,10 @@ const RegisterForm = () => {
 
   const customStyles = {
     content: {
-      width: '45%', // Cambia el porcentaje según tu preferencia
-      height: '33%', // Cambia el porcentaje según tu preferencia
-      margin: 'auto', // Para centrar el modal horizontalmente
-      backgroundColor: 'white', // Color de fondo del modal
+      width: '45%', 
+      height: '33%', 
+      margin: 'auto', 
+      backgroundColor: 'white', 
     },
   };
 

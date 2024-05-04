@@ -6,7 +6,6 @@ exports.login = async (req, res) => {
     const { username, password } = req.body;
     authController.login(username, password, res);
   } catch (error) {
-
   }
 };
 

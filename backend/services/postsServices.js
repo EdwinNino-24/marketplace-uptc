@@ -1,5 +1,5 @@
 const postsModel = require('../models/postsModel');
-const imageHandler = require('../imageHandler.js');
+const imageHandler = require('../utils/imageUtils.js');
 
 
 exports.getProductsPosts = async () => {

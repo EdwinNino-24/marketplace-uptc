@@ -1,9 +1,6 @@
 const jwtUtils = require('../utils/jwtUtils');
-
 const hashUtils = require('../utils/hashUtils.js');
-
 const mailUtils = require('../utils/mailUtils.js');
-
 const registerModel = require('../models/registerModel');
 
 

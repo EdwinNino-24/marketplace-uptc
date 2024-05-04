@@ -9,7 +9,6 @@ import Spinner from './Spinner.jsx';
 import Slider from 'react-slick';
 
 import React, { useState, useEffect } from "react";
-import Axios from 'axios';
 
 import BANNER1 from "../images/3.jpeg";
 import BANNER2 from "../images/4.jpeg";
@@ -20,78 +19,24 @@ import Navigation from './Navigation.jsx';
 import { ColombianPrice } from './ColombianPrice.jsx';
 
 
-export const MainPage = () => {
+export const MainPage = ({ user, href_user_profile,
+    categories, showSubMenu, handleSubMenuToggleEnter, handleSubMenuToggleLeave,
+    locations, showLocationsMenu, handleLocationsMenuToggleEnter, handleLocationsMenuToggleLeave,
+    searchTerm, handleSearchChange, handleKeyPress, handleSearch }) => {
 
     const [loading, setLoading] = useState(false);
 
-    const [user, setUser] = useState("Iniciar Sesión");
-
-    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
-
-    const send_token_user = () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.log('No hay token disponible.');
-            setUser("Iniciar Sesión");
-            return;
-        }
-        Axios.post('http://localhost:5000/user_profile', { token: token })
-            .then(response => {
-                const user = response.data.ID_ACCOUNT;
-                setUser(user ? user : "Iniciar Sesión");
-            })
-            .catch(error => {
-                console.error('Error al iniciar sesión:', error);
-                setUser("Iniciar Sesión");
-            });
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000
     };
-
-    useEffect(() => {
-        send_token_user();
-    }, []);
-
-
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        setLoading(true);
-        fetch('http://localhost:5000/get_categories')
-            .then(response => response.json())
-            .then(data => setCategories(data))
-            .catch(error => console.error('Error:', error))
-            .finally(setLoading(false));
-    }, []);
-
-    const [showSubMenu, setShowSubMenu] = useState(false);
-
-    const handleSubMenuToggleEnter = () => {
-        setShowSubMenu(true);
-    };
-    const handleSubMenuToggleLeave = () => {
-        setShowSubMenu(false);
-    };
-    
-
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && searchTerm.trim()) {
-            window.location.href = `/search_page/${searchTerm}`;
-        }
-    };
-    const handleSearch = () => {
-        if (searchTerm.trim()) {
-            window.location.href = `/search_page/${searchTerm}`;
-        }
-    };
-
 
     const [productsPosts, setProductsPosts] = useState([]);
-
     useEffect(() => {
         setLoading(true);
         fetch('http://localhost:5000/get_products_posts')
@@ -106,7 +51,6 @@ export const MainPage = () => {
     }, []);
 
     const [servicesPosts, setServicesPosts] = useState([]);
-
     useEffect(() => {
         setLoading(true);
         fetch('http://localhost:5000/get_services_posts')
@@ -118,18 +62,7 @@ export const MainPage = () => {
             });
     }, []);
 
-
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 5000
-    };
-
-
+    
     return (
         <div className="bg_main_page">
             <div>
@@ -144,6 +77,10 @@ export const MainPage = () => {
                 handleSubMenuToggleEnter={handleSubMenuToggleEnter}
                 handleSubMenuToggleLeave={handleSubMenuToggleLeave}
                 showSubMenu={showSubMenu}
+                locations={locations}
+                showLocationsMenu={showLocationsMenu}
+                handleLocationsMenuToggleEnter={handleLocationsMenuToggleEnter}
+                handleLocationsMenuToggleLeave={handleLocationsMenuToggleLeave}
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}

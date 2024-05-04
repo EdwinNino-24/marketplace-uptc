@@ -1,5 +1,4 @@
 const express = require('express');
-
 const registerMiddleware = require('../middlewares/registerMiddleware');
 
 const router = express.Router();

@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 
+
 const secretKey = '2404';
 
 function verifyToken(token, callback) {
-   jwt.verify(token, secretKey, (err, decoded) => {
+  jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
       callback(err, null);
     } else {
@@ -21,7 +22,6 @@ function decodedToken(token) {
   let user;
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-
     } else {
       user = decoded.username;
     }
@@ -52,7 +52,6 @@ async function decodedTokenComplete(token) {
 }
 
 function getTokenFromLocalStorage() {
-  console.log(localStorage.getItem('token'));
   return localStorage.getItem('token');
 };
 

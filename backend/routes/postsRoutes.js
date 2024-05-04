@@ -1,5 +1,4 @@
 const express = require('express');
-
 const postsMiddleware = require('../middlewares/postsMiddleware');
 
 const router = express.Router();

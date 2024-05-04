@@ -6,7 +6,6 @@ const recoveryService = require('../services/recoveryService');
 exports.searchRecoverAccount = async (id, res) => {
     try {
         const accounts = await userService.getUsers(id);
-
         if (accounts.length > 0) {
             const isSigned = await registerService.isSigned(accounts[0]);
             if (!isSigned) {
@@ -61,7 +60,7 @@ exports.resetPassword = async (password, token, res) => {
         const user = await userService.getUserAccount(id);
         const changePassword = await userService.updatePassword(password, user);
         if (changePassword) {
-            res.json({ code: 0, token: token});
+            res.json({ code: 0, token: token });
         }
         else {
             res.json({ code: 1 });

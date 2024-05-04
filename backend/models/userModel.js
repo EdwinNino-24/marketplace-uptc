@@ -1,12 +1,12 @@
 const { queryDatabase } = require('../utils/dbUtils.js');
 
+
 exports.fetchUserById = async (id) => {
   const query = 'SELECT * FROM ACCOUNTS WHERE ID_ACCOUNT = ? LIMIT 1';
   let results = [];
   try {
     results = await queryDatabase(query, [id]);
   } catch (error) {
-
   }
   return results[0];
 };
@@ -17,7 +17,6 @@ exports.fetchUsersById = async (id) => {
   try {
     results = await queryDatabase(query, [id]);
   } catch (error) {
-
   }
   return results;
 };
@@ -36,7 +35,6 @@ exports.fetchPersonalInformationById = async (id) => {
   try {
     results = await queryDatabase(query, [id]);
   } catch (error) {
-
   }
   return results[0];
 };

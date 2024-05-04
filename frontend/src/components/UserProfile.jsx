@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import '../styles/UserProfile.css';
 import '../styles/Header.css';
-import Axios from 'axios';
 
 import { AiFillDatabase } from "react-icons/ai";
 import { PiCrosshairSimpleFill } from "react-icons/pi";
@@ -12,82 +11,17 @@ import Header from './Header';
 import Navigation from './Navigation.jsx';
 
 
-export const UserProfile = () => {
+export const UserProfile = ({ user, href_user_profile,
+    categories, showSubMenu, handleSubMenuToggleEnter, handleSubMenuToggleLeave,
+    locations, showLocationsMenu, handleLocationsMenuToggleEnter, handleLocationsMenuToggleLeave,
+    searchTerm, handleSearchChange, handleKeyPress, handleSearch }) => {
 
-    const [user, setUser] = useState("Iniciar Sesión");
-
-    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
-
-    const send_token_user = () => {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log('No hay token disponible.');
-            setUser("Iniciar Sesión");
-            return;
-        }
-
-        Axios.post('http://localhost:5000/user_profile', { token: token })
-            .then(response => {
-                const user = response.data.ID_ACCOUNT;
-                setUser(user ? user : "Iniciar Sesión");
-            })
-            .catch(error => {
-                console.error('Error al iniciar sesión:', error);
-                setUser("Iniciar Sesión");
-            });
-    };
-
-    useEffect(() => {
-        send_token_user();
-    }, []);
-
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:5000/get_categories')
-            .then(response => response.json())
-            .then(data => setCategories(data))
-            .catch(error => console.error('Error:', error));
-    }, []);
-
-    const [showSubMenu, setShowSubMenu] = useState(false);
-
-    const handleSubMenuToggleEnter = () => {
-        setShowSubMenu(true);
-    };
-    const handleSubMenuToggleLeave = () => {
-        setShowSubMenu(false);
-    };
-
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && searchTerm.trim()) {
-            window.location.href = `/search_page/${searchTerm}`;
-        }
-    };
-    const handleSearch = () => {
-        if (searchTerm.trim()) {
-            window.location.href = `/search_page/${searchTerm}`;
-        }
-    };
-
-    const handleClick = () => {
+    const handleLogout = () => {
         localStorage.removeItem('token');
-        setUser("Iniciar Sesión");
-        localStorage.removeItem('token');
-        send_token_user();
     };
-
 
     return (
         <div className="bg_my_account">
-
             <Header
                 user={user}
                 href_user_profile={href_user_profile}
@@ -97,12 +31,15 @@ export const UserProfile = () => {
                 handleSubMenuToggleEnter={handleSubMenuToggleEnter}
                 handleSubMenuToggleLeave={handleSubMenuToggleLeave}
                 showSubMenu={showSubMenu}
+                locations={locations}
+                showLocationsMenu={showLocationsMenu}
+                handleLocationsMenuToggleEnter={handleLocationsMenuToggleEnter}
+                handleLocationsMenuToggleLeave={handleLocationsMenuToggleLeave}
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
                 handleSearch={handleSearch}
             />
-
             <div className="bg_user_profile">
                 <div className="section_settings">
                     <h1 className="title_section_profile">MI PERFIL</h1>
@@ -166,7 +103,7 @@ export const UserProfile = () => {
                         </div>
                         <div className="button_user_profile">
                             <a href="/login">
-                                <button onClick={handleClick}>
+                                <button onClick={handleLogout}>
                                     Salir
                                 </button>
                             </a>
@@ -174,7 +111,6 @@ export const UserProfile = () => {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 };

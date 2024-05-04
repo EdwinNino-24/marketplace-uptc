@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 function formatToColombianPesos(price) {
     const numericPrice = parseFloat(price);
     if (!isNaN(numericPrice)) {

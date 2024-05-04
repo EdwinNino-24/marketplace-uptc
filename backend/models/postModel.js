@@ -35,7 +35,6 @@ exports.fetchPost = async (id) => {
 
 exports.updateStatePost = async (postId, newState) => {
   const updateQuery = `UPDATE PUBLICATIONS SET ID_STATE = ?, UPDATE_DATE = NOW() WHERE ID_PUBLICATION = ?;`;
-
   try {
     const result = await queryDatabase(updateQuery, [newState, postId]);
     return result.affectedRows > 0;
@@ -65,7 +64,6 @@ exports.updatePost = async (offerId, publicationId, post) => {
   const offerQuery = `UPDATE OFFERS SET ID_TYPE = ?, NAME_OFFER = ?, DESCRIPTION_OFFER = ?, PRICE_OFFER = ? WHERE ID_OFFER = ?`;
   const publicationQuery = `UPDATE PUBLICATIONS SET ID_CATEGORY = ?, ID_LOCATION = ?, UPDATE_DATE = NOW(), ID_STATE = 1 
   WHERE ID_PUBLICATION = ?`;
-
   try {
     const resultOffer = await queryDatabase(offerQuery, [post.type, post.title, post.description, post.price, offerId]);
     const resultPublication = await queryDatabase(publicationQuery, [post.category, post.location, publicationId]);

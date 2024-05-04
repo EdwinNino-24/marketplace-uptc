@@ -10,81 +10,16 @@ import Navigation from './Navigation.jsx';
 import { ColombianPrice } from './ColombianPrice.jsx';
 
 
-export const MyPublications = () => {
+export const MyPublications = ({ user, href_user_profile,
+    categories, showSubMenu, handleSubMenuToggleEnter, handleSubMenuToggleLeave,
+    locations, showLocationsMenu, handleLocationsMenuToggleEnter, handleLocationsMenuToggleLeave,
+    searchTerm, handleSearchChange, handleKeyPress, handleSearch }) => {
 
     const [loading, setLoading] = useState(false);
 
-    const [user, setUser] = useState("Iniciar Sesión");
-
-    const href_user_profile = localStorage.getItem('token') ? '/user-profile' : '/login';
-
     const [selectedStates, setSelectedStates] = useState({});
 
-    const send_token_user = () => {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log('No hay token disponible.');
-            setUser("Iniciar Sesión");
-            return;
-        }
-
-        Axios.post('http://localhost:5000/user_profile', { token: token })
-            .then(response => {
-                const user = response.data.ID_ACCOUNT;
-                setUser(user ? user : "Iniciar Sesión");
-            })
-            .catch(error => {
-                console.error('Error al iniciar sesión:', error);
-                setUser("Iniciar Sesión");
-            });
-    };
-
-    useEffect(() => {
-        send_token_user();
-    }, []);
-
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:5000/get_categories')
-            .then(response => response.json())
-            .then(data => setCategories(data))
-            .catch(error => console.error('Error:', error));
-    }, []);
-
-    const [showSubMenu, setShowSubMenu] = useState(false);
-
-    const handleSubMenuToggleEnter = () => {
-        setShowSubMenu(true);
-    };
-    const handleSubMenuToggleLeave = () => {
-        setShowSubMenu(false);
-    };
-
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter' && searchTerm.trim()) {
-            window.location.href = `/search_page/${searchTerm}`;
-        }
-    };
-
-    const handleSearch = () => {
-        if (searchTerm.trim()) {
-            window.location.href = `/search_page/${searchTerm}`;
-        }
-    };
-
-
-    const [selectedOption, setSelectedOption] = useState('');
-
     const [myPosts, setMyPosts] = useState([]);
-
     useEffect(() => {
         setLoading(true);
         const token = localStorage.getItem('token');
@@ -109,18 +44,17 @@ export const MyPublications = () => {
     }, []);
 
     const [states, setStates] = useState([]);
-
     useEffect(() => {
+        setLoading(true);
         fetch('http://localhost:5000/get_states')
             .then(response => response.json())
             .then(data => setStates(data))
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error))
+            .finally(() => setLoading(false));
     }, []);
 
     const handleOptionChange = (id, event) => {
         const newState = event.target.value;
-        setSelectedOption(newState);
-
         Axios.post('http://localhost:5000/update_publication_state', {
             publicationId: id,
             newState: newState,
@@ -141,7 +75,6 @@ export const MyPublications = () => {
             <div>
                 {loading && <Spinner />}
             </div>
-
             <Header
                 user={user}
                 href_user_profile={href_user_profile}
@@ -151,12 +84,15 @@ export const MyPublications = () => {
                 handleSubMenuToggleEnter={handleSubMenuToggleEnter}
                 handleSubMenuToggleLeave={handleSubMenuToggleLeave}
                 showSubMenu={showSubMenu}
+                locations={locations}
+                showLocationsMenu={showLocationsMenu}
+                handleLocationsMenuToggleEnter={handleLocationsMenuToggleEnter}
+                handleLocationsMenuToggleLeave={handleLocationsMenuToggleLeave}
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
                 handleSearch={handleSearch}
             />
-
             <div className="section_top">
                 <div className="section_title_my_posts_page">
                     <h1 className="section_title_my_posts">MIS PUBLICACIONES</h1>
@@ -167,7 +103,6 @@ export const MyPublications = () => {
                     </a>
                 </div>
             </div>
-
             <div className="my-publications">
                 {myPosts.map(publication => (
                     <div className="my-publication" key={publication.ID_PUBLICATION}>

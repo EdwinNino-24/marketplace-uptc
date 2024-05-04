@@ -6,7 +6,6 @@ exports.login = async (username, password, res) => {
     const validationResponse = await authService.validateLogin(username, password);
     res.json(validationResponse);
   } catch (error) {
-
   }
 };
 
@@ -15,6 +14,5 @@ exports.authCurrentUser = async (token, res) => {
     const state = await userService.getUserSessionFromToken(token);
     res.json({ isValid: state });
   } catch (error) {
-    
   }
 };

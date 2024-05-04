@@ -3,7 +3,9 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import '../styles/Header.css';
 
 
-const Navigation = ({ categories, handleSubMenuToggleEnter, handleSubMenuToggleLeave, showSubMenu, searchTerm, handleSearchChange, handleKeyPress, handleSearch }) => {
+const Navigation = ({ categories, handleSubMenuToggleEnter, handleSubMenuToggleLeave, showSubMenu,
+    locations, showLocationsMenu, handleLocationsMenuToggleEnter, handleLocationsMenuToggleLeave, 
+    searchTerm, handleSearchChange, handleKeyPress, handleSearch }) => {
     return (
         <nav className="mainnav">
             <div className="left_header_bottom">
@@ -15,6 +17,18 @@ const Navigation = ({ categories, handleSubMenuToggleEnter, handleSubMenuToggleL
                                 {categories.map((category) => (
                                     <a key={category.ID_CATEGORY} href={`/search_page/${category.NAME_CATEGORY}`}>
                                         <li>{category.NAME_CATEGORY}</li>
+                                    </a>
+                                ))}
+                            </ul>
+                        )}
+                    </li>
+                    <li onMouseEnter={handleLocationsMenuToggleEnter} onMouseLeave={handleLocationsMenuToggleLeave}>
+                        <p className="plataform_option">{"Sedes / Seccionales >"}</p>
+                        {showLocationsMenu && (
+                            <ul className="submenu">
+                                {locations.map((location) => (
+                                    <a key={location.ID_LOCATION} href={`/search_page/${location.NAME_LOCATION}`}>
+                                        <li>{location.NAME_LOCATION}</li>
                                     </a>
                                 ))}
                             </ul>

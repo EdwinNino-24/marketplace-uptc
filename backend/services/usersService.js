@@ -1,7 +1,5 @@
 const jwtUtils = require('../utils/jwtUtils');
-
 const hashUtils = require('../utils/hashUtils.js');
-
 const userModel = require('../models/userModel');
 
 
@@ -14,12 +12,10 @@ exports.getUserSessionFromToken = async (token) => {
     return isValid;
 };
 
-
 exports.getPersonalInformation = async (id) => {
     const user = await userModel.fetchPersonalInformationById(id);
     return user;
 };
-
 
 exports.updateUserProfile = async (names, lastnames, id) => {
     try {

@@ -1,12 +1,7 @@
 const jwtUtils = require('../utils/jwtUtils.js');
-
 const hashUtils = require('../utils/hashUtils.js');
-
 const mailUtils = require('../utils/mailUtils.js');
-
 const recoveryModel = require('../models/recoveryModel.js');
-
-const userModel = require('../models/userModel');
 
 
 exports.updateCodeRecovery = async (id) => {

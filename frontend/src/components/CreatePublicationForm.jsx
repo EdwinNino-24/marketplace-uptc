@@ -21,21 +21,17 @@ const CreatePublicationForm = () => {
     const [numericValue, setNumericValue] = useState('');
 
     const [images, setImages] = useState([]);
-
     const uploadImages = async (id) => {
         try {
             const formData = new FormData();
             images.forEach((image, index) => {
                 formData.append('images', image);
             });
-
             formData.append('id', id);
-
             const response = await fetch('http://localhost:5000/uploadImages', {
                 method: 'POST',
                 body: formData
             });
-
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
@@ -46,7 +42,6 @@ const CreatePublicationForm = () => {
             console.error('Error al subir las imágenes:', error.message);
         }
     };
-
     const onDrop = (acceptedFiles) => {
         const imageFiles = acceptedFiles.filter(file => file.type.startsWith('image/'));
         const newImages = imageFiles.map((file) => Object.assign(file, {
@@ -54,7 +49,6 @@ const CreatePublicationForm = () => {
         }));
         setImages([...images, ...newImages]);
     };
-
     const removeImage = (index) => {
         const updatedImages = [...images];
         updatedImages.splice(index, 1);
@@ -101,7 +95,6 @@ const CreatePublicationForm = () => {
         setNumericValue(value);
     };
 
-
     const handleSubmit = async (event) => {
         if (images.length > 0) {
             event.preventDefault();
@@ -134,7 +127,6 @@ const CreatePublicationForm = () => {
     };
 
     const [canPublish, setCanPublish] = useState(false);
-
     const handleImageChange = (event) => {
         if (images.length === 0) {
             setModalIsOpen(true);
@@ -144,17 +136,16 @@ const CreatePublicationForm = () => {
     };
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
-
     const handleOK = () => {
         setModalIsOpen(false);
     };
 
     const customStyles = {
         content: {
-            width: '50%', // Cambia el porcentaje según tu preferencia
-            height: '33%', // Cambia el porcentaje según tu preferencia
-            margin: 'auto', // Para centrar el modal horizontalmente
-            backgroundColor: 'white', // Color de fondo del modal
+            width: '50%',
+            height: '33%',
+            margin: 'auto',
+            backgroundColor: 'white',
         },
     };
 
@@ -166,7 +157,6 @@ const CreatePublicationForm = () => {
     };
 
     const [types, setTypes] = useState([]);
-
     useEffect(() => {
         fetch('http://localhost:5000/get_type_offers')
             .then(response => response.json())
@@ -175,7 +165,6 @@ const CreatePublicationForm = () => {
     }, []);
 
     const [categories, setCategories] = useState([]);
-
     useEffect(() => {
         fetch('http://localhost:5000/get_categories')
             .then(response => response.json())
@@ -184,13 +173,13 @@ const CreatePublicationForm = () => {
     }, []);
 
     const [locations, setLocations] = useState([]);
-
     useEffect(() => {
         fetch('http://localhost:5000/get_locations')
             .then(response => response.json())
             .then(data => setLocations(data))
             .catch(error => console.error('Error:', error));
     }, []);
+
 
     return (
         <div className="bg_create_publication">
@@ -308,7 +297,6 @@ const CreatePublicationForm = () => {
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

@@ -12,15 +12,12 @@ Modal.setAppElement('#root');
 const EnterEmailForm = () => {
 
     const navigate = useNavigate();
-
     const handleBack = () => {
         navigate(-1);
     };
 
     const [inputValue, setInputValue] = useState('');
-
     const [message, setMessage] = useState('');
-
     const handleSubmit = async (e) => {
         if (inputValue.length !== 0) {
             e.preventDefault();
@@ -30,7 +27,7 @@ const EnterEmailForm = () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email: inputValue }) // Envías solo el código en el cuerpo de la solicitud
+                    body: JSON.stringify({ email: inputValue })
                 });
                 const data = await response.json();
 
@@ -75,17 +72,17 @@ const EnterEmailForm = () => {
 
     const customStyles = {
         content: {
-            width: '45%', // Cambia el porcentaje según tu preferencia
-            height: '33%', // Cambia el porcentaje según tu preferencia
-            margin: 'auto', // Para centrar el modal horizontalmente
-            backgroundColor: 'white', // Color de fondo del modal
+            width: '45%', 
+            height: '33%', 
+            margin: 'auto', 
+            backgroundColor: 'white', 
         },
     };
 
     const handleInputChange = (event) => {
         const inputValue = event.target.value;
         const sanitizedValue = inputValue.replace(/\s/g, '');
-        setInputValue(sanitizedValue);
+        setInputValue(sanitizedValue.toLowerCase());
     };
 
     return (
