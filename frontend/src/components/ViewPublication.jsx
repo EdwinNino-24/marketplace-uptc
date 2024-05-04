@@ -85,6 +85,12 @@ export const ViewPublication = () => {
         }
     };
 
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
+
 
     const [publication, setPublication] = useState(""); 
 
@@ -92,7 +98,7 @@ export const ViewPublication = () => {
         setLoading(true);
         const fetchPublication = async () => {
             try {
-                const response = await Axios.get(`http://localhost:5000/publications/${id}`);
+                const response = await Axios.get(`http://localhost:5000/posts/${id}`);
                 setPublication(response.data); 
             } catch (error) {
                 console.error('Error al obtener la publicación:', error);
@@ -158,6 +164,7 @@ export const ViewPublication = () => {
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
+                handleSearch={handleSearch}
             />
 
             <div className="section_post">

@@ -64,7 +64,7 @@ const EditUserProfile = () => {
             return;
         }
 
-        Axios.post('http://localhost:5000/personal_information', { token: token })
+        Axios.post('http://localhost:5000/user_profile', { token: token })
             .then(response => {
                 const personal_information = response.data;
                 setFormDataPersonal({
@@ -106,6 +106,11 @@ const EditUserProfile = () => {
                 setMensaje("¡Tu información se ha actualizado correctamente!");
                 setModalIsOpen(true);
             }
+            else if (data.code === 1) {
+                setMensaje("¡Error tu información no se han podido actualizar!");
+                setModalIsOpen(true);
+            }
+
         } catch (error) {
         }
     };
@@ -161,6 +166,13 @@ const EditUserProfile = () => {
         setModalIsOpen(false);
     };
 
+    const [modal2IsOpen, setModal2IsOpen] = useState(false);
+
+    const handle2OK = () => {
+        setModalIsOpen(false);
+        window.location.reload();
+    };
+
     const customStyles = {
         content: {
             width: '45%', // Cambia el porcentaje según tu preferencia
@@ -197,7 +209,7 @@ const EditUserProfile = () => {
 
             if (data.code === 1) {
                 setMensaje("¡Tu contraseña se ha actualizado correctamente!");
-                setModalIsOpen(true);
+                setModal2IsOpen(true);
             }
             else{
                 setMensaje("¡Contraseña actual incorrecta!");
@@ -345,6 +357,20 @@ const EditUserProfile = () => {
                                         <h2 className='subtitle_notification'>{mensaje}</h2>
                                         <div className='button_notification'>
                                             <button className="ok_notification" onClick={handleOK}>Continuar</button>
+                                        </div>
+                                    </div>
+                                </Modal>
+                                <Modal
+                                    isOpen={modal2IsOpen}
+                                    onRequestClose={() => setModalIsOpen(true)}
+                                    contentLabel="Notificación"
+                                    style={customStyles}
+                                >
+                                    <div className='notification'>
+                                        <h1 className='title_notification'>Atención</h1>
+                                        <h2 className='subtitle_notification'>{mensaje}</h2>
+                                        <div className='button_notification'>
+                                            <button className="ok_notification" onClick={handle2OK}>Continuar</button>
                                         </div>
                                     </div>
                                 </Modal>

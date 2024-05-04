@@ -79,6 +79,12 @@ export const SearchPage = () => {
         }
     };
 
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
+
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -112,6 +118,7 @@ export const SearchPage = () => {
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
+                handleSearch={handleSearch}
             />
 
             <div className="posts_searched">

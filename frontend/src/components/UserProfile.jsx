@@ -71,6 +71,11 @@ export const UserProfile = () => {
             window.location.href = `/search_page/${searchTerm}`;
         }
     };
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
 
     const handleClick = () => {
         localStorage.removeItem('token');
@@ -95,6 +100,7 @@ export const UserProfile = () => {
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
+                handleSearch={handleSearch}
             />
 
             <div className="bg_user_profile">

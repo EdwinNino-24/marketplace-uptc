@@ -1,7 +1,9 @@
 import React from 'react';
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import '../styles/Header.css';
 
-const Navigation = ({ categories, handleSubMenuToggleEnter, handleSubMenuToggleLeave, showSubMenu, searchTerm, handleSearchChange, handleKeyPress }) => {
+
+const Navigation = ({ categories, handleSubMenuToggleEnter, handleSubMenuToggleLeave, showSubMenu, searchTerm, handleSearchChange, handleKeyPress, handleSearch }) => {
     return (
         <nav className="mainnav">
             <div className="left_header_bottom">
@@ -29,7 +31,7 @@ const Navigation = ({ categories, handleSubMenuToggleEnter, handleSubMenuToggleL
                             value={searchTerm}
                             onChange={handleSearchChange}
                             placeholder="Haz una Búsqueda..." onKeyPress={handleKeyPress}></input>
-                        <label className="icon_glass"><FaMagnifyingGlass color="#F7C600" size="20px" /></label>
+                        <label className="icon_glass" onClick={handleSearch}><FaMagnifyingGlass color="#F7C600" size="1.3rem" /></label>
                     </li>
                 </ul>
             </div>

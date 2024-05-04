@@ -28,30 +28,34 @@ const ActivateAccount = () => {
     const [mensaje, setMensaje] = useState('');
 
     const handleSubmit = async (e) => {
-        if (numericValue.length !== 0) {
-            e.preventDefault();
-            try {
-                const response = await fetch('http://localhost:5000/code_activation', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ code: numericValue, token: (localStorage.getItem('token')) }) // Envías solo el código en el cuerpo de la solicitud
-                });
-                const data = await response.json();
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:5000/code_activation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: numericValue, token: (localStorage.getItem('token')) }) // Envías solo el código en el cuerpo de la solicitud
+            });
+            const data = await response.json();
 
-                if (data.code === '0') {
-                    setMensaje("¡El código que ingresaste, no fue el que te enviamos!");
-                    setModalIsOpen(true);
-                } else {
-                    localStorage.setItem('token', data.token);
-                    setMensaje("Tu cuenta ha sido activada exitosamente!");
-                    setModal2IsOpen(true);
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            if (data.code === '0') {
+                setMensaje("¡El código que ingresaste, no fue el que te enviamos!");
+                setModalIsOpen(true);
+            } else if (data.code === '1') {
+                localStorage.setItem('token', data.token);
+                setMensaje("¡Tu cuenta ha sido activada exitosamente!");
+                setModal2IsOpen(true);
             }
+            else if (data.code === '2') {
+                localStorage.setItem('token', data.token);
+                setMensaje("¡Error en la activación de tu cuenta!");
+                setModal2IsOpen(true);
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
+
     };
 
     const [modalIsOpen, setModalIsOpen] = useState(false);

@@ -17,7 +17,7 @@ import BANNER3 from "../images/banner3.jpeg";
 
 import Header from './Header';
 import Navigation from './Navigation.jsx';
-import { ColombianPrice } from './ColombianPrice.jsx'; 
+import { ColombianPrice } from './ColombianPrice.jsx';
 
 
 export const MainPage = () => {
@@ -30,13 +30,11 @@ export const MainPage = () => {
 
     const send_token_user = () => {
         const token = localStorage.getItem('token');
-
         if (!token) {
             console.log('No hay token disponible.');
             setUser("Iniciar Sesión");
             return;
         }
-
         Axios.post('http://localhost:5000/user_profile', { token: token })
             .then(response => {
                 const user = response.data.ID_ACCOUNT;
@@ -52,13 +50,16 @@ export const MainPage = () => {
         send_token_user();
     }, []);
 
+
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
+        setLoading(true);
         fetch('http://localhost:5000/get_categories')
             .then(response => response.json())
             .then(data => setCategories(data))
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error:', error))
+            .finally(setLoading(false));
     }, []);
 
     const [showSubMenu, setShowSubMenu] = useState(false);
@@ -69,6 +70,7 @@ export const MainPage = () => {
     const handleSubMenuToggleLeave = () => {
         setShowSubMenu(false);
     };
+    
 
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -78,6 +80,11 @@ export const MainPage = () => {
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter' && searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
             window.location.href = `/search_page/${searchTerm}`;
         }
     };
@@ -140,6 +147,7 @@ export const MainPage = () => {
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
+                handleSearch={handleSearch}
             />
             <div className="banner">
                 <Slider className='slider-main-page' {...settings}>

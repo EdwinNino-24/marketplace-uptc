@@ -37,13 +37,15 @@ const NewPasswordForm = () => {
                     body: JSON.stringify({ newPassword: newPassword, token: localStorage.getItem('token') })
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
+                const data = await response.json();
+
+                if (data.code === 0) {
                     await localStorage.setItem('token', data.token);
                     setMensaje("¡Su contraseña se ha guardado correctamente!");
                     setModal2IsOpen(true);
-                } else {
-                    console.error('Error al actualizar la contraseña:', response.statusText);
+                } else if (data.code === 1) {
+                    setMensaje("¡Ocurrió un error al actualizar la contraseña!");
+                    setModalIsOpen(true);
                 }
             } catch (error) {
                 console.error('Error:', error);

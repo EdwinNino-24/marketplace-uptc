@@ -23,6 +23,7 @@
 }
 
 .title_section_profile {
+  user-select: none;
   font-size: 4rem;
   font-weight: bold;
   color: var(--my-color3-create_publication);
@@ -33,6 +34,7 @@
 }
 
 .settings {
+  user-select: none;
   padding: 1rem 1rem;
   margin: 0 auto;
   display: grid;
@@ -46,6 +48,7 @@
   width: 100%;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   box-shadow: 1px 10px 10px 2px rgba(0, 0, 0, .2);
   border: 6px solid transparent;
   border-radius: 5px;
@@ -70,6 +73,9 @@
 
 .setting_footer {
   text-align: center;
+  display: block;
+  justify-content: center;
+  align-items: center;
 }
 
 .setting_footer h1 {
@@ -83,7 +89,7 @@
   font-weight: 400;
   color: rgba(0, 0, 0, 0.555);
   text-transform: uppercase;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   padding: 0.1rem 0rem 0.5rem 0rem;
 }
 
@@ -94,7 +100,6 @@
 
 .button_user_profile a{
   width: 100%;
-  padding-left: 15%;
 }
 
 .button_user_profile button {
@@ -105,6 +110,7 @@
   width: 70%;
   height: 2.5rem;
   font-size: 1.5rem;
+  margin-left: 15%;
 }
 
 .button_user_profile button {
@@ -115,16 +121,4 @@
 
 .button_user_profile button:hover {
   color: var(--my-color1-create_publication);
-}
-
-
-
-
-
-
-/*=================================MEDIA================================*/
-@media only screen and (max-width: 600px) {
-  header ul {
-    display: none;
-  }
 }

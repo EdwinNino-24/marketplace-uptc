@@ -1,6 +1,7 @@
 const { queryDatabase } = require('./databaseService.js');
 const { bucket } = require('./firebaseConfig.js');
 
+
 async function fetchRandomImages() {
     try {
         const publications = await fetchPublications();
@@ -55,4 +56,26 @@ const fetchPublications = () => {
     });
 };
 
-module.exports = { fetchRandomImages };
+async function getImagesPost(req, res) {
+    try {
+        const folderPath = req.body.folderPath;
+
+        const [files] = await bucket.getFiles({ prefix: folderPath });
+        const urls = await Promise.all(
+            files.map(async (file) => {
+                const [url] = await file.getSignedUrl({
+                    action: 'read',
+                    expires: '03-01-2500',
+                });
+                return url;
+            })
+        );
+        res.json({ image: urls });
+
+    } catch (error) {
+        console.error('Error fetching images:', error);
+        res.status(500).json({ message: 'Error fetching images' });
+    }
+}
+
+module.exports = { fetchRandomImages, getImagesPost };

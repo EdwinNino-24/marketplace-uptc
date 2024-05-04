@@ -1,30 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const admin = require('firebase-admin');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
-const { login } = require('./authService.js');
-const { decodedToken } = require('./jwtService.js');
-
-const { createAccount, resendCodeActivation } = require('./newUserService.js');
-const { activateAccount } = require('./activationService.js');
-
-const { searchAccountRecover, recoverAccount, resendCodeRecovery } = require('./recoveryService.js');
-const { enterPasswordRecover } = require('./passwordResetService.js');
-
-const { getUser, validateUser, updatePersonalInformation, updatePassword } = require('./userService.js');
-
 const { getPublication, getPublications, getProductsPosts, getServicesPosts, getMyPosts, getPostsBySearch } = require('./postsService.js');
 const { insertPost, editPost, updateStatePost } = require('./postService.js');
 
-const { getTypePosts, getCategories, getLocations, getStates } = require('./types.js');
-
-const { fetchRandomImages } = require('./imageHandler.js');
-
 const { bucket } = require('./firebaseConfig.js');
+
+
+const userRoutes = require('./routes/userRoutes');
+const getRoutes = require('./routes/getRoutes');
+const registerRoutes = require('./routes/registerRoutes');
+const recoverRoutes = require('./routes/recoveryRoutes.js');
+const postsRoutes = require('./routes/postsRoutes.js');
+const postRoutes = require('./routes/postRoutes.js');
 
 
 const app = express();
@@ -33,137 +25,31 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-
-app.post('/login', (req, res) => {
-  login(req, res);
-});
-
-app.post('/user_profile', (req, res) => {
-  getUser(req, res);
-});
-
-app.post('/crear-cuenta', (req, res) => {
-  const formData = req.body;
-  createAccount(formData, res);
-});
-
-app.post('/code_activation', (req, res) => {
-  activateAccount(req, res);
-});
-
-app.post('/resend_code_activation', (req, res) => {
-  resendCodeActivation(req, res);
-});
-
-app.post('/search_account_recover', (req, res) => {
-  searchAccountRecover(req, res);
-});
-
-app.post('/recover_account', (req, res) => {
-  recoverAccount(req, res);
-});
-
-app.post('/resend_code_recover', (req, res) => {
-  resendCodeRecovery(req, res);
-});
-
-app.post('/enter_password_recover', (req, res) => {
-  enterPasswordRecover(req, res);
-});
+app.use(userRoutes);
+app.use(getRoutes);
+app.use(registerRoutes);
+app.use(recoverRoutes);
+app.use(postsRoutes);
+app.use(postRoutes);
 
 
-app.post('/personal_information', (req, res) => {
-  getUser(req, res);
-});
-
-app.post('/change_personal_information', (req, res) => {
-  updatePersonalInformation(req, res);
-});
-
-app.post('/change_password', (req, res) => {
-  updatePassword(req, res);
-});
-
-
-app.get('/publications', getPublications);
-
-app.get('/get_products_posts', async (req, res) => {
-  try {
-    await fetchRandomImages();
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
-  }
-
-  await getProductsPosts(req, res);
-});
-
-app.get('/get_services_posts', async (req, res) => {
-  try {
-    await fetchRandomImages();
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
-  }
-
-  await getServicesPosts(req, res);
-});
-
-app.post('/get_posts_by_search', async (req, res) => {
-  await getPostsBySearch(req, res);
-});
-
-
-
-app.get('/publications/:id', (req, res) => {
-  getPublication(req, res);
-});
-
-
-app.post('/get_post_images', async (req, res) => {
-  try {
-    const folderPath = req.body.folderPath;
-
-    const [files] = await bucket.getFiles({ prefix: folderPath });
-    const urls = await Promise.all(
-      files.map(async (file) => {
-        const [url] = await file.getSignedUrl({
-          action: 'read',
-          expires: '03-01-2500',
-        });
-        return url;
-      })
-    );
-    res.json({ image: urls });
-
-  } catch (error) {
-    console.error('Error fetching images:', error);
-    res.status(500).json({ message: 'Error fetching images' });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
   }
 });
 
+const upload = multer({ storage });
 
-app.get('/get_type_offers', (req, res) => {
-  getTypePosts(req, res);
-});
 
-app.get('/get_type_offers', (req, res) => {
-  getTypePosts(req, res);
-});
 
-app.get('/get_categories', (req, res) => {
-  getCategories(req, res);
-});
 
-app.get('/get_locations', (req, res) => {
-  getLocations(req, res);
-});
 
-app.get('/get_states', (req, res) => {
-  getStates(req, res);
-});
 
-app.post('/verify_current_user', (req, res) => {
-  validateUser(req, res);
-});
+
 
 app.post('/create_post', (req, res) => {
 
@@ -185,20 +71,7 @@ app.post('/edit_post', (req, res) => {
   editPost(req, res);
 });
 
-app.post('/update_publication_state', (req, res) => {
-  updateStatePost(req, res);
-});
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ storage });
 
 app.post('/delete_folder', async (req, res) => {
   const folderPath = req.body.folderPath;
@@ -259,15 +132,6 @@ app.post('/uploadImages', upload.array('images', 100), async (req, res) => {
   }
 });
 
-app.post('/get_my_posts', async (req, res) => {
-  try {
-    await fetchRandomImages();
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las imágenes aleatorias de las publicaciones' });
-  }
-
-  await getMyPosts(req, res);
-});
 
 
 
@@ -318,11 +182,6 @@ app.post('/uploadEditImages', upload.array('images', 100), async (req, res) => {
 });
 
 
-
-
-
-
-
 app.listen(5000, () => {
-  console.log('Servidor Express corriendo en el puerto 5000');
+  console.log('Marketplace UPTC - Backend Desplegado!!!');
 });

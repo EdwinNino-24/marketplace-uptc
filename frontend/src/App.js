@@ -40,7 +40,7 @@ function App() {
 
           <Route path="/enter-email" element={<EnterEmail />} />
           <Route path="/enter-code-recover" element={<EnterCodeRecover />} />
-          <Route path="/new_password_from_recover" element={<NewPassword />} />
+
 
           <Route path="/main-page" element={<MainPage />} />
           <Route path="/view-publication/:id" element={<ViewPublication />} />
@@ -48,13 +48,14 @@ function App() {
 
           <Route path="/" element={<ProtectedRoute />}>
 
+            <Route path="/new_password_from_recover" element={<NewPassword />} />
+
             <Route path="/create-publication" element={<CreatePublication />} />
             <Route path="/my-publications-page" element={<MyPublications />} />
             <Route path="/edit-publication/:id" element={<EditPublication />} />
 
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/edit-user-profile" element={<EditUserProfile />} />
-
 
           </Route>
 

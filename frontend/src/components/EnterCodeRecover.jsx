@@ -30,35 +30,33 @@ const EnterCodeRecover = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(numericValue);
 
-    if (numericValue.length !== 0) {
-      try {
-        const response = await fetch('http://localhost:5000/recover_account', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ code: numericValue, token: localStorage.getItem('token') })
-        });
+    try {
+      const response = await fetch('http://localhost:5000/recover_account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: numericValue, token: localStorage.getItem('token') })
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (data.code === '1') {
-          setMensaje("¡Recuperación de Cuenta Exitosa!")
-          setModal2IsOpen(true);
-          await localStorage.setItem('token', data.token);
-        }
-        else if (data.code === '0') {
-          setMensaje("¡El código de seguridad que ingresaste no fue el que te enviamos!")
-          await localStorage.setItem('token', data.token);
-          setModalIsOpen(true);
-        }
-
-      } catch (error) {
-        console.error('Error:', error);
+      if (data.code === '1') {
+        setMensaje("¡Recuperación de Cuenta Exitosa!")
+        setModal2IsOpen(true);
+        await localStorage.setItem('token', data.token);
       }
+      else if (data.code === '0') {
+        setMensaje("¡El código de seguridad que ingresaste no fue el que te enviamos!")
+        await localStorage.setItem('token', data.token);
+        setModalIsOpen(true);
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
     }
+
   };
 
   const [modalIsOpen, setModalIsOpen] = useState(false);

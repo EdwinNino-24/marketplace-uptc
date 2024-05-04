@@ -46,6 +46,10 @@ const EnterEmailForm = () => {
                     await localStorage.setItem('token', data.token);
                     setModal2IsOpen(true);
                 }
+                else if (data.code === "3") {
+                    setMessage('¡La solicitud ha fallado!');
+                    setModalIsOpen(true);
+                }
             } catch (error) {
                 console.error('Error:', error);
             }

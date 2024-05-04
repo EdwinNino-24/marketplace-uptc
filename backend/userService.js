@@ -53,20 +53,18 @@ async function updatePersonalInformation(req, res) {
       return res.status(400).send({ error: "Nombres y apellidos son requeridos" });
     }
 
-    // Preparamos la consulta SQL para actualizar la información
     const updateQuery = `
             UPDATE PERSONAL_INFORMATION PI
             JOIN ACCOUNTS A ON A.ID_PERSONAL = PI.ID_PERSONAL
             SET PI.NAMES = ?, PI.LASTNAMES = ?
             WHERE A.ID_ACCOUNT = ?;
         `;
-    console.log(user);
-    // Ejecutamos la actualización
+
     await queryDatabase(updateQuery, [names, lastnames, user]);
     console.log(user);
 
     res.json({ code: 0 });
-    // Devolvemos una respuesta exitosa
+
   } catch (error) {
     console.error('Error al actualizar la información personal:', error);
     res.status(500).send({ error: "Error al procesar la solicitud" });

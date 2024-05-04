@@ -32,7 +32,7 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/crear-cuenta', {
+      const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -45,7 +45,11 @@ const RegisterForm = () => {
         setMensaje("¡Ya tenemos una cuenta registrada con este usuario!");
         setModalIsOpen(true);
       }
-      else {
+      else if (data.code === '1') {
+        setMensaje("¡Se presento un error al crear tu cuenta!");
+        setModalIsOpen(true);
+      }
+      else if (data.code === '2') {
         localStorage.setItem('token', data.token);
         window.location.href = '/activate-account';
       }

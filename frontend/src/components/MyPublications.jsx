@@ -74,6 +74,12 @@ export const MyPublications = () => {
         }
     };
 
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
+            window.location.href = `/search_page/${searchTerm}`;
+        }
+    };
+
 
     const [selectedOption, setSelectedOption] = useState('');
 
@@ -148,6 +154,7 @@ export const MyPublications = () => {
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
                 handleKeyPress={handleKeyPress}
+                handleSearch={handleSearch}
             />
 
             <div className="section_top">

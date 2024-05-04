@@ -170,8 +170,8 @@
 }
 
 .icon_glass {
-  background: var(--my-color2-main_page);
   margin-left: 0.5rem;
+  cursor: pointer;
 }
 
 .input_search {
