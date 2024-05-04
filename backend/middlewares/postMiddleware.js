@@ -1,5 +1,6 @@
 const postController = require('../controllers/postController');
 
+
 exports.post = async (req, res) => {
   const { id } = req.params;
   try {
@@ -20,6 +21,39 @@ exports.statePost = async (req, res) => {
   const { publicationId, newState } = req.body;
   try {
     postController.updateStatePost(publicationId, newState);
+  } catch (error) {
+  }
+};
+
+exports.createPost = async (req, res) => {
+  const post = {
+    "title": req.body.title,
+    "type": req.body.type,
+    "category": req.body.category,
+    "description": req.body.description,
+    "price": req.body.price,
+    "location": req.body.location,
+    "token": req.body.token
+  }
+  try {
+    postController.createPost(post, res);
+  } catch (error) {
+  }
+};
+
+exports.updatePost = async (req, res) => {
+  const token = req.body.token;
+  const post = {
+    id: req.body.id,
+    title: req.body.title,
+    type: req.body.type,
+    category: req.body.category,
+    description: req.body.description,
+    price: req.body.price,
+    location: req.body.location,
+};
+  try {
+    postController.updatePost(token, post, res);
   } catch (error) {
   }
 };

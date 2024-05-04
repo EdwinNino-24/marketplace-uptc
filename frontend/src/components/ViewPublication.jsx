@@ -35,7 +35,6 @@ export const ViewPublication = () => {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            console.log('No hay token disponible.');
             setUser("Iniciar Sesión");
             return;
         }
@@ -119,10 +118,7 @@ export const ViewPublication = () => {
                 const response = await Axios.post('http://localhost:5000/get_post_images', {
                     folderPath: id,
                 });
-
                 setImages(response.data.image); 
-                console.log(response.data.image);
-                console.log(images);
             } catch (error) {
                 console.error('Error fetching images:', error);
             }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Spinner from './Spinner.jsx'; 
+import Spinner from './Spinner.jsx';
 
 import '../styles/CreatePublicationForm.css';
 import '../styles/Notification.css';
@@ -48,15 +48,10 @@ const CreatePublicationForm = () => {
     };
 
     const onDrop = (acceptedFiles) => {
-        // Filtra los archivos para incluir solo imágenes
         const imageFiles = acceptedFiles.filter(file => file.type.startsWith('image/'));
-
-        // Mapea cada archivo de imagen a un nuevo objeto con una URL de previsualización
         const newImages = imageFiles.map((file) => Object.assign(file, {
             preview: URL.createObjectURL(file)
         }));
-
-        // Actualiza el estado de las imágenes añadiendo las nuevas imágenes
         setImages([...images, ...newImages]);
     };
 
@@ -110,31 +105,31 @@ const CreatePublicationForm = () => {
     const handleSubmit = async (event) => {
         if (images.length > 0) {
             event.preventDefault();
-            setLoading(true); 
+            setLoading(true);
             try {
                 const response = await fetch('http://localhost:5000/create_post', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData) 
+                    body: JSON.stringify(formData)
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
+                const data = await response.json();
+                const code = data.code;
+                if (code === 0) {
                     const id_post = data.id_post;
                     await uploadImages(id_post);
                     setMensaje("¡La publicación se ha creado exitosamente!");
                     setModalCreatePostIsOpen(true);
-                } else {
-                    console.error('Error al enviar el formulario:', response.statusText);
+                } else if (code === 1) {
+                    setMensaje("¡Ha ocurrido un error al crear la publicación!");
+                    setModalIsOpen(true);
                 }
             } catch (error) {
                 console.error('Error al enviar el formulario:', error.message);
             }
-            setLoading(false); 
+            setLoading(false);
         } else {
-            console.log('No sea nuv, cargue una imagen');
         }
     };
 
@@ -143,7 +138,6 @@ const CreatePublicationForm = () => {
     const handleImageChange = (event) => {
         if (images.length === 0) {
             setModalIsOpen(true);
-            console.log(formData);
         }
         const hasImages = images.length > 0;
         setCanPublish(hasImages);
@@ -310,7 +304,7 @@ const CreatePublicationForm = () => {
                                 <button className="button_publicate" onMouseOver={handleImageChange} type='submit' disabled={!canPublish}>PUBLICAR</button>
                             </div>
                             <div>
-                                {loading && <Spinner />}  
+                                {loading && <Spinner />}
                             </div>
                         </div>
                     </form>

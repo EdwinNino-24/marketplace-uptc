@@ -32,3 +32,17 @@ exports.updateState = async (id, state) => {
     } catch (error) {
     }
 }
+
+exports.insertPost = async (offer, post, user) => {
+    try {
+        return await postModel.createPost(offer, post, user);
+    } catch (error) {
+    }
+}
+
+exports.updatePost = async (idOffer, idPost, post) => {
+    try {
+        return await postModel.updatePost(idOffer, idPost, post);
+    } catch (error) {
+    }
+}

@@ -39,7 +39,7 @@ const EditPublication = () => {
     useEffect(() => {
         const fetchPublication = async () => {
             try {
-                const response = await Axios.get(`http://localhost:5000/publications/${id}`);
+                const response = await Axios.get(`http://localhost:5000/posts/${id}`);
                 const publication = response.data;
 
                 setFormData({
@@ -179,12 +179,19 @@ const EditPublication = () => {
                     body: JSON.stringify(formData) // Utiliza el objeto formData
                 });
 
-                if (response.ok) {
+                const data = await response.json();
+                const code = data.code;
+                if (code === 2) {
                     await uploadImages(id);
                     setMensaje("¡La publicación se ha actualizado correctamente!");
                     setModalCreatePostIsOpen(true);
-                } else {
-                    console.error('Error al enviar el formulario:', response.statusText);
+                } else if (code === 1) {
+                    setMensaje("¡Ha ocurrido un error al actualizar la publicación!");
+                    setModalIsOpen(true);
+                }
+                else if (code === 0) {
+                    setMensaje("¡No tienes el permiso para actualizar esta publicación!");
+                    setModalIsOpen(true);
                 }
 
             } catch (error) {

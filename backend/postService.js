@@ -89,15 +89,7 @@ async function fetchPublicationDetails(publicationId) {
     return results.length > 0 ? results[0] : null;
 }
 
-async function editOffer(offerId, post) {
-    const offerQuery = `UPDATE OFFERS SET ID_TYPE = ?, NAME_OFFER = ?, DESCRIPTION_OFFER = ?, PRICE_OFFER = ? WHERE ID_OFFER = ?`;
-    await queryDatabase(offerQuery, [post.type, post.title, post.description, post.price, offerId]);
-}
 
-async function editPublication(publicationId, post) {
-    const publicationQuery = `UPDATE PUBLICATIONS SET ID_CATEGORY = ?, ID_LOCATION = ?, UPDATE_DATE = NOW(), ID_STATE = 1 WHERE ID_PUBLICATION = ?`;
-    await queryDatabase(publicationQuery, [post.category, post.location, publicationId]);
-}
 
 
 async function updateStatePost(req, res) {
