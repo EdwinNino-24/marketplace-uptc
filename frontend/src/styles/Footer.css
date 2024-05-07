@@ -1,0 +1,103 @@
+.footer {
+    background: #333;
+    color: #f4f4f4;
+    text-align: center;
+    padding: 10px 20px;
+    flex-shrink: 0;
+}
+
+.footer-content {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.footer-section {
+    flex: 1;
+    padding: 0 20px;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #f4f4f4;
+}
+
+.logo-text span {
+    color: #e8491d;
+}
+
+.footer-section h2 {
+    font-size: 16px;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.footer-section ul,
+.footer-section p {
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.footer-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-section ul li a {
+    color: #bbbbbb;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+    color: #ffffff;
+}
+
+.socials a {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background: #404040;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    border-radius: 5px;
+    color: #f4f4f4;
+    font-size: 18px;
+}
+
+.footer-bottom {
+    padding: 10px;
+    border-top: 1px solid #444;
+    background: #222;
+    text-align: center;
+    font-size: 14px;
+}
+
+.form-element {
+    display: flex;
+}
+
+.form-element input[type="email"] {
+    padding: 10px;
+    margin-right: 5px;
+    border: none;
+    width: 70%;
+}
+
+.form-element button {
+    padding: 10px;
+    background: #e8491d;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form-element button:hover {
+    background: #333;
+}

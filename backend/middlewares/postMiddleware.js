@@ -57,3 +57,11 @@ exports.updatePost = async (req, res) => {
   } catch (error) {
   }
 };
+
+exports.deletePost = async (req, res) => {
+  const { publicationId } = req.body;
+  try {
+    postController.deletePost(publicationId);
+  } catch (error) {
+  }
+};

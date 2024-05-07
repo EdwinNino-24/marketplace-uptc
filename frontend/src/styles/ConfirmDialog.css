@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+.confirm_dialog{
+    display: block;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter';
+    width: 100%;
+    justify-content: center;
+    user-select: none;
+}
+.title_confirm_dialog{
+    font-weight: 800;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 2.5rem;
+    width: 100%;
+    margin: 1rem 0rem 0.5rem 0rem;
+}
+.subtitle_confirm_dialog{
+    font-weight: 500;
+    background: var(--my-color3-register);
+    user-select: none;
+    font-size: 1.8rem;
+    width: 100%;
+    margin: 0.5rem 0rem 0.5rem 0rem;
+}
+
+.button_confirm_dialog{
+    width: 100%;
+    margin: 1rem 0rem 0rem 0rem;
+}
+
+.yes_confirm_dialog{
+    background: red;
+    font-size: 2rem;
+    color: var(--my-color3-register);
+    cursor: pointer;
+    width: 20%;
+    user-select: none;
+    margin-right: 1rem;
+}
+.yes_confirm_dialog:hover{
+    background: darkred;
+}
+
+.no_confirm_dialog{
+    background: green;
+    font-size: 2rem;
+    color: var(--my-color3-register);
+    cursor: pointer;
+    width: 20%;
+    user-select: none;
+    margin-left: 1rem;
+}
+.no_confirm_dialog:hover{
+    background: darkgreen;
+}
+
+:root {
+    --my-color1-notification: #F7C600; 
+    --my-color2-notification: #1E1A16; 
+    --my-color3-notification: #FFF;
+    --my-color4-notification: gray; 
+}
+  
+*{
+    font-family: 'Inter', sans-serif;
+}

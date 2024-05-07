@@ -46,3 +46,10 @@ exports.updatePost = async (idOffer, idPost, post) => {
     } catch (error) {
     }
 }
+
+exports.deletePost = async (id) => {
+    try {
+        postModel.deletePost(id);
+    } catch (error) {
+    }
+}

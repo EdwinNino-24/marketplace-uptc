@@ -67,11 +67,8 @@
 
 .post_img {
     width: 100%;
-    /* o el tamaño que desees */
     height: 20rem;
-    /* Asegúrate de que el alto y el ancho sean iguales para la relación 1:1 */
     overflow: hidden;
-    /* Oculta cualquier parte de la imagen que exceda este tamaño */
     display: flex;
     justify-content: center;
     align-items: center;

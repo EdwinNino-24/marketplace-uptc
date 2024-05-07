@@ -27,7 +27,7 @@ exports.fetchPost = async (id) => {
         JOIN CATEGORIES C ON P.ID_CATEGORY = C.ID_CATEGORY
         JOIN LOCATIONS L ON P.ID_LOCATION = L.ID_LOCATION
         JOIN STATES S ON P.ID_STATE = S.ID_STATE
-        WHERE ID_PUBLICATION = ?;
+        WHERE ID_PUBLICATION = ? AND P.VISIBILITY_POST = TRUE;
     `;
   const result = await queryDatabase(query, id);
   return result[0];
@@ -47,8 +47,8 @@ exports.updateStatePost = async (postId, newState) => {
 exports.createPost = async (offer, post, user) => {
   const queryOffer = `INSERT INTO OFFERS (ID_TYPE, NAME_OFFER, DESCRIPTION_OFFER, URL_IMAGE_OFFER, PRICE_OFFER) VALUES (?, ?, ?, ?, ?)`;
   const queryPublication = `INSERT INTO PUBLICATIONS 
-                   (ID_OFFERER, ID_CATEGORY, ID_LOCATION, ID_OFFER, ID_STATE, CREATION_DATE, UPDATE_DATE)
-                   VALUES (?, ?, ?, ?, 1, NOW(), NOW())`;
+                   (ID_OFFERER, ID_CATEGORY, ID_LOCATION, ID_OFFER, ID_STATE, CREATION_DATE, UPDATE_DATE, VISIBILITY_POST)
+                   VALUES (?, ?, ?, ?, 1, NOW(), NOW(), TRUE)`;
   try {
     const resultOffer = await queryDatabase(queryOffer, [offer.typeId, offer.name, offer.description, "", offer.price]);
     const idOffer = resultOffer.insertId;
@@ -68,6 +68,17 @@ exports.updatePost = async (offerId, publicationId, post) => {
     const resultOffer = await queryDatabase(offerQuery, [post.type, post.title, post.description, post.price, offerId]);
     const resultPublication = await queryDatabase(publicationQuery, [post.category, post.location, publicationId]);
     return resultOffer.affectedRows > 0 && resultPublication.affectedRows > 0;
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    return false;
+  }
+};
+
+exports.deletePost = async (postId) => {
+  const query = `UPDATE PUBLICATIONS SET VISIBILITY_POST = FALSE WHERE ID_PUBLICATION = ?;`;
+  try {
+    const result = await queryDatabase(query, [postId]);
+    return result.affectedRows > 0;
   } catch (error) {
     console.error('Error updating user profile:', error);
     return false;

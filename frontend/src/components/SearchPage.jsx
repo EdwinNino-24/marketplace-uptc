@@ -14,6 +14,8 @@ import Header from './Header';
 import Navigation from './Navigation.jsx';
 import { ColombianPrice } from './ColombianPrice.jsx';
 
+import Footer from './Footer';
+
 
 export const SearchPage = ({ user, href_user_profile,
     categories, showSubMenu, handleSubMenuToggleEnter, handleSubMenuToggleLeave,
@@ -89,6 +91,7 @@ export const SearchPage = ({ user, href_user_profile,
                     </div>
                 )}
             </div>
+            <Footer />
         </div>
     )
 };

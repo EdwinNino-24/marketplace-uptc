@@ -63,3 +63,10 @@ exports.updatePost = async (token, newData, res) => {
     } catch (error) {
     }
 };
+
+exports.deletePost = async (id, res) => {
+    try {
+        await postServices.deletePost(id);
+    } catch (error) {
+    }
+};

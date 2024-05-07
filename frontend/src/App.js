@@ -4,6 +4,9 @@ import Axios from 'axios';
 
 import Login from "./components/LoginForm";
 
+
+import Chat from "./components/Chat";
+
 import Register from "./components/RegisterForm";
 import ActivateAccount from "./components/ActivateAccount";
 
@@ -100,6 +103,8 @@ function App() {
           <Route path="*" element={<Login />} />
 
           <Route path="/login" element={<Login />} />
+
+          <Route path="/chat" element={<Chat />} />
 
           <Route path="/register" element={<Register />} />
           <Route path="/activate-account" element={<ActivateAccount />} />

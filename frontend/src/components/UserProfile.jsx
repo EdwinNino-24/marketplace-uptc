@@ -9,6 +9,7 @@ import { GrLogout } from "react-icons/gr";
 
 import Header from './Header';
 import Navigation from './Navigation.jsx';
+import Footer from './Footer';
 
 
 export const UserProfile = ({ user, href_user_profile,
@@ -111,6 +112,7 @@ export const UserProfile = ({ user, href_user_profile,
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 };

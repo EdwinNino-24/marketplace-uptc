@@ -151,19 +151,29 @@
   margin-bottom: 1.5%;
 }
 
+.chats-my-publication {
+  background: #388E3C;
+  color: white;
+}
+.chats-my-publication:hover {
+  background: #2E7D32 ;
+}
+
 .edit-my-publication {
   color: white;
-  background: #043246;
+  background: #FFA000;
+}
+.edit-my-publication:hover {
+  color: white;
+  background: #FF8F00;
 }
 
 .delete-my-publication {
-  background: #540303;
+  background: #D32F2F ;
   color: white;
-
 }
-
-.chats-my-publication {
-  background: #004139;
+.delete-my-publication:hover {
+  background: #C62828;
   color: white;
 }
 
@@ -185,4 +195,26 @@
 .post_link{
   text-decoration: none;
   color: var(--my-color2-my_publications);
+}
+
+.image-with-text1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5%;
+  min-height: 61vh;
+}
+
+.image-with-text1 img {
+  max-width: 20%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.image-with-text1 p {
+  margin-top: 1%;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2.5rem;
 }

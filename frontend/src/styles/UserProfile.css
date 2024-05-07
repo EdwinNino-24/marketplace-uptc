@@ -19,7 +19,7 @@
 .bg_user_profile {
   padding-top: 9%;
   background: var(--my-color5-create_publication);
-  min-height: 100vh;
+  height: 92.5vh;
 }
 
 .title_section_profile {
