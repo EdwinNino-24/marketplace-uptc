@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root {
+  --my-color1: #F7C600;
+  --my-color2: #1E1A16;
+  --my-color3: #FFF;
+  --my-color4: gray;
+  --my-color5: #ecedec;
+  --font-size-h1: 2rem;
+  --font-size-h2: 3rem;
+  --font-size-h3: 1.4rem;
+  --font-size-p: 1.3rem;
+  --font-size-title: 2.5rem;
+  --font-size-ra: 1rem;
+  --font-size-raaa: 1.5rem;
+  --font-size-B2: 1.8rem;
+  --font: 'Inter';
+}

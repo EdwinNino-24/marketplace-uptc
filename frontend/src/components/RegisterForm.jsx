@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Modal from 'react-modal';
+import Header from './HeaderTwo';
+import '../styles/Var.css';
 
 Modal.setAppElement('#root');
 
@@ -59,7 +61,7 @@ const RegisterForm = () => {
 
   const handleChange1 = (e) => {
     const { name, value } = e.target;
-    let processedValue = value.trim();
+    let processedValue = value;
     switch (name) {
       case 'email':
         processedValue = processedValue.replace(/\s/g, '').toLowerCase();
@@ -88,19 +90,17 @@ const RegisterForm = () => {
 
   const customStyles = {
     content: {
-      width: '45%', 
-      height: '33%', 
-      margin: 'auto', 
-      backgroundColor: 'white', 
+      width: '45%',
+      height: '33%',
+      margin: 'auto',
+      backgroundColor: 'white',
     },
   };
 
 
   return (
     <div className="bg_register">
-      <header className="header_register">
-        <h2 className="title_login">MARKETPLACE - UPTC</h2>
-      </header>
+      <Header />
       <div className="body_register">
         <div className="wrapperRegisterUserForm">
           <form onSubmit={handleSubmit}>
@@ -127,7 +127,7 @@ const RegisterForm = () => {
             <div className='input_password_register'>
               <input
                 type={passwordVisible ? 'text' : 'password'}
-                placeholder="Nueva Contraseña"
+                placeholder="Contraseña"
                 value={formData.password}
                 onChange={handleChange1}
                 name="password"

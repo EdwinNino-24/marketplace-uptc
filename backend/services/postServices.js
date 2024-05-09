@@ -50,6 +50,13 @@ exports.updatePost = async (idOffer, idPost, post) => {
 exports.deletePost = async (id) => {
     try {
         postModel.deletePost(id);
+        try {
+            const [files] = await bucket.getFiles({ prefix: id });
+            const deletePromises = files.map(file => file.delete());
+            await Promise.all(deletePromises);
+        } catch (error) {
+            console.error('Error al eliminar archivos:', error);
+        }
     } catch (error) {
     }
 }

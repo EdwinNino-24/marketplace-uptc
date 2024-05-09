@@ -3,6 +3,7 @@ import '../styles/Header.css';
 import '../styles/MyPublications.css';
 import '../styles/ConfirmDialog.css';
 import '../styles/Notification.css';
+import '../styles/Var.css';
 
 import Spinner from './Spinner.jsx';
 import Axios from 'axios';

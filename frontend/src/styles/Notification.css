@@ -10,16 +10,16 @@
     user-select: none;
 }
 .title_notification{
-    font-weight: 800;
-    background: var(--my-color3-register);
+    font-weight: 600;
+    background: var(--my-color3);
     user-select: none;
-    font-size: 2.5rem;
+    font-size: var(--font-size-title);
     width: 100%;
     margin: 1rem 0rem 0.5rem 0rem;
 }
 .subtitle_notification{
-    font-weight: 500;
-    background: var(--my-color3-register);
+    font-weight: 400;
+    background: var(--my-color3);
     user-select: none;
     font-size: 1.8rem;
     width: 100%;
@@ -31,21 +31,14 @@
 }
 .ok_notification{
     background: green;
-    font-size: 2rem;
-    color: var(--my-color3-register);
+    font-size: 1.8rem;
+    color: var(--my-color3);
     cursor: pointer;
     width: 30%;
     user-select: none;
 }
 .ok_notification:hover{
     background: darkgreen;
-}
-
-:root {
-    --my-color1-notification: #F7C600; 
-    --my-color2-notification: #1E1A16; 
-    --my-color3-notification: #FFF;
-    --my-color4-notification: gray; 
 }
   
 *{

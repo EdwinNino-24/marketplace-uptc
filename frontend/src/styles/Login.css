@@ -1,51 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
-.notification_account_created {
-    align-items: center;
-    text-align: center;
-    font-family: 'Inter';
-}
-
-.title_notification_account_created {
-    margin: 0.5rem 1rem 0.5rem 1rem;
-    font-weight: 800;
-    background: var(--my-color3-register);
-    user-select: none;
-    font-size: 2.5rem;
-}
-
-.subtitle_notification_account_created {
-    margin: 0rem 1rem 1rem 1rem;
-    font-weight: 500;
-    background: var(--my-color3-register);
-    user-select: none;
-    font-size: 1.5rem;
-}
-
-.button_notification_account_created {
-    margin-top: 1rem;
-}
-
-.ok_notification_account_created {
-    background: green;
-    font-size: 2rem;
-    width: 25%;
-    color: var(--my-color3-register);
-    cursor: pointer;
-}
-
-.ok_notification_account_created:hover {
-    background: darkgreen;
-}
-
-:root {
-    --my-color1-login: #F7C600;
-    --my-color2-login: #1E1A16;
-    --my-color3-login: #FFF;
-    --my-color4-login: gray;
-}
-
-
 * {
     margin: 0;
     padding: 0;
@@ -58,12 +10,12 @@
     -moz-osx-font-smoothing: grayscale;
     display: flex;
     min-height: 100vh;
-    background: var(--my-color3-login);
+    background: var(--my-color3);
 }
 
 .bg_login .header-login {
     width: 100%;
-    background: var(--my-color1-login);
+    background: var(--my-color1);
     justify-content: left;
     flex: 1;
     height: 5rem;
@@ -71,17 +23,6 @@
     position: fixed;
     z-index: 2;
 
-}
-
-.bg_login .title_login {
-    background: var(--my-color2-login);
-    color: var(--my-color1-login);
-    font-size: 3rem;
-    margin-top: 0.5%;
-    margin-left: 1.5%;
-    width: 35rem;
-    text-align: center;
-    user-select: none;
 }
 
 .body_login {
@@ -110,7 +51,7 @@
     width: 40%;
     height: 20rem;
     margin-top: 3rem;
-    border: 1px solid var(--my-color4-login);
+    border: 1px solid var(--my-color4);
     border-radius: 10px;
 }
 
@@ -130,14 +71,14 @@
 }
 
 .input-box-user-login input {
-    width: 45%;
+    width: 48%;
     height: 100%;
     background: transparent;
-    border: 1.5px solid var(--my-color4-login);
+    border: 1.5px solid var(--my-color4);
     outline: none;
     border-radius: 40px;
-    font-size: 1.5rem;
-    color: var(--my-color2-login);
+    font-size: var(--font-size-p);
+    color: var(--my-color2);
     padding: 20px 45px 20px 20px;
     margin-left: 4.5rem;
     font-weight: 400;
@@ -148,11 +89,11 @@
     width: 75%;
     height: 100%;
     background: transparent;
-    border: 1.5px solid var(--my-color4-login);
+    border: 1.5px solid var(--my-color4);
     outline: none;
     border-radius: 40px;
-    font-size: 1.5rem;
-    color: var(--my-color2-login);
+    font-size: var(--font-size-p);
+    color: var(--my-color2);
     padding: 20px 45px 20px 20px;
     margin-left: 4.5rem;
     font-weight: 400;
@@ -163,8 +104,8 @@
     right: 6rem;
     top: 48%;
     transform: translateY(-50%);
-    font-size: 1.5rem;
-    color: var(--my-color2-login);
+    font-size: var(--font-size-p);
+    color: var(--my-color2);
     font-weight: 400;
     user-select: none;
 }
@@ -178,52 +119,52 @@
 }
 
 .remember-forgot a {
-    color: var(--my-color2-login);
+    color: var(--my-color2);
     text-decoration: none;
     padding-left: 5rem;
     font-weight: 800;
-    font-size: 1rem;
+    font-size: var(--font-size-ra);
     user-select: none;
 }
 
 .remember-forgot a:hover {
     text-decoration: underline;
-    color: var(--my-color2-login);
+    color: var(--my-color2);
 }
 
 .wrapper-login .button-login {
-    width: 60%;
+    width: 50%;
     height: 3rem;
-    background: var(--my-color2-login);
+    background: var(--my-color2);
     border: none;
     outline: none;
     border-radius: 40px;
-    box-shadow: 0 0 0.3rem var(--my-color2-login);
+    box-shadow: 0 0 0.3rem var(--my-color2);
     cursor: pointer;
-    font-size: 1.5rem;
-    color: var(--my-color3-login);
-    margin-left: 20%;
+    font-size: var(--font-size-p);
+    color: var(--my-color3);
+    margin-left: 25%;
     margin-top: 2rem;
     font-weight: 800;
     user-select: none;
 }
 
 .wrapper-login .button-login:hover {
-    color: var(--my-color1-login);
+    color: var(--my-color1);
 }
 
 .wrapper-login .register-link {
-    font-size: 1rem;
+    font-size: var(--font-size-ra);
     text-align: center;
     margin-top: 1rem;
     margin-bottom: 2rem;
-    color: var(--my-color2-login);
+    color: var(--my-color2);
     user-select: none;
 }
 
 .register-link p a {
-    font-size: 1rem;
-    color: var(--my-color2-login);
+    font-size: var(--font-size-ra);
+    color: var(--my-color2);
     text-decoration: none;
     font-weight: 800;
 }

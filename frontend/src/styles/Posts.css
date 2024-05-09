@@ -1,0 +1,70 @@
+.post_link {
+    text-decoration: none;
+}
+
+.post {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 10px 10px 2px rgba(0, 0, 0, .2);
+    border: 6px solid transparent;
+    border-radius: 5px;
+    background: var(--my-color3);
+    justify-content: center;
+}
+
+.post:hover {
+    border: 6px solid #08a05c55;
+}
+
+.post_img {
+    width: 100%;
+    height: 12rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post_img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    width: 100%;
+    height: 100%;
+}
+
+.footer_post {
+    width: 100%;
+    font-family: 'Inter';
+    padding: 1rem 0rem 1rem 1.5rem;
+    text-align: left;
+    text-decoration: none;
+}
+
+.footer_post .price {
+    font-weight: 500;
+    font-size: 1.8rem;
+    color: var(--my-color2-main_page);
+    text-decoration: none;
+}
+
+.footer_post h1 {
+    font-weight: 400;
+    font-size: var(--font-size-h3);
+    color: var(--my-color2);
+    text-decoration: none;
+    padding-bottom: 0.1rem;
+}
+
+.footer_post p {
+    font-weight: 500;
+    color: var(--my-color4);
+    text-transform: uppercase;
+    font-size: 1rem;
+    text-decoration: none;
+}

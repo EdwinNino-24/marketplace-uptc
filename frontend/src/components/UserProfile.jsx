@@ -48,7 +48,7 @@ export const UserProfile = ({ user, href_user_profile,
                 <div className="settings">
                     <div className="setting">
                         <div className="icon_setting">
-                            <AiFillDatabase size="150px" />
+                            <AiFillDatabase size="125px" />
                         </div>
                         <div className="setting_footer">
                             <h1> Mi Cuenta </h1>
@@ -64,7 +64,7 @@ export const UserProfile = ({ user, href_user_profile,
                     </div>
                     <div className="setting">
                         <div className="icon_setting">
-                            <PiCrosshairSimpleFill size="150px" />
+                            <PiCrosshairSimpleFill size="125px" />
                         </div>
                         <div className="setting_footer">
                             <h1> Mis Publicaciones </h1>
@@ -80,7 +80,7 @@ export const UserProfile = ({ user, href_user_profile,
                     </div>
                     <div className="setting">
                         <div className="icon_setting">
-                            <PiChatsFill size="150px" />
+                            <PiChatsFill size="125px" />
                         </div>
                         <div className="setting_footer">
                             <h1> Mis Chats </h1>
@@ -96,7 +96,7 @@ export const UserProfile = ({ user, href_user_profile,
                     </div>
                     <div className="setting">
                         <div className="icon_setting">
-                            <GrLogout size="150px" />
+                            <GrLogout size="125px" />
                         </div>
                         <div className="setting_footer">
                             <h1> Cerrar Sesión </h1>

@@ -5,9 +5,7 @@ const Header = ({ user, href_user_profile }) => {
         <header className="header">
             <div className="box_header_top">
                 <div className="isotype_header">
-                    <a href="/main-page" className="href_isotype">
-                        <h1 className="isotype">MARKETPLACE - UPTC</h1>
-                    </a>
+                    <h1 className="isotype">MARKETPLACE - UPTC</h1>
                 </div>
                 <div className="list_user_options">
                     <ul className="user_options">

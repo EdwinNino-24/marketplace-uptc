@@ -2,6 +2,8 @@ import '../styles/Header.css';
 import '../styles/Banner.css';
 import '../styles/ImageSlider.css';
 import '../styles/Publications.css';
+import '../styles/Posts.css';
+import '../styles/Var.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -64,7 +66,7 @@ export const MainPage = ({ user, href_user_profile,
             });
     }, []);
 
-    
+
     return (
         <div className="bg_main_page">
             <div>

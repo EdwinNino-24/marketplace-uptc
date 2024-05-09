@@ -1,4 +1,4 @@
-import '../styles/EditPublicationForm.css';
+import '../styles/CreateAndEditPost.css';
 import '../styles/Notification.css';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { FaArrowAltCircleLeft } from "react-icons/fa";
 import Spinner from './Spinner.jsx';
 
 import Axios from 'axios';
-
+import Header from './HeaderTwo';
 import React, { useState, useEffect } from 'react';
 
 import Modal from 'react-modal';
@@ -264,9 +264,7 @@ const EditPublication = () => {
 
     return (
         <div className="bg_create_publication">
-            <header className="header">
-                <h2 className="title_create_publication">MARKETPLACE - UPTC</h2>
-            </header>
+            <Header />
             <div className='body_create_publication'>
                 <div className='wrapperCreatePublication'>
                     <form onSubmit={handleSubmit}>
@@ -282,7 +280,7 @@ const EditPublication = () => {
                                 </div>
                                 <div className="image_preview">
                                     {images.map((image, index) => (
-                                        <div key={index} className="image_container">
+                                        <div key={index} className="image_container1">
                                             <img src={image.preview} className='preview_image' alt={`Imagen ${index}`} />
                                             <button type="button" className="button_remove" onClick={() => removeImage(index)}>Eliminar</button>
                                         </div>

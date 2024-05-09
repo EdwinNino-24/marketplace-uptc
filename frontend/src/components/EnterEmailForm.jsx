@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { useState } from 'react';
 import Modal from 'react-modal';
+import Header from './HeaderTwo';
+import '../styles/Var.css';
 
 
 Modal.setAppElement('#root');
@@ -87,9 +89,7 @@ const EnterEmailForm = () => {
 
     return (
         <div className="bg_enter_email">
-            <header className='header-login'>
-                <h2 className='title_login'>MARKETPLACE - UPTC</h2>
-            </header>
+            <Header />
             <div className='body_enter_email'>
                 <div className='wrapper_enter_email'>
                     <form action="">

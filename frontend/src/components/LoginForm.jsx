@@ -3,6 +3,8 @@ import Axios from 'axios';
 import '../styles/Login.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Modal from 'react-modal';
+import Header from './HeaderTwo';
+import '../styles/Var.css';
 
 const LoginForm = () => {
 
@@ -81,9 +83,7 @@ const LoginForm = () => {
 
   return (
     <div className="bg_login">
-      <header className='header-login'>
-        <h2 className='title_login'>MARKETPLACE - UPTC</h2>
-      </header>
+      <Header />
       <div className='body_login'>
         <div className='title_body'>
           <h1 className='t1'>Inicia sesión con tu usuario y contraseña</h1>

@@ -1,48 +1,51 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
-:root {
-  --my-color1-create_publication: #F7C600;
-  --my-color2-create_publication: #1E1A16;
-  --my-color3-create_publication: #FFF;
-  --my-color4-create_publication: gray;
-  --my-color5-create_publication: #ecedec;
-}
-
 * {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
 }
 
-.bg_view_publication{
+.bg_view_publication {
   margin: 0;
   padding: 0;
 }
 
-.section_post{
-  padding-top: 10%;
+.section_post {
+  padding-top: 9.5%;
+  height: auto;
+  padding-bottom: 3rem;
 }
+
 .publication {
   display: flex;
   width: 90%;
-  background-color: var(--my-color5-create_publication);
+  background-color: var(--my-color5);
   margin-left: 5%;
+  height: auto;
+  padding-bottom: 3rem;
+  user-select: none;
 }
 
-.images_post{
+.images_post {
   width: 55%;
   float: left;
-  height: auto; 
+  height: 30rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2.5%;
 }
-.slider_post{
+
+.slider_post {
   width: 80%;
-  height: auto;
+  height: 30rem;
   margin: 5%;
 }
-.image_slider{
+
+.image_container {
+  height: 30rem;
+}
+
+.image_slider {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -50,59 +53,68 @@
 
 .slider_post .slick-prev:before,
 .slider_post .slick-next:before {
-  color: var(--my-color2-create_publication);
+  color: var(--my-color2);
 }
 
 
 
 
-.info_post{
+.info_post {
   width: 45%;
   float: right;
+  display: flex;
+  align-items: center;
 }
 
-.data_post{
-  padding-right: 5%;
-}
-.data_post h1{
-  font-size: 4rem;
+
+.data_post h1 {
+  width: 100%;
+  font-size: var(--font-size-title);
   font-weight: 800;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
   margin-left: 3%;
 }
-.data_post h2{
-  font-size: 3rem;
+
+.data_post h2 {
+  width: 100%;
+  font-size: var(--font-size-title);
   font-weight: 600;
   margin-top: 1.5rem;
   margin-left: 3%;
 }
-.data_post p{
-  font-size: 1.5rem;
+
+.data_post p {
+  width: 100%;
+  font-size: var(--font-size-p);
   margin-top: 0.3rem;
   margin-left: 3%;
 }
-.description{
-  font-size: 1.5rem;
+
+.data_post .description {
+  width: 100%;
+  font-size: var(--font-size-p);
   margin-left: 3%;
   margin-top: 0.5rem;
   margin-bottom: 3rem;
 }
 
-.button_contact{
+.button_contact {
   width: 100%;
-  margin: 3% auto 5% 3%;
+  margin: 6% auto 5% 3%;
 }
-.button_contact button{
-  background: var(--my-color2-create_publication);
-  width: 30%;
-  font-size: 2rem;
-  color: var(--my-color3-create_publication);
+
+.button_contact button {
+  background: var(--my-color2);
+  width: max-content;
+  font-size: var(--font-size-p);
+  color: var(--my-color3);
   font-weight: 800;
   cursor: pointer;
   user-select: none;
-  height: 3rem;
+  height: max-content;
+  padding: 0.5rem;
 }
 
-.button_contact button:hover{
-  color: var(--my-color1-create_publication);
+.button_contact button:hover {
+  color: var(--my-color1);
 }

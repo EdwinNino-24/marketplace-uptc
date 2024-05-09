@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import Header from './HeaderTwo';
+import '../styles/Var.css';
 
 
 Modal.setAppElement('#root');
@@ -130,9 +132,7 @@ const EnterCodeRecover = () => {
 
   return (
     <div className="bg_activate_account">
-      <header className='header-login'>
-        <h2 className='title_login'>MARKETPLACE - UPTC</h2>
-      </header>
+      <Header />
       <div className='body_activate_account'>
         <div className='wrapper_enter_code_recover'>
           <form onSubmit={handleSubmit}>

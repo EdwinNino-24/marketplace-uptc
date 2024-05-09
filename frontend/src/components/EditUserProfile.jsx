@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import '../styles/EditUserProfile.css';
 import Axios from 'axios';
+import Header from './HeaderTwo';
+import '../styles/Var.css';
 
 import { useNavigate } from 'react-router-dom';
 import { FaArrowAltCircleLeft } from "react-icons/fa";
@@ -211,7 +213,7 @@ const EditUserProfile = () => {
                 setMensaje("¡Tu contraseña se ha actualizado correctamente!");
                 setModal2IsOpen(true);
             }
-            else{
+            else {
                 setMensaje("¡Contraseña actual incorrecta!");
                 setModalIsOpen(true);
             }
@@ -228,9 +230,7 @@ const EditUserProfile = () => {
 
     return (
         <div className="bg_edit_profile">
-            <header className="header_register">
-                <h2 className="title_login">MARKETPLACE - UPTC</h2>
-            </header>
+            <Header/>
             <div className="body_edit_profile">
                 <div className="wrapper_edit_profile">
                     <div className='header_top_profile'>

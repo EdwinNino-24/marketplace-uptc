@@ -1,12 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
-:root {
-  --my-color1-main_page: #F7C600;
-  --my-color2-main_page: #1E1A16;
-  --my-color3-main_page: #FFF;
-  --my-color4-main_page: gray;
-}
-
 .bg_main_page {
   margin: 0;
   padding: 0;
@@ -14,17 +5,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: block;
-  background: var(--my-color3-main_page);
-}
-
-* {
-  font-family: 'Inter', sans-serif;
 }
 
 .header {
   width: 100%;
-  background: var(--my-color1-main_page);
-  height: 5rem;
+  background: var(--my-color1);
+  height: min-content;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -33,6 +19,7 @@
   position: fixed;
   z-index: 2;
   box-sizing: border-box;
+  padding: 1rem 0rem 1rem 0rem;
 }
 
 .box_header_top {
@@ -42,19 +29,20 @@
 }
 
 .isotype_header {
-  width: 45%;
+  width: 50%;
   float: left;
-  padding-left: 1.5rem;
+  padding-left: 3%;
 }
 
 .isotype {
-  width: 70%;
-  font-size: 2rem;
-  color: var(--my-color1-main_page);
-  background: var(--my-color2-main_page);
+  width: max-content;
+  font-size: var(--font-size-h1);
+  color: var(--my-color1);
+  background: var(--my-color2);
   text-align: center;
   text-decoration: none;
   user-select: none;
+  padding: 0 1rem 0 1rem;
 }
 
 .href_isotype {
@@ -62,7 +50,7 @@
 }
 
 .list_user_options {
-  width: 55%;
+  width: 50%;
   float: right;
   user-select: none;
 }
@@ -78,9 +66,9 @@
 
 .user_option {
   padding: 0 1.5rem;
-  color: var(--my-color2-main_page);
-  font-size: 1.5rem;
-  font-weight: lighter;
+  color: var(--my-color2);
+  font-size: var(--font-size-p);
+  font-weight: 400;
   text-decoration: none;
   user-select: none;
 }
@@ -88,20 +76,21 @@
 .mainnav {
   position: fixed;
   z-index: 2;
-  margin-top: 5.2%;
-  background: var(--my-color2-main_page);
+  margin-top: 4.6%;
+  background: var(--my-color2);
   width: 100%;
   height: 3rem;
   display: flex;
+  padding: 0.5rem 0 0.5rem 0;
 }
 
 .left_header_bottom {
-  width: 60%;
+  width: 55%;
   float: left;
 }
 
 .right_header_bottom {
-  width: 50%;
+  width: 45%;
   float: right;
   padding-left: 16%;
 }
@@ -112,16 +101,15 @@
   display: flex;
   padding: 0;
   margin: 0;
-  margin-top: 0.5rem;
   margin-left: 5%;
   user-select: none;
 }
 
 .plataform_option {
   padding: 0 1rem;
-  color: var(--my-color1-main_page);
-  font-size: 1.5rem;
-  font-weight: lighter;
+  color: var(--my-color1);
+  font-size: var(--font-size-p);
+  font-weight: 400;
   text-decoration: none;
   user-select: none;
 }
@@ -131,12 +119,11 @@
   display: flex;
   padding: 0;
   margin: 0;
-  margin-top: 0.5rem;
   margin-left: 1.5%;
 }
 
 .submenu {
-  background: var(--my-color2-main_page);
+  background: var(--my-color2);
   margin-top: 1rem;
   height: auto;
 }
@@ -144,39 +131,41 @@
 .submenu li {
   list-style: none;
   padding-left: 10%;
-  font-size: 1.5rem;
+  font-size: var(--font-size-p);
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
   cursor: pointer;
   height: auto;
   user-select: none;
+  font-weight: 400;
 }
 
 .submenu li:hover {
-  background: var(--my-color1-main_page);
-  color: var(--my-color2-main_page);
+  background: var(--my-color1);
+  color: var(--my-color2);
 }
 
 .submenu a {
   text-decoration: none;
-  color: var(--my-color1-main_page);
+  color: var(--my-color1);
   width: 100%;
 }
 
 .submenu a:hover {
   text-decoration: none;
-  background: var(--my-color1-main_page);
-  color: var(--my-color2-main_page);
+  background: var(--my-color1);
+  color: var(--my-color2);
 }
 
 .icon_glass {
-  margin-left: 0.5rem;
+  margin: 0.5rem;
   cursor: pointer;
 }
 
 .input_search {
   padding: 0 1rem;
-  color: var(--my-color2-main_page);
-  font-size: 1.5rem;
-  font-weight: lighter;
+  color: var(--my-color2);
+  font-size: var(--font-size-p);
+  font-weight: 400;
 }

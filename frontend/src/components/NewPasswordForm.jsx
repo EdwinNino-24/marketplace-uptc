@@ -7,7 +7,8 @@ import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
+import Header from './HeaderTwo';
+import '../styles/Var.css';
 
 Modal.setAppElement('#root');
 
@@ -80,9 +81,7 @@ const NewPasswordForm = () => {
 
     return (
         <div className="bg_activate_account">
-            <header className='header-login'>
-                <h2 className='title_login'>MARKETPLACE - UPTC</h2>
-            </header>
+            <Header />
             <div className='body_activate_account'>
                 <div className='wrapper_new_password_from_recover'>
                     <form action="">
