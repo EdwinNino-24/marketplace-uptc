@@ -66,7 +66,7 @@ const EditUserProfile = () => {
             return;
         }
 
-        Axios.post('http://localhost:5000/user_profile', { token: token })
+        Axios.post('http://localhost:5050/user_profile', { token: token })
             .then(response => {
                 const personal_information = response.data;
                 setFormDataPersonal({
@@ -94,7 +94,7 @@ const EditUserProfile = () => {
     const handleSubmitPersonalInformation = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/change_personal_information', {
+            const response = await fetch('http://localhost:5050/change_personal_information', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -199,7 +199,7 @@ const EditUserProfile = () => {
     const handleSubmitChangePassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/change_password', {
+            const response = await fetch('http://localhost:5050/change_password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -200,3 +200,7 @@
     height: max-content;
     padding: 0.5rem;
 }
+
+.button_remove:hover{
+    color: var(--my-color1);
+}

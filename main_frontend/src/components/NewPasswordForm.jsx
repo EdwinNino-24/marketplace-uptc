@@ -25,7 +25,7 @@ const NewPasswordForm = () => {
         e.preventDefault();
         if (newPassword.length !== 0) {
             try {
-                const response = await fetch('http://localhost:5000/enter_password_recover', {
+                const response = await fetch('http://localhost:5050/enter_password_recover', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

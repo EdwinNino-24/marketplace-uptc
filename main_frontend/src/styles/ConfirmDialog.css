@@ -11,7 +11,7 @@
 }
 .title_confirm_dialog{
     font-weight: 800;
-    background: var(--my-color3-register);
+    background: var(--my-color3);
     user-select: none;
     font-size: 2.5rem;
     width: 100%;
@@ -19,7 +19,7 @@
 }
 .subtitle_confirm_dialog{
     font-weight: 500;
-    background: var(--my-color3-register);
+    background: var(--my-color3);
     user-select: none;
     font-size: 1.8rem;
     width: 100%;
@@ -34,7 +34,7 @@
 .yes_confirm_dialog{
     background: red;
     font-size: 2rem;
-    color: var(--my-color3-register);
+    color: var(--my-color3);
     cursor: pointer;
     width: 20%;
     user-select: none;
@@ -47,7 +47,7 @@
 .no_confirm_dialog{
     background: green;
     font-size: 2rem;
-    color: var(--my-color3-register);
+    color: var(--my-color3);
     cursor: pointer;
     width: 20%;
     user-select: none;
@@ -55,15 +55,4 @@
 }
 .no_confirm_dialog:hover{
     background: darkgreen;
-}
-
-:root {
-    --my-color1-notification: #F7C600; 
-    --my-color2-notification: #1E1A16; 
-    --my-color3-notification: #FFF;
-    --my-color4-notification: gray; 
-}
-  
-*{
-    font-family: 'Inter', sans-serif;
 }

@@ -31,7 +31,7 @@
     border-radius: 10px;
     padding: 30px, 40px;
     padding-bottom: 1rem;
-    background: var(--my-color3-register);
+    background: var(--my-color3);
 }
 
 .wrapperRegisterUserForm .header-register .iconBackFromRegister{
@@ -149,7 +149,7 @@
 .wrapperRegisterUserForm .button_register{
     width: 50%;
     height: 3rem;
-    background: var(--my-color2-register);
+    background: var(--my-color2);
     border: none;
     outline: none;
     border-radius: 40px;

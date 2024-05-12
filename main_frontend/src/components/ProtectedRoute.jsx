@@ -10,7 +10,7 @@ const useAuth = () => {
         if (!token) {
             setIsAuthenticated(false);
         } else {
-            Axios.post('http://localhost:5000/verify_current_user', { token: token })
+            Axios.post('http://localhost:5050/verify_current_user', { token: token })
                 .then(response => {
                     setIsAuthenticated(response.data.isValid === 1);
                 })

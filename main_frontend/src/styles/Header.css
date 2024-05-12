@@ -169,3 +169,7 @@
   font-size: var(--font-size-p);
   font-weight: 400;
 }
+
+li {
+  cursor: pointer;
+}

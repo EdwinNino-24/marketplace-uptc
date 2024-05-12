@@ -21,6 +21,23 @@ export const UserProfile = ({ user, href_user_profile,
         localStorage.removeItem('token');
     };
 
+    const handleMyChats = async (id) => {
+        if (localStorage.getItem('token')) {
+            const response = await fetch('http://localhost:5000/api/users/login', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: id }),
+            });
+            const data = await response.json();
+            const jsonParam = data.jsonParam;
+            window.open(`http://localhost:5173/?json=${jsonParam}`, '_blank');
+        } else {
+            window.location.href = `/login`;
+        }
+    }
+
     return (
         <div className="bg_my_account">
             <Header
@@ -87,11 +104,9 @@ export const UserProfile = ({ user, href_user_profile,
                             <p> Posibles Compras </p>
                         </div>
                         <div className="button_user_profile">
-                            <a href="/edit-user-profile">
-                                <button>
+                                <button onClick={() => handleMyChats(user)}>
                                     Chatear
                                 </button>
-                            </a>
                         </div>
                     </div>
                     <div className="setting">

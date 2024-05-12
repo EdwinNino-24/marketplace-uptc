@@ -32,7 +32,7 @@ const CreatePublicationForm = () => {
                 formData.append('images', image);
             });
             formData.append('id', id);
-            const response = await fetch('http://localhost:5000/uploadImages', {
+            const response = await fetch('http://localhost:5050/uploadImages', {
                 method: 'POST',
                 body: formData
             });
@@ -104,7 +104,7 @@ const CreatePublicationForm = () => {
             event.preventDefault();
             setLoading(true);
             try {
-                const response = await fetch('http://localhost:5000/create_post', {
+                const response = await fetch('http://localhost:5050/create_post', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -118,6 +118,14 @@ const CreatePublicationForm = () => {
                     await uploadImages(id_post);
                     setMensaje("¡La publicación se ha creado exitosamente!");
                     setModalCreatePostIsOpen(true);
+                    setLoading(false);
+                    await fetch('http://localhost:5000/api/users/register', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ name: data.name, email: data.id_post }),
+                    });
                 } else if (code === 1) {
                     setMensaje("¡Ha ocurrido un error al crear la publicación!");
                     setModalIsOpen(true);
@@ -125,7 +133,6 @@ const CreatePublicationForm = () => {
             } catch (error) {
                 console.error('Error al enviar el formulario:', error.message);
             }
-            setLoading(false);
         } else {
         }
     };
@@ -162,7 +169,7 @@ const CreatePublicationForm = () => {
 
     const [types, setTypes] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:5000/get_type_offers')
+        fetch('http://localhost:5050/get_type_offers')
             .then(response => response.json())
             .then(data => setTypes(data))
             .catch(error => console.error('Error:', error));
@@ -170,7 +177,7 @@ const CreatePublicationForm = () => {
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:5000/get_categories')
+        fetch('http://localhost:5050/get_categories')
             .then(response => response.json())
             .then(data => setCategories(data))
             .catch(error => console.error('Error:', error));
@@ -178,7 +185,7 @@ const CreatePublicationForm = () => {
 
     const [locations, setLocations] = useState([]);
     useEffect(() => {
-        fetch('http://localhost:5000/get_locations')
+        fetch('http://localhost:5050/get_locations')
             .then(response => response.json())
             .then(data => setLocations(data))
             .catch(error => console.error('Error:', error));
@@ -187,7 +194,7 @@ const CreatePublicationForm = () => {
 
     return (
         <div className="bg_create_publication">
-            <Header/>
+            <Header />
             <div className='body_create_publication'>
                 <div className='wrapperCreatePublication'>
                     <form onSubmit={handleSubmit}>

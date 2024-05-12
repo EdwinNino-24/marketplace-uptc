@@ -39,7 +39,7 @@ const EditPublication = () => {
     useEffect(() => {
         const fetchPublication = async () => {
             try {
-                const response = await Axios.get(`http://localhost:5000/posts/${id}`);
+                const response = await Axios.get(`http://localhost:5050/posts/${id}`);
                 const publication = response.data;
 
                 setFormData({
@@ -64,13 +64,12 @@ const EditPublication = () => {
 
         const fetchImages = async () => {
             try {
-                const response = await Axios.post('http://localhost:5000/get_post_images', {
+                const response = await Axios.post('http://localhost:5050/get_post_images', {
                     folderPath: id,
                 });
-                // Asumiendo que 'response.data.image' es un array de URLs de imágenes
                 const loadedImages = response.data.image.map(url => ({
                     preview: url,
-                    path: url // Añade 'path' o un identificador si lo necesitas para otros propósitos
+                    path: url 
                 }));
                 setImages(loadedImages);
             } catch (error) {
@@ -86,13 +85,13 @@ const EditPublication = () => {
 
     const [images, setImages] = useState([]);
 
-    const [removedUrls, setRemovedUrls] = useState([]);  // Estado para almacenar las URLs de las imágenes eliminadas
+    const [removedUrls, setRemovedUrls] = useState([]);  
 
     const uploadImages = async (id) => {
         try {
             const formData = new FormData();
             images.forEach((image, index) => {
-                if (image.file) { // Ensure only file objects are appended
+                if (image.file) { 
                     formData.append('images', image.file);
                 }
             });
@@ -100,7 +99,7 @@ const EditPublication = () => {
             formData.append('id', id);
             formData.append('removedUrls', JSON.stringify(removedUrls));
 
-            const response = await fetch('http://localhost:5000/uploadEditImages', {
+            await fetch('http://localhost:5050/uploadEditImages', {
                 method: 'POST',
                 body: formData,
             });
@@ -117,7 +116,7 @@ const EditPublication = () => {
         const imageFiles = acceptedFiles.filter(file => file.type.startsWith('image/'));
         const newImages = imageFiles.map(file => ({
             preview: URL.createObjectURL(file),
-            file: file // Guarda el archivo original por si necesitas acceder a él más tarde
+            file: file 
         }));
         setImages([...images, ...newImages]);
     };
@@ -127,9 +126,9 @@ const EditPublication = () => {
         const imageToRemove = images[index];
         const updatedImages = images.filter((_, idx) => idx !== index);
         setImages(updatedImages);
-        if (!imageToRemove.isNew) {  // Si la imagen viene de Firebase
-            setRemovedUrls(prev => [...prev, imageToRemove.path]);  // Guardar la URL para su posterior eliminación en el servidor
-            console.log('Removed image URL:', imageToRemove.path);  // Imprimir en consola la URL de la imagen eliminada
+        if (!imageToRemove.isNew) {  
+            setRemovedUrls(prev => [...prev, imageToRemove.path]);  
+            console.log('Removed image URL:', imageToRemove.path);  
         }
     };
 
@@ -171,7 +170,7 @@ const EditPublication = () => {
             event.preventDefault();
             setLoading(true);
             try {
-                const response = await fetch('http://localhost:5000/edit_post', {
+                const response = await fetch('http://localhost:5050/edit_post', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -237,7 +236,7 @@ const EditPublication = () => {
     const [types, setTypes] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/get_type_offers')
+        fetch('http://localhost:5050/get_type_offers')
             .then(response => response.json())
             .then(data => setTypes(data))
             .catch(error => console.error('Error:', error));
@@ -246,7 +245,7 @@ const EditPublication = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/get_categories')
+        fetch('http://localhost:5050/get_categories')
             .then(response => response.json())
             .then(data => setCategories(data))
             .catch(error => console.error('Error:', error));
@@ -255,7 +254,7 @@ const EditPublication = () => {
     const [locations, setLocations] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/get_locations')
+        fetch('http://localhost:5050/get_locations')
             .then(response => response.json())
             .then(data => setLocations(data))
             .catch(error => console.error('Error:', error));

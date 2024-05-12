@@ -4,9 +4,6 @@ import Axios from 'axios';
 
 import Login from "./components/LoginForm";
 
-
-import Chat from "./components/Chat";
-
 import Register from "./components/RegisterForm";
 import ActivateAccount from "./components/ActivateAccount";
 
@@ -38,7 +35,7 @@ function App() {
       setUser("Iniciar Sesión");
       return;
     }
-    Axios.post('http://localhost:5000/user_profile', { token: token })
+    Axios.post('http://localhost:5050/user_profile', { token: token })
       .then(response => {
         const user = response.data.ID_ACCOUNT;
         setUser(user ? user : "Iniciar Sesión");
@@ -51,7 +48,7 @@ function App() {
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:5000/get_categories')
+    fetch('http://localhost:5050/get_categories')
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Error:', error))
@@ -67,7 +64,7 @@ function App() {
 
   const [locations, setLocations] = useState([]);
   useEffect(() => {
-    fetch('http://localhost:5000/get_locations')
+    fetch('http://localhost:5050/get_locations')
       .then(response => response.json())
       .then(data => setLocations(data))
       .catch(error => console.error('Error:', error));
@@ -104,8 +101,6 @@ function App() {
           <Route path="*" element={<Login />} />
 
           <Route path="/login" element={<Login />} />
-
-          <Route path="/chat" element={<Chat />} />
 
           <Route path="/register" element={<Register />} />
           <Route path="/activate-account" element={<ActivateAccount />} />

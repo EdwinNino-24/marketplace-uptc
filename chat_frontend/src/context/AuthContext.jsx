@@ -20,15 +20,12 @@ export const AuthContextProvider = ({ children }) => {
     password: "",
   });
 
-  console.log("Userr:", user);
-  console.log("registerError:", registerError);
-  console.log("isRegisterLoading:", isRegisterLoading);
-  console.log("loginError:", loginError);
-  console.log("isLoginLoading:", isLoginLoading);
-
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const jsonParam = urlParams.get('json');
+    const jsonData = JSON.parse(decodeURIComponent(jsonParam));
+    localStorage.setItem("User", JSON.stringify(jsonData));
     const user = localStorage.getItem("User");
-
     setUser(JSON.parse(user));
   }, []);
 

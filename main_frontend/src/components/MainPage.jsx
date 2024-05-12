@@ -43,7 +43,7 @@ export const MainPage = ({ user, href_user_profile,
     const [productsPosts, setProductsPosts] = useState([]);
     useEffect(() => {
         setLoading(true);
-        fetch('http://localhost:5000/get_products_posts')
+        fetch('http://localhost:5050/get_products_posts')
             .then(response => response.json())
             .then(data => {
                 setProductsPosts(data);
@@ -57,7 +57,7 @@ export const MainPage = ({ user, href_user_profile,
     const [servicesPosts, setServicesPosts] = useState([]);
     useEffect(() => {
         setLoading(true);
-        fetch('http://localhost:5000/get_services_posts')
+        fetch('http://localhost:5050/get_services_posts')
             .then(response => response.json())
             .then(data => setServicesPosts(data))
             .catch(error => console.error('Error al obtener las publicaciones:', error))

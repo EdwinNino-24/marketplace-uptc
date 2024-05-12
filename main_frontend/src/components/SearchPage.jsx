@@ -28,7 +28,7 @@ export const SearchPage = ({ user, href_user_profile,
 
     useEffect(() => {
         setLoading(true);
-        Axios.post('http://localhost:5000/get_posts_by_search', { search: searchTermId })
+        Axios.post('http://localhost:5050/get_posts_by_search', { search: searchTermId })
             .then(response => {
                 setPosts(response.data);
             })

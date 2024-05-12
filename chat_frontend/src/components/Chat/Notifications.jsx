@@ -35,6 +35,7 @@ const Notifications = () => {
           fill="currentColor"
           className="bi bi-chat-left-fill"
           viewBox="0 0 16 16"
+          color="black"
         >
           <path d="M2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
         </svg>
@@ -47,16 +48,16 @@ const Notifications = () => {
       {isOpen ? (
         <div className="notifications-box">
           <div className="notifications-header">
-            <h3>Nofications</h3>
+            <h3>Notificaciones</h3>
             <div
               className="mark-as-read"
               onClick={() => markAllNotificationsAsRead(notifications)}
             >
-              Mark all as read
+              Marcar como leídas!
             </div>
           </div>
           {modifiedNotifications?.length === 0 ? (
-            <span className="notification">No notifications yet...</span>
+            <span className="notification">Sin notificaciones aún...</span>
           ) : null}
           {modifiedNotifications &&
             modifiedNotifications.map((n, index) => (
@@ -68,7 +69,7 @@ const Notifications = () => {
                   setIsOpen(false);
                 }}
               >
-                <span>{`${n.senderName} sent you a new message...`}</span>
+                <span>{`${n.senderName} te ha enviado un nuevo mensaje...`}</span>
                 <span className="notification-time">
                   {moment(n.date).calendar()}
                 </span>

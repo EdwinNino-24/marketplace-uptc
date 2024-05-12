@@ -7,6 +7,7 @@ import { useFetchRecipientUser } from "../../hooks/useFetchRecipient";
 import { unreadNotificationsFunc } from "../../utils/unreadNotifications";
 import moment from "moment";
 
+
 const UserCard = ({ chat, user }) => {
   const { recipientUser } = useFetchRecipientUser(chat, user);
   const { latestMessage } = useFecthLatestMessage(chat);

@@ -28,7 +28,7 @@ const ActivateAccount = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/code_activation', {
+            const response = await fetch('http://localhost:5050/code_activation', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ const ActivateAccount = () => {
         handleClick();
         e.preventDefault();
         try {
-            await fetch('http://localhost:5000/resend_code_activation', {
+            await fetch('http://localhost:5050/resend_code_activation', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

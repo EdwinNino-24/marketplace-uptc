@@ -24,7 +24,7 @@ const EnterEmailForm = () => {
         if (inputValue.length !== 0) {
             e.preventDefault();
             try {
-                const response = await fetch('http://localhost:5000/search_account_recover', {
+                const response = await fetch('http://localhost:5050/search_account_recover', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

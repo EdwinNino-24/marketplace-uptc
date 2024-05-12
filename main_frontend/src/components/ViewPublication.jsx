@@ -34,7 +34,7 @@ export const ViewPublication = ({ user, href_user_profile,
         setLoading(true);
         const fetchPublication = async () => {
             try {
-                const response = await Axios.get(`http://localhost:5000/posts/${id}`);
+                const response = await Axios.get(`http://localhost:5050/posts/${id}`);
                 setPublication(response.data);
             } catch (error) {
                 console.error('Error al obtener la publicación:', error);
@@ -50,7 +50,7 @@ export const ViewPublication = ({ user, href_user_profile,
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await Axios.post('http://localhost:5000/get_post_images', {
+                const response = await Axios.post('http://localhost:5050/get_post_images', {
                     folderPath: id,
                 });
                 setImages(response.data.image);
@@ -74,6 +74,26 @@ export const ViewPublication = ({ user, href_user_profile,
 
     useEffect(() => {
     }, [images]);
+    
+    const handleMyChats = async (user, post) => {
+        await fetch('http://localhost:5000/api/chats', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ senderId: user, receiverId: post }),
+        });
+        const response = await fetch('http://localhost:5000/api/users/login', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: user }),
+        });
+        const data = await response.json();
+        const jsonParam = data.jsonParam;
+        window.open(`http://localhost:5173/?json=${jsonParam}`, '_blank');
+    }
 
 
     return (
@@ -121,7 +141,7 @@ export const ViewPublication = ({ user, href_user_profile,
                             <p> Ofertada en {publication.NAME_LOCATION} </p>
                             <p> Por {publication.ID_OFFERER} </p>
                             <div className="button_contact">
-                                <button>
+                                <button onClick={() => handleMyChats(user, publication.ID_PUBLICATION)}>
                                     Contactar
                                 </button>
                             </div>

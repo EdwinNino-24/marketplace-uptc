@@ -4,9 +4,11 @@ import { Stack } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
 import { useFetchRecipientUser } from "../../hooks/useFetchRecipient";
-import moment from "moment";
 import InputEmoji from "react-input-emoji";
 import { useEffect } from "react";
+import moment from 'moment';
+import '../../main.css';
+
 
 const ChatBox = () => {
   const { user } = useContext(AuthContext);
@@ -22,14 +24,14 @@ const ChatBox = () => {
 
   if (!recipientUser)
     return (
-      <p style={{ textAlign: "center", width: "100%" }}>
-        No conversation selected yet..
+      <p className='rara' style={{ textAlign: "center", width: "100%" }}>
+        Chatea con vendedores o con tus posibles clientes...
       </p>
     );
 
   if (isMessagesLoading)
     return (
-      <p style={{ textAlign: "center", width: "100%" }}>Loading chat...</p>
+      <p style={{ textAlign: "center", width: "100%" }}>Cargando chat...</p>
     );
 
   return (
@@ -60,8 +62,15 @@ const ChatBox = () => {
         <InputEmoji
           value={textMessage}
           onChange={setTextMessage}
-          fontFamily="nunito"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              sendTextMessage(textMessage, user, currentChat._id, setTextMessage);
+            }
+          }}
+          fontFamily="Inter"
           borderColor="rgba(72, 112, 223, 0.2)"
+          placeholder="Ingresa un mensaje..."
+          className="chat-input"
         />
         <button
           className="send-btn"

@@ -1,10 +1,24 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 body {
-  font-family: "Nunito", sans-serif;
-  background: rgb(40, 40, 40);
+  font-family: "Inter";
+  background: #ecedec;
 }
-
+.title_header_chat {
+  background: #1E1A16;
+  font-family: "Inter";
+  padding: 0 2.5rem 0 2.5rem;
+  font-weight: 800;
+  color: #F7C600;
+  text-decoration: none;
+  user-select: none;
+  font-size: 2rem;
+}
+.mb-4{
+  padding-top: 1.5rem;
+  background: #F7C600;
+  height: auto;
+}
 /* All users */
 .all-users {
   display: flex;
@@ -13,7 +27,7 @@ body {
 
 .single-user {
   background: rgb(0, 213, 255);
-  color: white;
+  color: black;
   cursor: pointer;
   padding: 5px 7px;
   border-radius: 10px;
@@ -21,9 +35,12 @@ body {
   position: relative;
 }
 
+.rara {
+  font-size: 1.5rem;
+}
 /* User Card */
 .user-card {
-  color: white;
+  color: black;
   position: relative;
   border-bottom: 1px solid rgb(100, 100, 100);
   width: 380px;
@@ -40,7 +57,7 @@ body {
 .user-card .text,
 .user-card .date {
   font-size: 14px;
-  color: rgb(180, 180, 180);
+  color: rgb(76, 69, 69);
 }
 
 .user-online {
@@ -48,7 +65,7 @@ body {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: rgb(0, 219, 0);
+  background: green;
   position: absolute;
   top: -3px;
   right: -3px;
@@ -59,12 +76,25 @@ body {
 .chat-box {
   max-height: calc(100vh - 10rem);
   overflow-y: auto;
-  background: rgb(25, 25, 25);
+  background: rgb(255, 255, 255);
   border-radius: 10px;
 }
 
 .messages-box {
   height: 85vh;
+}
+
+.react-input-emoji--placeholder {
+  font-family: "Inter";
+  font-size: 1rem;
+}
+.react-input-emoji input {
+  font-family: "Inter";
+  font-size: 1rem;
+}
+.chat-input {
+  font-family: "Inter";
+  font-size: 1rem;
 }
 
 /* Chat Header */
@@ -86,7 +116,7 @@ body {
 
 .message {
   color: white;
-  background: #282828;
+  background: darkolivegreen;
   padding: 0.75rem;
   border-radius: 5px;
   max-width: 50%;
@@ -94,7 +124,7 @@ body {
 
 .message.self {
   color: white;
-  background: #00bd9b;
+  background: darkcyan;
 }
 
 .message-footer {
@@ -106,28 +136,43 @@ body {
 /* Chat Input  */
 .chat-input {
   width: 100%;
-  background: rgb(30, 30, 30);
+  background: #1E1A16;
   padding: 1rem;
+  font-family: "Inter";
+  font-size: 1rem;
 }
+
+.chat-input input {
+  width: 100%;
+  background: #1E1A16;
+  padding: 1rem;
+  font-family: "Inter";
+  font-size: 1rem;
+}
+
 .send-btn {
   border: none;
-  background: rgba(72, 112, 223, 1);
+  background: darkcyan;
   color: white;
   height: 40px;
   width: 40px;
   border-radius: 50%;
+  position: relative;
+  right: 0.5rem;
 }
 
 /* Notification */
 .notifications {
   position: relative;
+  user-select: none;
+  bottom: 0.5rem;
 }
 
 .notifications-icon {
   color: white;
   cursor: pointer;
   position: relative;
-  margin-right: 1rem;
+  margin-right: 3rem;
 }
 
 .notifications-box {
@@ -152,13 +197,16 @@ body {
 
 .notifications-box h3 {
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1.1rem;
 }
 
 .mark-as-read {
+  display: flex;
   cursor: pointer;
   font-weight: 700;
   opacity: 0.8;
+  float: right;
+  font-size: 0.8rem;
 }
 
 .notification {
@@ -174,6 +222,7 @@ body {
 
 .notification.not-read {
   background: #263159;
+  color: #ffffff;
 }
 
 .notification-time {
@@ -184,7 +233,7 @@ body {
 
 .notification-count {
   display: flex;
-  background: #00bd9b;
+  background: darkolivegreen;
   height: 25px;
   width: 25px;
   font-size: 14px;
@@ -195,11 +244,12 @@ body {
   position: absolute;
   top: -10px;
   right: -15px;
+  color: white;
 }
 
 .this-user-notifications {
   display: flex;
-  background: #00bd9b;
+  background: darkolivegreen;
   height: 20px;
   width: 20px;
   font-size: 12px;
@@ -207,4 +257,12 @@ body {
   border-radius: 50%;
   align-items: center;
   justify-content: center;
+  color: white;
+}
+
+.current_user {
+  position: relative;
+  color: #1E1A16;
+  bottom: 0.5rem;
+  font-size: 1.3rem;
 }

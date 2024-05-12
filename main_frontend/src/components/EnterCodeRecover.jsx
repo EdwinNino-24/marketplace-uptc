@@ -34,7 +34,7 @@ const EnterCodeRecover = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/recover_account', {
+      const response = await fetch('http://localhost:5050/recover_account', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ const EnterCodeRecover = () => {
     handleClick();
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/resend_code_recover', {
+      const response = await fetch('http://localhost:5050/resend_code_recover', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

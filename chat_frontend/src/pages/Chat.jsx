@@ -18,7 +18,7 @@ const Chat = () => {
       {userChats?.length < 1 ? null : (
         <Stack direction="horizontal" gap={4} className="align-items-start">
           <Stack className="messages-box flex-grow-0 pe-3" gap={3}>
-            {isUserChatsLoading && <p>Fetching Chats..</p>}
+            {isUserChatsLoading && <p>Buscando Chats..</p>}
             {(!isUserChatsLoading && !userChats) ||
               (!userChats?.length === 0 && <p>No Chats..</p>)}
             {userChats?.map((chat, index) => {

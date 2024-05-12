@@ -53,7 +53,7 @@ exports.createPost = async (offer, post, user) => {
     const resultOffer = await queryDatabase(queryOffer, [offer.typeId, offer.name, offer.description, "", offer.price]);
     const idOffer = resultOffer.insertId;
     const resultPublication = await queryDatabase(queryPublication, [user, post.category, post.location, idOffer]);
-    return [resultOffer.affectedRows > 0 && resultPublication.affectedRows > 0, idOffer];
+    return [resultOffer.affectedRows > 0 && resultPublication.affectedRows > 0, idOffer, offer.name];
   } catch (error) {
     console.error('Error updating user profile:', error);
     return [false];

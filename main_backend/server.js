@@ -24,7 +24,7 @@ app.use(postsRoutes);
 app.use(postRoutes);
 
 
-app.listen(5000, () => {
+app.listen(5050, () => {
   console.log('Marketplace UPTC - Backend Desplegado!!!');
 });
 

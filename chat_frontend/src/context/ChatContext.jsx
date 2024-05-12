@@ -21,17 +21,11 @@ export const ChatContextProvider = ({ children, user }) => {
   const [notifications, setNotifications] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
 
-  console.log("userChats", userChats);
-  console.log("currentChat", currentChat);
-  console.log("messages", messages);
-  console.log("messagesError", messagesError);
-  console.log("onlineUsers", onlineUsers);
-  console.log("sendTextMessageError", sendTextMessageError);
-  console.log("notifications", notifications);
+
 
   // initialize socket
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io("http://localhost:4000");
     setSocket(newSocket);
 
     return () => {
@@ -144,12 +138,14 @@ export const ChatContextProvider = ({ children, user }) => {
 
       if (user?._id) {
         const userId = user?._id;
-
+        console.log(userId);
         const response = await getRequest(`${baseUrl}/chats/${userId}`);
 
         if (response.error) {
           return setUserChatsError(response);
         }
+
+        console.log(response);
 
         setUserChats(response);
       }

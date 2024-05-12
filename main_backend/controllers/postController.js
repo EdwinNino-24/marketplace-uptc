@@ -37,7 +37,7 @@ exports.createPost = async (post, res) => {
         };
         const result = await postServices.insertPost(offer, post, user);
         if (result[0]) {
-            res.json({ code: 0, id_post: result[1] });
+            res.json({ code: 0, id_post: result[1], name: result[2] });
         } else {
             res.json({ code: 1 });
         }

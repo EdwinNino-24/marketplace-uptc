@@ -34,7 +34,7 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('http://localhost:5050/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -54,6 +54,13 @@ const RegisterForm = () => {
       else if (data.code === '2') {
         localStorage.setItem('token', data.token);
         window.location.href = '/activate-account';
+        await fetch('http://localhost:5000/api/users/register', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: formData.names + " " + formData.lastnames, email: formData.email }),
+        });
       }
     } catch (error) {
     }
