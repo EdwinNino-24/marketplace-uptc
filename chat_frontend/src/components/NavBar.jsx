@@ -10,11 +10,9 @@ const NavBar = () => {
   return (
     <Navbar className="mb-4" style={{ height: "3.75rem" }}>
       <Container>
-        <h2>
-          <h1 className="title_header_chat">
-            MARKETCHAT - UPTC
-          </h1>
-        </h2>
+        <h1 className="title_header_chat">
+          MARKETCHAT - UPTC
+        </h1>
         <Nav>
           <Stack direction="horizontal" gap={1}>
             <Notifications />

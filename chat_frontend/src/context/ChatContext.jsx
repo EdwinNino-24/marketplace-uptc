@@ -138,14 +138,11 @@ export const ChatContextProvider = ({ children, user }) => {
 
       if (user?._id) {
         const userId = user?._id;
-        console.log(userId);
         const response = await getRequest(`${baseUrl}/chats/${userId}`);
 
         if (response.error) {
           return setUserChatsError(response);
         }
-
-        console.log(response);
 
         setUserChats(response);
       }

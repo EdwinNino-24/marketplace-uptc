@@ -1,6 +1,4 @@
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const validator = require("validator");
 const userModel = require("../Models/userModel");
 
 const createToken = (_id) => {
@@ -33,8 +31,8 @@ const loginUser = async (req, res) => {
 
 
     const token = await createToken(user._id);
-    const jsonData = { _id: user._id, name: user.name, email, token }; // El objeto JSON que deseas enviar
-    const jsonParam = await encodeURIComponent(JSON.stringify(jsonData)); // Codifica el objeto JSON como una cadena JSON
+    const jsonData = { _id: user._id, name: user.name, email, token }; 
+    const jsonParam = await encodeURIComponent(JSON.stringify(jsonData)); 
     res.json({ jsonParam:  jsonParam});
   } catch (error) {
     console.log(error);
