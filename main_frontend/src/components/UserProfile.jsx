@@ -104,9 +104,9 @@ export const UserProfile = ({ user, href_user_profile,
                             <p> Posibles Compras </p>
                         </div>
                         <div className="button_user_profile">
-                                <button onClick={() => handleMyChats(user)}>
-                                    Chatear
-                                </button>
+                            <button onClick={() => handleMyChats(user)}>
+                                Chatear
+                            </button>
                         </div>
                     </div>
                     <div className="setting">

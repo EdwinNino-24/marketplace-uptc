@@ -24,3 +24,11 @@ exports.passwordProfile = async (req, res) => {
   } catch (error) {
   }
 };
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    userController.deleteAccount(token, password, res);
+  } catch (error) {
+  }
+};

@@ -9,5 +9,6 @@ router.post('/verify_current_user', authMiddleware.currentUser);
 router.post('/user_profile', userMiddleware.userProfile);
 router.post('/change_personal_information', userMiddleware.personalInformationProfile);
 router.post('/change_password', userMiddleware.passwordProfile);
+router.post('/delete_account', userMiddleware.deleteAccount);
 
 module.exports = router;

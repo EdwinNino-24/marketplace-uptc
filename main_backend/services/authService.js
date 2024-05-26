@@ -9,6 +9,13 @@ exports.validateLogin = async (username, password) => {
     if (!user) {
       return { code: '0', message: 'Usuario no encontrado', token: null };
     }
+    if (!user.STATE_ACCOUNT) {
+      return {
+        code: '1',
+        message: 'Activa tu Cuenta',
+        token: await jwtUtils.generateToken(user.ID_ACCOUNT, false, user.STATE_ACCOUNT)
+      };
+    }
     const isPasswordValid = await hashUtils.checkCode(password, user.PASSWORD_HASHED);
     if (!isPasswordValid) {
       return { code: '2', message: 'Contraseña incorrecta', token: null };

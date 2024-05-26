@@ -69,3 +69,24 @@ exports.updatePassword = async (password_hashed, user) => {
     return false;
   }
 };
+
+exports.deleteAccount = async (user) => {
+  const updateQuery = `
+  UPDATE ACCOUNTS
+  SET STATE_ACCOUNT = FALSE
+  WHERE ID_ACCOUNT = ?;
+  `;
+  const updatePosts = `
+  UPDATE PUBLICATIONS
+  SET VISIBILITY_POST = FALSE
+  WHERE ID_OFFERER = ?;
+  `;
+  try {
+    await queryDatabase(updatePosts, [user.ID_ACCOUNT]);
+    const result = await queryDatabase(updateQuery, [user.ID_ACCOUNT]);
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error('Error updating password:', error);
+    return false;
+  }
+};

@@ -39,3 +39,19 @@ exports.passwordProfile = async (token, current_password, new_password, res) => 
   } catch (error) {
   }
 };
+
+exports.deleteAccount = async (token, password, res) => {
+  try {
+    const user = await userService.getUserFromToken(token);
+    const userAccount = await userService.getUserAccount(user);
+    const isValid = await userService.isValidChangePassword(password, userAccount);
+    if (isValid) {
+      await userService.deleteAccount(userAccount);
+      res.json({ code: 1 });
+    }
+    else {
+      res.json({ code: 0 });
+    }
+  } catch (error) {
+  }
+};

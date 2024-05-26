@@ -74,3 +74,19 @@ exports.updatePassword = async (password, user) => {
         return false;
     }
 };
+
+exports.deleteAccount = async (user) => {
+    try {
+        const success = await userModel.deleteAccount(user);
+        if (success) {
+            console.log('User deleted successfully.');
+            return success;
+        } else {
+            console.log('No changes.');
+        }
+        return success;
+    } catch (error) {
+        console.error('Failed to delete User:', error);
+        return false;
+    }
+};

@@ -36,7 +36,7 @@ const EditUserProfile = () => {
 
     const [lastnames, setLastnames] = useState('');
 
-    const [token] = useState(localStorage.getItem('token'));
+    const [token] = useState('');
 
     const [formDataPersonal, setFormDataPersonal] = useState({
         "names": names,
@@ -228,9 +228,57 @@ const EditUserProfile = () => {
         setDeleteAccount(!deleteAccount);
     };
 
+
+    const [confirmDeleteIsOpen, setConfirmDeleteIsOpen] = useState(false);
+
+    const handleYes = () => {
+        raaa();
+        setConfirmDeleteIsOpen(false);
+    };
+
+    async function raaa() {
+        try {
+            const response = await fetch('http://localhost:5050/delete_account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    password: formCurrentPassword.current_password_delete,
+                    token: localStorage.getItem('token')
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseData = await response.json();
+            if (responseData.code === 0) {
+                setMensaje("¡La contraseña ingresada es incorrecta!");
+                setModalIsOpen(true);
+            } else if (responseData.code === 1) {
+                window.location.href = `/login`;
+                localStorage.removeItem('token');
+            }
+
+        } catch (error) {
+            console.error("Error al actualizar el estado:", error);
+        }
+    }
+
+    const handleNo = () => {
+        setConfirmDeleteIsOpen(false);
+    };
+
+    const handleDeleteAccount = async (e) => {
+        e.preventDefault();
+        setConfirmDeleteIsOpen(true);
+    };
+
     return (
         <div className="bg_edit_profile">
-            <Header/>
+            <Header />
             <div className="body_edit_profile">
                 <div className="wrapper_edit_profile">
                     <div className='header_top_profile'>
@@ -377,7 +425,7 @@ const EditUserProfile = () => {
                             </form>
                         </div>
                         <div className='delete_account'>
-                            <form onSubmit={handleSubmitPersonalInformation}>
+                            <form onSubmit={handleDeleteAccount}>
                                 <div className='header-register'>
                                     <h1 className='title_personal_info' onClick={toggleDeleteAccount}>Eliminar cuenta {deleteAccount ? '<' : '>'}</h1>
                                 </div>
@@ -387,9 +435,9 @@ const EditUserProfile = () => {
                                             <input
                                                 type={confirmPasswordToDeleteAccount ? 'text' : 'password'}
                                                 placeholder="Ingresa tu contraseña para continuar"
-                                                value={formCurrentPassword.current_password}
+                                                value={formCurrentPassword.current_password_delete}
                                                 onChange={handleChange5}
-                                                name="current_password"
+                                                name="current_password_delete"
                                                 required
                                             />
                                             {confirmPasswordToDeleteAccount ? (
@@ -411,6 +459,21 @@ const EditUserProfile = () => {
                                         </button>
                                     </div>
                                 )}
+                                <Modal
+                                    isOpen={confirmDeleteIsOpen}
+                                    onRequestClose={() => setConfirmDeleteIsOpen(false)}
+                                    contentLabel="Notificación"
+                                    style={customStyles}
+                                >
+                                    <div className='confirm_dialog'>
+                                        <h1 className='title_confirm_dialog'>Atención</h1>
+                                        <h2 className='subtitle_confirm_dialog'>¿Esta seguro de querer eliminar su cuenta?</h2>
+                                        <div className='button_confirm_dialog'>
+                                            <button className="yes_confirm_dialog" onClick={handleYes}>Si</button>
+                                            <button className="no_confirm_dialog" onClick={handleNo}>No</button>
+                                        </div>
+                                    </div>
+                                </Modal>
                                 <Modal
                                     isOpen={modalIsOpen}
                                     onRequestClose={() => setModalIsOpen(false)}
