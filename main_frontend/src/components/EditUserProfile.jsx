@@ -46,7 +46,7 @@ const EditUserProfile = () => {
     const [formDataPasswords, setFormDataPasswords] = useState({
         "current_password": '',
         "new_password": '',
-        "token": token
+        "token": localStorage.getItem('token')
     });
     const [formCurrentPassword, setFormCurrentPassword] = useState({
         "current_password_delete": ''
@@ -199,6 +199,7 @@ const EditUserProfile = () => {
     const handleSubmitChangePassword = async (e) => {
         e.preventDefault();
         try {
+            console.log(formDataPasswords);
             const response = await fetch('http://localhost:5050/change_password', {
                 method: 'POST',
                 headers: {
